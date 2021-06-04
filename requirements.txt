@@ -1,0 +1,3 @@
+twitchio == 2.0.0b5
+mariadb == 1.0.6
+requests == 2.25.1

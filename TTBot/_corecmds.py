@@ -19,6 +19,7 @@ async def CMD_invite(self, ctx):
             logging.info(f"Bot was invited to the channel '{ctx.author.name}'.")
             await ctx.channel.send(f'I joined your channel, {ctx.author.name}. You can only control me over there')
             self.DB_query(f"INSERT IGNORE INTO modules(channel) VALUES('{ctx.author.name}')")
+            await self.get_channel(str(ctx.author.name)).send(f'/me coming in hot')
     except:
         pass
 
@@ -30,7 +31,7 @@ async def CMD_uninvite(self, ctx):
         # i know, this is bad, but for some reason i cant find the proper leave command from twitchio
         #await ctx.channel.send(f'I am leaving your channel right now, {ctx.author.name}. You can invite me in my channel again')
         await ctx.channel.send(f'I wont join your channel anymore, {ctx.author.name}. You can invite me in my channel again')
-        await self.part_channels(ctx.author.name)
+        await self.part_channels(ctx.author.name) # ToDo this doesnt exist - will not join after restart thou.
 
 @commands.command(name='module')
 async def CMD_module(self, ctx, *args):

@@ -44,6 +44,8 @@ def DB_connect(self):
             database=os.environ['DBNAME']
         )
     self.conn.autocommit = True
+    self.conn.auto_reconnect = True
+    logging.debug(self.conn.auto_reconnect)
 
 def DB_query(self, sql):
     # send a database query
@@ -91,7 +93,7 @@ def DB_GetPV(self, PVName: str):
     try:
         cur = self.DB_query(f"SELECT varname, typ, value FROM processvars WHERE varname = '{PVName}' LIMIT 1;")
         # should be either a hit or we must ingest the default value
-        for (value) in cur:
+        for (varname, typ, value) in cur:
             if PV[PVName]['typ'] == 'int':
                 return int(value)
             if PV[PVName]['typ'] == 'float':

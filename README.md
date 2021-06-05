@@ -69,3 +69,16 @@ You also need a new column in the [\_db.py](https://github.com/Prash3r/Trackmani
 
  1. local testing
  2. alternative SQLite interface also for local testing
+
+### Deployment example
+build docker images with appropriate tags:
+
+    docker build -t prash3r/trackmaniatwitchbot:v0.0.1 .
+    docker build -t prash3r/trackmaniatwitchbot:latest .
+
+push docker containers to dockerhub:
+
+    docker push prash3r/trackmaniatwitchbot:latest
+	docker push prash3r/trackmaniatwitchbot:v0.0.1
+
+force update running server container

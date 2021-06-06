@@ -14,12 +14,6 @@ class TrackmaniaTwitchBot(commands.Bot):
     from .optional.commands.mm import CMD_mm
     from .optional.commands.roll import CMD_roll
     from .optional.commands.score import CMD_score
-    # general evaluators imported into the Bot class right here:
-    # these need to be manually called from the _handle.py file
-    # dont forget the rights check which also is the opt out for channels
-    from .optional.evaluators.luckerscounter import EVAL_luckerscounter
-    from .optional.evaluators.ooga import EVAL_ooga
-    from .optional.evaluators.ping import EVAL_ping
 
     def __init__(self):
         # logging configuration

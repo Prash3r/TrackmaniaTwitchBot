@@ -6,6 +6,14 @@ from unittest import mock
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
 
 class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
+	async def test_getMessageRegex(self):
+		regex = EvaluatorLuckers.getMessageRegex()
+		self.assertRegex('luckers', regex)
+		self.assertRegex('hey luckers', regex)
+		self.assertRegex('luckers, you KEKEGA', regex)
+		self.assertNotRegex('lucky', regex)
+	# async def test_getMessageRegex(self)
+
 	async def test_execute(self):
 		pEvaluatorLuckers = EvaluatorLuckers()
 		pEvaluatorLuckers.funcGetPV = mock.Mock(return_value=3)

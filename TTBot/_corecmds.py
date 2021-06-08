@@ -1,9 +1,12 @@
-import twitchio
-from twitchio.ext import commands
-import random
-import os
-import time
+# pylib
 import logging
+
+# vendor
+import minidi
+from twitchio.ext import commands
+
+# local
+from .logic.Environment import Environment
 
 
 @commands.command(name='invite')
@@ -81,8 +84,11 @@ async def CMD_test(self, ctx):
 
 @commands.command(name='help')
 async def CMD_help(self, ctx, args=""):
-    if ((ctx.channel.name.lower() != ctx.author.name.lower()) and (ctx.channel.name.lower() !=os.environ['TWITCH_BOT_USERNAME'])):
+    pEnvironment = minidi.get(Environment)
+    channelName = ctx.channel.name.lower()
+    if channelName not in [ctx.author.name.lower(), pEnvironment.getTwitchBotUsername()]:
         return
+    
     try:
         if ("invite" in args):
             await ctx.channel.send("use the command '!invite' to invite this bot to your channel")

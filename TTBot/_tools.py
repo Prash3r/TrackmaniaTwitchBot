@@ -1,5 +1,12 @@
+# pylib
 import re
-import os
+
+# vendor
+import minidi
+
+# local
+from .logic.Environment import Environment
+
 '''
 remove some characters from arguments provided by the user
 '''
@@ -13,8 +20,10 @@ def ownerrights(self, ctx):
         return False
 
 def botchathome(self, ctx):
+    pEnvironment = minidi.get(Environment)
+
     try:
-        return (ctx.channel.name.lower() == os.environ['TWITCH_BOT_USERNAME'].lower())
+        return (ctx.channel.name.lower() == pEnvironment.getTwitchBotUsername())
     except:
         return False
 

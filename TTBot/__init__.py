@@ -1,6 +1,13 @@
-from twitchio.ext import commands
-import os
+# pylib
 import logging
+import os
+
+# vendor
+import minidi
+from twitchio.ext import commands
+
+# local
+from .logic.Environment import Environment
 
 class TrackmaniaTwitchBot(commands.Bot):
     from ._db import conn, creationcmds, tablelist, PV, DB, DB_connect, DB_init, DB_init_table, DB_init_processvars, DB_query, DB_GetPV, DB_WritePV
@@ -16,24 +23,20 @@ class TrackmaniaTwitchBot(commands.Bot):
     from .optional.commands.score import CMD_score
 
     def __init__(self):
-        # logging configuration
-        if os.environ['DEBUG'] == "True":
-            logginglevel = logging.DEBUG # Spam info
-        else:
-            logginglevel = logging.INFO # riolu info (only the result, u get it?)
-            # maybe add rotating logsfile config here
+        pEnvironment = minidi.get(Environment)
         logging.basicConfig(
-            level=logginglevel,
+            level=logging.DEBUG if pEnvironment.isDebug() else logging.INFO,
             format="%(asctime)s [%(levelname)s.%(funcName)s] %(message)s",
             handlers=[
                 #logging.FileHandler("debug.log"),
                 logging.StreamHandler()
             ]
         )
+
         super().__init__(
-            token=os.environ['TWITCH_ACCESS_TOKEN'],
-            client_id=os.environ['TWITCH_CLIENT_ID'],
-            prefix=os.environ['TWITCH_CMD_PREFIX']#,
+            token=pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
+            client_id=pEnvironment.getVariable('TWITCH_CLIENT_ID'),
+            prefix=pEnvironment.getVariable('TWITCH_CMD_PREFIX')#,
             #intial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
@@ -64,20 +67,24 @@ class TrackmaniaTwitchBot(commands.Bot):
                 raise Exception("channellist was empty")
             await self.join_channels(channellist)
         except:
+            pEnvironment = minidi.get(Environment)
+            twitchBotUsername = pEnvironment.getTwitchBotUsername()
             logging.error("could not extract channel list from DB on startup")
             logging.error(f"channellist:{channellist}")
             #try to create create the bots channel in module table
             logging.warning(f"trying to get my on channel into DB")
-            self.DB_query(f"INSERT IGNORE INTO modules(channel) VALUES('{os.environ['TWITCH_BOT_USERNAME'].lower()}')")
+            self.DB_query(f"INSERT IGNORE INTO modules(channel) VALUES('{twitchBotUsername}')")
             os._exit(1)
     
     async def event_message(self, ctx):
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
         if ctx.author is None:
-            return # this is a twitchio bug i guess, but it spamms my debug logs
+            return
+        
         # ignore thyself
-        if ctx.author.name.lower() == os.environ['TWITCH_BOT_USERNAME'].lower():
+        pEnvironment = minidi.get(Environment)
+        if ctx.author.name.lower() == pEnvironment.getTwitchBotUsername():
             logging.debug("own message detected and ignored")
             return
 

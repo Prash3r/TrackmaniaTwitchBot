@@ -1,4 +1,5 @@
 # pylib
+from TTBot.optional.commands.CommandCore import CommandCore
 import logging
 import os
 import re
@@ -7,6 +8,10 @@ import re
 from TTBot import _tools
 
 # local
+from .CommandCore import CommandInvite
+from .CommandCore import CommandUninvite
+from .CommandCore import CommandModule
+from .CommandCore import CommandHelp
 from .CommandFactory import CommandFactory
 from .CommandJoke import CommandJoke
 from .CommandKem import CommandKem
@@ -17,6 +22,10 @@ from .CommandScore import CommandScore
 
 class CommandRunner:
 	COMMANDS = [
+		CommandInvite,
+		CommandUninvite,
+		CommandModule,
+		CommandHelp,
 		CommandJoke,
 		CommandKem,
 		CommandMm,
@@ -40,7 +49,7 @@ class CommandRunner:
 			if _tools.rights(pTwitchBot, ctx, commandClass.getRightsId()):
 				pCommandInstance = CommandFactory.create(commandClass, pTwitchBot, ctx)
 				try:
-					if len(args) < 2:
+					if (args == None) or (len(args) < 2):
 						result = await pCommandInstance.execute([])
 					else:
 						result = await pCommandInstance.execute(args[1:])

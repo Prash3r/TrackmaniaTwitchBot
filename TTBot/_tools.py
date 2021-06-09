@@ -39,6 +39,8 @@ def getUserLevel(self, ctx):
 def rights(self, ctx, command):
     # ONLY for dynamically choosable commands. rights for basic commands are handled individually in their own functions
     try:
+        if ((command == 'core') and ((ctx.channel.name == ctx.author.name) or (botchathome(self, ctx)))):
+            return True
         # ToDo: what happens if args[0] doesnt exist or its not a viable column in the table?
         # get user lvl of command in this channel and check if the user fits the requirements
         # completely untested, this should not work yet:

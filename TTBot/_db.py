@@ -1,6 +1,13 @@
-import mariadb
-import os
+# pylib
 import logging
+import os
+
+# vendor
+import mariadb
+import minidi
+
+# local
+from .logic.Environment import Environment
 
 conn = None
 DB = None
@@ -36,13 +43,15 @@ PV =	{
 
 def DB_connect(self):
     # establishes Database connection
+    pEnvironment = minidi.get(Environment)
+
     self.conn = mariadb.connect(
-            user=os.environ['DBUSER'],
-            password=os.environ['DBPASS'],
-            host=os.environ['DBHOST'],
-            port=int(os.environ['DBPORT']),
-            database=os.environ['DBNAME']
-        )
+        user=    pEnvironment.getVariable('DBUSER'),
+        password=pEnvironment.getVariable('DBPASS'),
+        host=    pEnvironment.getVariable('DBHOST'),
+        port=int(pEnvironment.getVariable('DBPORT')),
+        database=pEnvironment.getVariable('DBNAME')
+    )
     self.conn.autocommit = True
     self.conn.auto_reconnect = True
     logging.debug(self.conn.auto_reconnect)

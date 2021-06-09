@@ -7,13 +7,6 @@ class TrackmaniaTwitchBot(commands.Bot):
     from ._tools import sanitize, ownerrights, botchathome, isint, getUserLevel, rights
     from ._handle import handle
     from ._corecmds import CMD_help, CMD_invite, CMD_module, CMD_uninvite, CMD_test
-    # commands imported into the Bot class right here:
-    # (correctly decorated these should trigger automatically with no further action)
-    from .optional.commands.joke import CMD_joke
-    from .optional.commands.kem import CMD_kem
-    from .optional.commands.mm import CMD_mm
-    from .optional.commands.roll import CMD_roll
-    from .optional.commands.score import CMD_score
 
     def __init__(self):
         # logging configuration

@@ -41,33 +41,23 @@ All modules are either a command or an evaluator and they are located here:
 ## I want to implement additional functionality
 Feel free to create pull requests. This is an early stage of development so if you want to implement general functionality you maybe should talk to me first - chances are that someone is already doing it. If you want to implement a command or an evaluator you should look at an existing one first.
 
-If you got your logic down you need to import it into the class like all the other optionals at [\_\_init\_\_.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/__init__.py). Evaluators have to be called individually from [_handle.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_handle.py). Add them exactly as all other evaluators to the bottom of the list. Evaluators should also return if they triggered as bool.
-
-You also need a new column in the [\_db.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_db.py) creationcmds modules table that should be exactly named as your module. (this table is only created when empty so i have to add the column manually anyway. But it should work for a fresh start)
 
 **If you have no means of testing just commit your newmodulename.py into evaluators or commands and i will test and integrate them.**
 
 ### Some Tips and examples
 
- - if you need a **persistent variable** look at the evaluator [luckerscounter](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators/luckerscounter.py) and add your variable to the PV in [_db.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_db.py) accordingly
+ - if you need a **persistent variable** look at the evaluator [luckerscounter](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators/EvaluatorLuckers.py) and add your variable to the PV in [_db.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_db.py) accordingly
  - some useful functions can be found in [_tools.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_tools.py)
 
 ### Guidelines
 
  1. dont commit sensitive data
  2. dont commit your local SQLite database
- 3. dont commit format changes if you didnt change the code
- 4. preferrably rebase before pull request
- 5. you should usually only commit 2 to 4 files for a pull request that only adds a command/evaluator
-	 - **\_\_init\_\_.py**
-	 - **newmodulename.py**
-	 - **\_db.py** for the new module column in the Database (+ processvar if needed)
-	 - _handle.py if its an evaluator
- 6. please for the love of software dont commit your .env file
+ 3. preferrably rebase before pull request
 
 ### Roadmap
 
- 1. local testing
+ 1. local module testing
  2. alternative SQLite interface also for local testing
 
 ### Deployment example
@@ -81,4 +71,4 @@ push docker containers to dockerhub:
     docker push prash3r/trackmaniatwitchbot:latest
 	docker push prash3r/trackmaniatwitchbot:v0.0.1
 
-force update running server container
+then force update the running server container

@@ -10,7 +10,9 @@ class EvaluatorFactory:
 		if isinstance(pEvaluatorInstance, EvaluatorLuckers):
 			pEvaluatorInstance.funcGetPV = pTwitchBot.DB_GetPV
 			pEvaluatorInstance.funcWritePV = pTwitchBot.DB_WritePV
-			pEvaluatorInstance.messageAuthor = ctx.author.name
+		pEvaluatorInstance.message = ctx.content
+		pEvaluatorInstance.messageAuthor = ctx.author.name
+		pEvaluatorInstance.messageChannel = ctx.channel.name # probably breaks for whispers
 		# if isinstance(pEvaluatorInstance, EvaluatorLuckers)
 
 		return pEvaluatorInstance

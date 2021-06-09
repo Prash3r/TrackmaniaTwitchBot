@@ -4,7 +4,7 @@ from .Evaluator import Evaluator
 class EvaluatorPing(Evaluator):
     @staticmethod
     def getMessageRegex() -> str:
-        return r'(ping)\b'
+        return r'\b(ping)\b'
     
     @staticmethod
     def getRightsId() -> str:

@@ -13,7 +13,14 @@ class DynamicObject:
 
 class TestEvaluatorFactory(unittest.TestCase):
 	def test_create_default(self):
-		pEvaluatorInstance = EvaluatorFactory.create(EvaluatorOoga, None, None)
+		ctx = DynamicObject()
+		ctx.author = DynamicObject()
+		ctx.author.name = 'unittest'
+		ctx.content = 'this is a unittest text artificially triggering for every evaluator'
+		ctx.channel = DynamicObject()
+		ctx.channel.name = 'unittestchannel'
+
+		pEvaluatorInstance = EvaluatorFactory.create(EvaluatorOoga, None, ctx)
 		self.assertIsInstance(pEvaluatorInstance, Evaluator)
 		self.assertIsInstance(pEvaluatorInstance, EvaluatorOoga)
 	# def test_create_default(self)
@@ -26,6 +33,9 @@ class TestEvaluatorFactory(unittest.TestCase):
 		ctx = DynamicObject()
 		ctx.author = DynamicObject()
 		ctx.author.name = 'unittest'
+		ctx.content = 'this is a text containing the word luckers and others'
+		ctx.channel = DynamicObject()
+		ctx.channel.name = 'unittestchannel'
 
 		pEvaluatorInstance = EvaluatorFactory.create(EvaluatorLuckers, pTwitchBot, ctx)
 		self.assertIsInstance(pEvaluatorInstance, Evaluator)

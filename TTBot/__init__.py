@@ -14,7 +14,6 @@ class TrackmaniaTwitchBot(commands.Bot):
     from ._db import conn, creationcmds, tablelist, PV, DB, DB_connect, DB_init, DB_init_table, DB_init_processvars, DB_query, DB_GetPV, DB_WritePV
     from ._tools import sanitize, ownerrights, botchathome, isint, getUserLevel, rights
     from ._handle import handle
-    from ._corecmds import CMD_help, CMD_invite, CMD_module, CMD_uninvite, CMD_test
 
     def __init__(self):
         self.initLogger()

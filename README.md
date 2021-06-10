@@ -54,6 +54,7 @@ Feel free to create pull requests. This is an early stage of development so if y
  1. dont commit sensitive data
  2. dont commit your local SQLite database
  3. preferrably rebase before pull request
+ 4. Do NOT use unsanitized ctx.content to build your sql requests - instead use the presanitized args
 
 ### Roadmap
 

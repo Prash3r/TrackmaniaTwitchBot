@@ -40,7 +40,7 @@ class CommandRunner:
 		if (ctx.content[:1] != pTwitchBot._prefix):
 			return False # no command char -> no command, abort here
 		# build the args
-		args = ctx.content[1:].split()
+		args = pTwitchBot.sanitize(ctx.content[1:]).split()
 		if len(args) < 1:
 			return False # only a ! no text after that
 		

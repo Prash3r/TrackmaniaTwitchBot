@@ -1,11 +1,12 @@
 # pylib
 from TTBot.optional.commands.CommandCore import CommandCore
-import logging
 import os
 import re
 
 # vendor
+import minidi
 from TTBot import _tools
+from TTBot.logic.Logger import Logger
 
 # local
 from .CommandCore import CommandInvite
@@ -42,6 +43,8 @@ class CommandRunner:
 		args = ctx.content[1:].split()
 		if len(args) < 1:
 			return False # only a ! no text after that
+		
+		pLogger = minidi.get(Logger)
 		for commandClass in self.COMMANDS:
 			if (commandClass.getCommandString() != args[0]):
 				continue
@@ -54,9 +57,10 @@ class CommandRunner:
 					else:
 						result = await pCommandInstance.execute(args[1:])
 					await ctx.channel.send(result)
-					logging.info(f"{commandClass.__name__} did trigger")
+					
+					pLogger.info(f"{commandClass.__name__} did trigger")
 				except Exception as e:
-					logging.exception(e)
+					pLogger.exception(e)
 			# if _tools.rights(pTwitchBot, ctx, commandrClass.getRightsId())
 		# for commandrClass in self.COMMANDS
 	# def execute(self, ctx)

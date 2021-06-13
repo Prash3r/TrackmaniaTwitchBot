@@ -1,7 +1,7 @@
 # local
 from .Command import Command
 from .CommandCore import CommandCore
-from .CommandCore import CommandInvite
+from .CommandJoke import CommandJoke
 from .CommandMm import CommandMm
 
 class CommandFactory:
@@ -11,6 +11,10 @@ class CommandFactory:
 
 		if isinstance(pCommandInstance, CommandMm):
 			pCommandInstance.funcDB_query = pTwitchBot.DB_query
+
+		if isinstance(pCommandInstance, CommandJoke):
+			pCommandInstance.funcGetPV = pTwitchBot.DB_GetPV
+			pCommandInstance.funcWritePV = pTwitchBot.DB_WritePV
 		
 		if isinstance(pCommandInstance, CommandCore):
 			pCommandInstance.pTwitchBot = pTwitchBot

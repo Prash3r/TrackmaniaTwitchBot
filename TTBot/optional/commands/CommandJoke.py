@@ -1,10 +1,11 @@
 # pylib
-#import time
 import random
 # local
 from .Command import Command
 
 class CommandJoke(Command):
+    funcGetPV: callable
+    funcWritePV: callable
     
     @staticmethod
     def getCommandString() -> str:
@@ -15,8 +16,11 @@ class CommandJoke(Command):
         return 'joke'
 
     async def execute(self, args) -> str:
+        lastjoker = self.funcGetPV('lastjoker')
+
+        self.funcWritePV('lastjoker', self.messageAuthor, lastjoker)
         if self.messageAuthor.lower() == "fegir":
-            return 'kem1W'
+            return lastjoker
         if self.messageAuthor.lower() == "amaterasutm":
             if random.choice([True, False, False, False, False, False, False]):
                 return 'kem1W'
@@ -24,10 +28,6 @@ class CommandJoke(Command):
                 return 'you know who!'
         else:
             if random.choice([True, False, False, False, False, False, False]):
-                return self.messageAuthor   # ToDo the message author should be stored in correct capitalization instead of lowercase for this to work properly
-                #time.sleep(1)      # could be possible if planned msgs is a thing
-                #return 'Fegir'
-                #time.sleep(2)      # alternatively create another return class -> multiAnswer ..
-                #return 'KEKW'
+                return f"modCheck .. {self.messageAuthor} .. KEKW"
             else:
                 return 'Fegir'

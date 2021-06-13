@@ -31,6 +31,10 @@ PV = {
         "typ": "int",
         "defaultvalue": 0
     },
+    "lastjoker": {
+        "typ": "str",
+        "defaultvalue": "Fegir"
+    },
     "shamename": {
         "typ": "str",
         "defaultvalue": "prash3r"

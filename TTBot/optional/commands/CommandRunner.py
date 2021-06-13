@@ -58,7 +58,7 @@ class CommandRunner:
 						result = await pCommandInstance.execute(args[1:])
 					await ctx.channel.send(result)
 					
-					pLogger.info(f"{commandClass.__name__} did trigger")
+					pLogger.info(f"{commandClass.__name__} triggered by {ctx.author.name}")
 				except Exception as e:
 					pLogger.exception(e)
 			# if _tools.rights(pTwitchBot, ctx, commandrClass.getRightsId())

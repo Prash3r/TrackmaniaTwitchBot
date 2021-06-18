@@ -6,6 +6,7 @@ import re
 # vendor
 import minidi
 from TTBot import _tools
+from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
 
 # local
@@ -39,8 +40,9 @@ class CommandRunner:
 		#if (ctx.content[:1] == os.environ['TWITCH_CMD_PREFIX']):
 		if (ctx.content[:1] != pTwitchBot._prefix):
 			return False # no command char -> no command, abort here
-		# build the args
-		args = pTwitchBot.sanitize(ctx.content[1:]).split()
+		
+		pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
+		args = pInputSanitizer.sanitize(ctx.content[1:]).split()
 		if len(args) < 1:
 			return False # only a ! no text after that
 		

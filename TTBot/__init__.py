@@ -12,7 +12,7 @@ from .logic.Logger import Logger
 
 class TrackmaniaTwitchBot(commands.Bot):
     from ._db import conn, creationcmds, tablelist, PV, DB, DB_connect, DB_init, DB_init_table, DB_init_processvars, DB_query, DB_GetPV, DB_WritePV
-    from ._tools import sanitize, ownerrights, botchathome, isint, getUserLevel, rights
+    from ._tools import ownerrights, botchathome, isint, getUserLevel, rights
     from ._handle import handle
 
     def __init__(self):

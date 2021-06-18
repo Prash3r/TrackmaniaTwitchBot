@@ -6,9 +6,9 @@ import mariadb
 import minidi
 
 # local
+from .logic.InputSanitizer import InputSanitizer
 from .logic.Environment import Environment
 from .logic.Logger import Logger
-from ._tools import sanitize
 
 conn = None
 DB = None
@@ -112,11 +112,12 @@ def DB_init_processvars(self):
 # def DB_init_processvars(self)
 
 def DB_GetPV(self, PVName: str):
-    # gets the value of the process variable
+    pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
     pLogger: Logger = minidi.get(Logger)
 
-    # sanitize input
-    PVName = sanitize(self, PVName).replace(' ', '') # also remove spaces
+    PVName = pInputSanitizer.sanitize(self, PVName)
+    PVName = PVName.replace(' ', '')
+
     try:
         cur = self.DB_query(f"SELECT varname, typ, value FROM processvars WHERE varname = '{PVName}' LIMIT 1;")
         # should be either a hit or we must ingest the default value
@@ -135,11 +136,12 @@ def DB_GetPV(self, PVName: str):
 # def DB_GetPV(self, PVName: str)
 
 def DB_WritePV(self, PVName: str, newvalue, oldvalue='unknown'):
-    # writes a process variable (ONLY if it already exists in the DB)
+    pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
     pLogger: Logger = minidi.get(Logger)
 
-    # sanitize input
-    PVName = sanitize(self, PVName).replace(' ', '') # also remove spaces
+    PVName = pInputSanitizer.sanitize(self, PVName)
+    PVName = PVName.replace(' ', '')
+    
     try:
         self.DB_query(f"UPDATE processvars SET value = '{str(newvalue)}' WHERE varname = '{PVName}' LIMIT 1")
         pLogger.debug(f"Updated PV '{PVName}' in DB from '{str(oldvalue)}' the newvalue '{str(newvalue)}'")

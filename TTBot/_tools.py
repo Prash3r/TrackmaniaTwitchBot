@@ -1,17 +1,8 @@
-# pylib
-import re
-
 # vendor
 import minidi
 
 # local
 from .logic.Environment import Environment
-
-'''
-remove some characters from arguments provided by the user
-'''
-def sanitize(self, dirty):
-    return re.sub('[!@#$\'%´`"]', '', dirty)
 
 def ownerrights(self, ctx):
     try:

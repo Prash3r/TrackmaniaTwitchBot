@@ -3,43 +3,18 @@ import minidi
 
 # local
 from .logic.Environment import Environment
-
-def ownerrights(self, ctx):
-    try:
-        return (ctx.channel.name.lower() == ctx.author.name.lower())
-    except:
-        return False
-
-def botchathome(self, ctx):
-    pEnvironment = minidi.get(Environment)
-
-    try:
-        return (ctx.channel.name.lower() == pEnvironment.getTwitchBotUsername())
-    except:
-        return False
+from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 def isint(self, s):
     if s[0] in ('-', '+'):
         return s[1:].isdigit()
     return s.isdigit()
 
-def getUserLevel(self, ctx):
-    try:
-        if ((ctx.author.name.lower() == 'prash3r') or ((ctx.author.name.lower() == ctx.channel.name.lower()))):
-            return 100
-        elif (ctx.author.is_mod()):
-            return 10
-        elif (ctx.author.is_subscriber()):
-            return 5
-        else:
-            return 1
-    except:
-        return 1
-
 def rights(self, ctx, command):
     # ONLY for dynamically choosable commands. rights for basic commands are handled individually in their own functions
     try:
-        if ((command == 'core') and ((ctx.channel.name == ctx.author.name) or (botchathome(self, ctx)))):
+        pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
+        if command == 'core' and (ctx.channel.name == ctx.author.name or pTwitchMessageEvaluator.isBotChatHome(ctx)):
             return True
         # ToDo: what happens if args[0] doesnt exist or its not a viable column in the table?
         # get user lvl of command in this channel and check if the user fits the requirements
@@ -51,7 +26,7 @@ def rights(self, ctx, command):
             elif accessLevel[0] == 0:
                 return False
             else:
-                return accessLevel[0] <= self.getUserLevel(ctx)
+                return accessLevel[0] <= pTwitchMessageEvaluator.getUserLevel(ctx)
         return False
     except:
         return False

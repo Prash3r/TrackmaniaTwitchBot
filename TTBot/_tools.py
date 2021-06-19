@@ -4,11 +4,6 @@ import minidi
 # local
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
-def isint(self, s):
-    if s[0] in ('-', '+'):
-        return s[1:].isdigit()
-    return s.isdigit()
-
 def rights(self, ctx, command):
     # ONLY for dynamically choosable commands. rights for basic commands are handled individually in their own functions
     try:

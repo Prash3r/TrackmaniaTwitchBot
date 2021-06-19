@@ -1,8 +1,9 @@
-# pylib
-#import time
-import random
-# local
+# vendor
+import minidi
+from TTBot.logic.InputSanitizer import InputSanitizer
 from twitchio.ext import commands
+
+# local
 from .Command import Command
 
 class CommandCore(Command):
@@ -72,7 +73,8 @@ class CommandModule(CommandCore):
             else:
                 if args[0].lower() == 'add':
                     if (len(args) == 3):
-                        if self.isint(args[2]):
+                        pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
+                        if pInputSanitizer.isInteger(args[2]):
                             self.funcDB_query(f"UPDATE modules SET {args[1]}={args[2]} WHERE channel='{self.messageAuthor}'")
                             return f'module {args[1]} added to your channel {self.messageAuthor} with access level {args[2]}'
                     else:

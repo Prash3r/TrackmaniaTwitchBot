@@ -9,7 +9,6 @@ from TTBot.logic.MariaDbWrapper import MariaDbWrapper
 
 class CommandCore(Command):
     pMariaDbWrapper: MariaDbWrapper
-    pMessage: twitchio.Message
     pTwitchBot: twitchio.ext.commands.Bot
 
     @staticmethod

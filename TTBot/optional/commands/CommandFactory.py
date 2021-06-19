@@ -25,7 +25,6 @@ class CommandFactory:
 		if isinstance(pCommandInstance, CommandCore):
 			pCommandInstance.pTwitchBot = pTwitchBot
 			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
-			pCommandInstance.pctx = ctx
 		
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
 		pCommandInstance.message = pTwitchMessageEvaluator.getContent(ctx)

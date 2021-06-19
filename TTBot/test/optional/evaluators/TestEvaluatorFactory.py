@@ -5,7 +5,7 @@ import unittest
 import minidi
 
 # local
-from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.ProcessVariables import ProcessVariables
 from TTBot.optional.evaluators.Evaluator import Evaluator
 from TTBot.optional.evaluators.EvaluatorFactory import EvaluatorFactory
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
@@ -41,7 +41,7 @@ class TestEvaluatorFactory(unittest.TestCase):
 		pEvaluatorInstance = EvaluatorFactory.create(EvaluatorLuckers, pTwitchBot, ctx)
 		self.assertIsInstance(pEvaluatorInstance, Evaluator)
 		self.assertIsInstance(pEvaluatorInstance, EvaluatorLuckers)
-		self.assertEqual(pEvaluatorInstance.pMariaDbWrapper, minidi.get(MariaDbWrapper))
+		self.assertEqual(pEvaluatorInstance.pProcessVariables, minidi.get(ProcessVariables))
 		self.assertEqual(pEvaluatorInstance.messageAuthor, 'unittest')
 	# def test_create_luckers(self):
 # class TestEvaluatorFactory(unittest.TestCase)

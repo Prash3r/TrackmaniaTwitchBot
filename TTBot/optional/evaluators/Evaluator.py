@@ -1,5 +1,5 @@
 # pylib
-from abc import abstractmethod, abstractstaticmethod
+from abc import abstractstaticmethod
 
 # local
 from ..Module import Module

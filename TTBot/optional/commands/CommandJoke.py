@@ -6,6 +6,12 @@ from .Command import Command
 from TTBot.logic.ProcessVariables import ProcessVariables
 
 class CommandJoke(Command):
+    FUNC_JOKE_USER_SPECIALS = {
+        'fegir': lambda lastjoker: lastjoker,
+        'amaterasutm': lambda _: 'kem1W' if random.random() >= 0.9 else 'you know who!'
+    }
+    FUNC_JOKE_DEFAULT = lambda messageAuthor: f"modCheck .. {messageAuthor} .. KEKW" if random.random() >= 0.9 else 'Fegir'
+
     pProcessVariables: ProcessVariables
     
     @staticmethod
@@ -16,20 +22,16 @@ class CommandJoke(Command):
     def getRightsId() -> str:
         return 'joke'
 
-    async def execute(self, args) -> str:
-        lastjoker = self.pProcessVariables.get('lastjoker', 'fegir')
-        self.pProcessVariables.write('lastjoker', self.messageAuthor)
+    async def execute(self, args: list) -> str:
+        messageAuthor = self.messageAuthor.lower()
 
-        if self.messageAuthor.lower() == "fegir":
-            return lastjoker
+        lastjoker = self.pProcessVariables.get('lastjoker', 'fegir')
+        self.pProcessVariables.write('lastjoker', messageAuthor)
+
+        if messageAuthor in CommandJoke.FUNC_JOKE_USER_SPECIALS.keys():
+            funcJokeUserSpecial = CommandJoke.FUNC_JOKE_USER_SPECIALS[messageAuthor]
+            return funcJokeUserSpecial(lastjoker)
         
-        if self.messageAuthor.lower() == "amaterasutm":
-            if random.choice([True, False, False, False, False, False, False]):
-                return 'kem1W'
-            else:
-                return 'you know who!'
-        else:
-            if random.choice([True, False, False, False, False, False, False]):
-                return f"modCheck .. {self.messageAuthor} .. KEKW"
-            else:
-                return 'Fegir'
+        return CommandJoke.FUNC_JOKE_DEFAULT(messageAuthor)
+    # async def execute(self, args: list) -> str
+# class CommandJoke(Command)

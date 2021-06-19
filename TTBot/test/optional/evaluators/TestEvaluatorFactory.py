@@ -1,12 +1,15 @@
 # pylib
 import unittest
 
+# vendor
+import minidi
+
 # local
+from TTBot.logic.MariaDbWrapper import MariaDbWrapper
 from TTBot.optional.evaluators.Evaluator import Evaluator
 from TTBot.optional.evaluators.EvaluatorFactory import EvaluatorFactory
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
 from TTBot.optional.evaluators.EvaluatorOoga import EvaluatorOoga
-from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing
 
 class DynamicObject:
 	pass
@@ -27,8 +30,6 @@ class TestEvaluatorFactory(unittest.TestCase):
 
 	def test_create_luckers(self):
 		pTwitchBot = DynamicObject()
-		pTwitchBot.DB_GetPV = lambda: 'database read query'
-		pTwitchBot.DB_WritePV = lambda: 'database write query'
 		
 		ctx = DynamicObject()
 		ctx.author = DynamicObject()
@@ -40,8 +41,7 @@ class TestEvaluatorFactory(unittest.TestCase):
 		pEvaluatorInstance = EvaluatorFactory.create(EvaluatorLuckers, pTwitchBot, ctx)
 		self.assertIsInstance(pEvaluatorInstance, Evaluator)
 		self.assertIsInstance(pEvaluatorInstance, EvaluatorLuckers)
-		self.assertEqual(pEvaluatorInstance.funcGetPV(), 'database read query')
-		self.assertEqual(pEvaluatorInstance.funcWritePV(), 'database write query')
+		self.assertEqual(pEvaluatorInstance.pMariaDbWrapper, minidi.get(MariaDbWrapper))
 		self.assertEqual(pEvaluatorInstance.messageAuthor, 'unittest')
 	# def test_create_luckers(self):
 # class TestEvaluatorFactory(unittest.TestCase)

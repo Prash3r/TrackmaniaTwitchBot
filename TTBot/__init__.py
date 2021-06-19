@@ -9,18 +9,17 @@ from twitchio.ext import commands
 # local
 from .logic.Environment import Environment
 from .logic.Logger import Logger
+from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class TrackmaniaTwitchBot(commands.Bot):
-    from ._db import conn, creationcmds, tablelist, PV, DB, DB_connect, DB_init, DB_init_table, DB_init_processvars, DB_query, DB_GetPV, DB_WritePV
     from ._tools import rights
     from ._handle import handle
 
     def __init__(self):
         self.initLogger()
-        pEnvironment: Environment = minidi.get(Environment)
-        pLogger: Logger = minidi.get(Logger)
 
+        pEnvironment: Environment = minidi.get(Environment)
         super().__init__(
             token=pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
             client_id=pEnvironment.getVariable('TWITCH_CLIENT_ID'),
@@ -28,14 +27,17 @@ class TrackmaniaTwitchBot(commands.Bot):
             #intial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
-        # get Database connection going
-        self.DB_connect()
-        self.DB_init()
-        pLogger.info("Database initiated")
-        # DB.query() callable from now on
+        pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
+        pMariaDbWrapper.connect()
+        initSuccess = pMariaDbWrapper.init()
+        pLogger: Logger = minidi.get(Logger)
 
-        pLogger.info("Twitchio Bot initiated")
-        return
+        if initSuccess:    
+            pLogger.info("Database successfully initialized!")
+            pLogger.info("Twitchio Bot successfully started!")
+        else:
+            pLogger.error("Database initialization failed!")
+            os._exit(1)
     # def __init__(self)
     
     def initLogger(self):
@@ -51,6 +53,7 @@ class TrackmaniaTwitchBot(commands.Bot):
 
     async def event_ready(self):
         pLogger: Logger = minidi.get(Logger)
+        pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
 
         # We are logged in and ready to chat and use commands...
         pLogger.info(f'Logged in as | {self.nick}')
@@ -58,7 +61,8 @@ class TrackmaniaTwitchBot(commands.Bot):
         logentry = "joining the following channels on startup: \t"
         try:
             # join all channels present in the modules table:
-            cur = self.DB_query("SELECT channel from modules")
+            cur = pMariaDbWrapper.fetch("SELECT channel from modules")
+
             for channel in cur:
                 channellist.append(channel[0])
                 logentry += channel[0] + ', '
@@ -77,7 +81,7 @@ class TrackmaniaTwitchBot(commands.Bot):
             pLogger.error(f"channellist:{channellist}")
             #try to create create the bots channel in module table
             pLogger.warning(f"trying to get my on channel into DB")
-            self.DB_query(f"INSERT IGNORE INTO modules(channel) VALUES('{twitchBotUsername}')")
+            pMariaDbWrapper.query(f"INSERT IGNORE INTO modules(channel) VALUES('{twitchBotUsername}')")
             os._exit(1)
     # async def event_ready(self)
     

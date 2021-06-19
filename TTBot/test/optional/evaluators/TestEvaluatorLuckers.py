@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 
 # local
+from TTBot.logic.MariaDbWrapper import MariaDbWrapper
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
 
 class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
@@ -15,15 +16,18 @@ class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 	# async def test_getMessageRegex(self)
 
 	async def test_execute(self):
+		pMariaDbWrapper = MariaDbWrapper()
+		pMariaDbWrapper.getProcessVariable = mock.Mock(return_value=3)
+		pMariaDbWrapper.writeProcessVariable = mock.Mock()
+
 		pEvaluatorLuckers = EvaluatorLuckers()
-		pEvaluatorLuckers.funcGetPV = mock.Mock(return_value=3)
-		pEvaluatorLuckers.funcWritePV = mock.Mock()
+		pEvaluatorLuckers.pMariaDbWrapper = pMariaDbWrapper
 		pEvaluatorLuckers.messageAuthor = 'unittest'
 
 		result = await pEvaluatorLuckers.execute()
 		self.assertEqual(result, "Turbo was called Luckers for 4 times ... please just dont, @unittest!")
 
-		pEvaluatorLuckers.funcGetPV.assert_called_once_with('luckerscounter')
-		pEvaluatorLuckers.funcWritePV.assert_called_once_with('luckerscounter', 4, 3)
+		pEvaluatorLuckers.pMariaDbWrapper.getProcessVariable.assert_called_once_with('luckerscounter')
+		pEvaluatorLuckers.pMariaDbWrapper.writeProcessVariable.assert_called_once_with('luckerscounter', 4, 3)
 	# async def test_execute(self)
 # class TestEvaluatorLuckers(EvaluatorLuckers)

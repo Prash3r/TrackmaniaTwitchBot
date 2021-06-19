@@ -1,10 +1,11 @@
 # vendor
 import minidi
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 # local
 from .Evaluator import Evaluator
 from .EvaluatorLuckers import EvaluatorLuckers
+from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class EvaluatorFactory:
 	@staticmethod
@@ -12,9 +13,7 @@ class EvaluatorFactory:
 		pEvaluatorInstance = evaluatorClass()
 
 		if isinstance(pEvaluatorInstance, EvaluatorLuckers):
-			pEvaluatorInstance.funcGetPV = pTwitchBot.DB_GetPV
-			pEvaluatorInstance.funcWritePV = pTwitchBot.DB_WritePV
-		# if isinstance(pEvaluatorInstance, EvaluatorLuckers)
+			pEvaluatorInstance.pMariaDbWrapper = minidi.get(MariaDbWrapper)
 
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)		
 		pEvaluatorInstance.message = pTwitchMessageEvaluator.getContent(ctx)

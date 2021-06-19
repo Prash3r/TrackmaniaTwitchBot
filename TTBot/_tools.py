@@ -2,6 +2,7 @@
 import minidi
 
 # local
+from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 def rights(self, ctx, command):
@@ -15,7 +16,8 @@ def rights(self, ctx, command):
         # ToDo: what happens if args[0] doesnt exist or its not a viable column in the table?
         # get user lvl of command in this channel and check if the user fits the requirements
         # completely untested, this should not work yet:
-        cur = self.DB_query(f"SELECT {command} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1")
+        pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
+        cur = pMariaDbWrapper.fetch(f"SELECT {command} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")
         for accessLevel in cur:
             if accessLevel[0] == None:
                 return False

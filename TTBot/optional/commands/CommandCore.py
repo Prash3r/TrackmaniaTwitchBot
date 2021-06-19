@@ -1,14 +1,15 @@
 # vendor
 import minidi
-from TTBot.logic.InputSanitizer import InputSanitizer
 from twitchio.ext import commands
 
 # local
 from .Command import Command
+from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.MariaDbWrapper import MariaDbWrapper
 
 class CommandCore(Command):
     pTwitchBot : commands.Bot
-    funcDB_query : callable
+    pMariaDbWrapper: MariaDbWrapper
     pctx : any
 
     @staticmethod
@@ -23,7 +24,7 @@ class CommandInvite(CommandCore):
     async def execute(self, args) -> str:
         try:
             await self.pTwitchBot.join_channels([f'{self.messageAuthor}'])
-            self.funcDB_query(f"INSERT IGNORE INTO modules(channel) VALUES('{self.messageAuthor}')")
+            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules(channel) VALUES('{self.messageAuthor}')")
             #await self.pTwitchBot.get_channel(self.messageAuthor).send(f'/me coming in hot') # i have no idea why this doesnt work
             #await self.pctx.channel.send(f'I joined your channel, {self.messageAuthor}. You can only control me over there')
             return f'I joined your channel, {self.messageAuthor}. You can only control me over there'
@@ -37,7 +38,7 @@ class CommandUninvite(CommandCore):
     
     async def execute(self, args) -> str:
         try:
-            self.funcDB_query(f"DELETE FROM modules WHERE channel='{self.messageAuthor}'")
+            self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel='{self.messageAuthor}'")
             # i know, this is bad, but for some reason i cant find the proper leave command from twitchio
             #await ctx.channel.send(f'I am leaving your channel right now, {self.messageAuthor}. You can invite me in my channel again')
             #await self.pTwitchBot.part_channels(self.messageAuthor) # ToDo this doesnt exist - will not join after restart thou.
@@ -53,7 +54,7 @@ class CommandModule(CommandCore):
     async def execute(self, args) -> str:
         try:
             if args[0].lower() == 'list':
-                cur = self.funcDB_query(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}'")
+                cur = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}'")
                 #following should be reworked more diynamically and not at all hardcoded:
                 reply = "module:accesslevel - "
                 for (luckerscounter, joke, kem, mm, roll, score, ooga, ping, test) in cur:
@@ -75,14 +76,14 @@ class CommandModule(CommandCore):
                     if (len(args) == 3):
                         pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
                         if pInputSanitizer.isInteger(args[2]):
-                            self.funcDB_query(f"UPDATE modules SET {args[1]}={args[2]} WHERE channel='{self.messageAuthor}'")
+                            self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}={args[2]} WHERE channel='{self.messageAuthor}'")
                             return f'module {args[1]} added to your channel {self.messageAuthor} with access level {args[2]}'
                     else:
-                        self.funcDB_query(f"UPDATE modules SET {args[1]}=1 WHERE channel='{self.messageAuthor}'")
+                        self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}=1 WHERE channel='{self.messageAuthor}'")
                         return f'module {args[1]} added to your channel {self.messageAuthor} for everyone to use'
                     pass
                 elif args[0].lower() == 'rem':
-                    self.funcDB_query(f"UPDATE modules SET {args[1]}=0 WHERE channel='{self.messageAuthor}'")
+                    self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}=0 WHERE channel='{self.messageAuthor}'")
                     return f'module {args[1]} removed from your channel, {self.messageAuthor}'
         except:
             return 'kem1W'

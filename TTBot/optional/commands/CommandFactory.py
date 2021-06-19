@@ -1,28 +1,30 @@
 # vendor
 import minidi
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 # local
 from .Command import Command
 from .CommandCore import CommandCore
 from .CommandJoke import CommandJoke
 from .CommandMm import CommandMm
+from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandFactory:
 	@staticmethod
 	def create(commandClass, pTwitchBot, ctx) -> Command:
 		pCommandInstance = commandClass()
+		pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
 
 		if isinstance(pCommandInstance, CommandMm):
-			pCommandInstance.funcDB_query = pTwitchBot.DB_query
+			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
 
 		if isinstance(pCommandInstance, CommandJoke):
-			pCommandInstance.funcGetPV = pTwitchBot.DB_GetPV
-			pCommandInstance.funcWritePV = pTwitchBot.DB_WritePV
+			pCommandInstance.funcGetPV = pMariaDbWrapper.getProcessVariable
+			pCommandInstance.funcWritePV = pMariaDbWrapper.writeProcessVariable
 		
 		if isinstance(pCommandInstance, CommandCore):
 			pCommandInstance.pTwitchBot = pTwitchBot
-			pCommandInstance.funcDB_query = pTwitchBot.DB_query
+			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
 			pCommandInstance.pctx = ctx
 		
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)

@@ -13,7 +13,6 @@ from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class TrackmaniaTwitchBot(commands.Bot):
-    from ._tools import rights
     from ._handle import handle
 
     def __init__(self):

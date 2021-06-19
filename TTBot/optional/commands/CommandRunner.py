@@ -1,9 +1,9 @@
 # vendor
 import minidi
-from TTBot import _tools
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.UserRights import UserRights
 
 # local
 from .CommandCore import CommandInvite
@@ -42,24 +42,26 @@ class CommandRunner:
 		if len(args) < 1:
 			return False # only a ! no text after that
 		
-		pLogger = minidi.get(Logger)
+		pLogger: Logger = minidi.get(Logger)
+		pUserRights: UserRights = minidi.get(UserRights)
+
 		for commandClass in self.COMMANDS:
 			if (commandClass.getCommandString() != args[0]):
 				continue
 			#args.pop(0) # get rid of the command itself and only carry arguments from now on
-			if _tools.rights(pTwitchBot, ctx, commandClass.getRightsId()):
+			if pUserRights.allowModuleExecution(ctx, commandClass):
 				pCommandInstance = CommandFactory.create(commandClass, pTwitchBot, ctx)
 				try:
 					if (args == None) or (len(args) < 2):
 						result = await pCommandInstance.execute([])
 					else:
 						result = await pCommandInstance.execute(args[1:])
+
 					await pTwitchMessageEvaluator.getChannel(ctx).send(result)
-					
 					pLogger.info(f"{commandClass.__name__} triggered by {pTwitchMessageEvaluator.getAuthorName(ctx)}")
 				except Exception as e:
 					pLogger.exception(e)
-			# if _tools.rights(pTwitchBot, ctx, commandrClass.getRightsId())
-		# for commandrClass in self.COMMANDS
+			# if pUserRights.allowModuleExecution(ctx, commandClass)
+		# for commandClass in self.COMMANDS
 	# def execute(self, ctx)
 # class CommandRunner

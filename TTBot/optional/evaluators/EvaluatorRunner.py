@@ -3,9 +3,9 @@ import re
 
 # vendor
 import minidi
-from TTBot import _tools
 from TTBot.logic.Logger import Logger
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.UserRights import UserRights
 
 # local
 from .EvaluatorFactory import EvaluatorFactory
@@ -24,12 +24,13 @@ class EvaluatorRunner:
 		pLogger = minidi.get(Logger)
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
 		pChannel = pTwitchMessageEvaluator.getChannel(ctx)
+		pUserRights: UserRights = minidi.get(UserRights)
 
 		for evaluatorClass in self.EVALUATORS:
 			if not re.search(evaluatorClass.getMessageRegex(), ctx.content.lower()):
 				continue
 			
-			if _tools.rights(pTwitchBot, ctx, evaluatorClass.getRightsId()):
+			if pUserRights.allowModuleExecution(ctx, evaluatorClass):
 				pEvaluatorInstance = EvaluatorFactory.create(evaluatorClass, pTwitchBot, ctx)
 				try:
 					result = await pEvaluatorInstance.execute()
@@ -37,7 +38,7 @@ class EvaluatorRunner:
 					pLogger.info(f"{evaluatorClass.__name__} did trigger")
 				except Exception as e:
 					pLogger.exception(e)
-			# if _tools.rights(pTwitchBot, ctx, evaluatorClass.getRightsId())
+			# if pUserRights.allowModuleExecution(ctx, evaluatorClass)
 		# for evaluatorClass in self.EVALUATORS
 	# def execute(self, ctx)
 # class EvaluatorRunner

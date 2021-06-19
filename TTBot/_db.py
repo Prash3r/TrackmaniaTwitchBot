@@ -115,7 +115,7 @@ def DB_GetPV(self, PVName: str):
     pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
     pLogger: Logger = minidi.get(Logger)
 
-    PVName = pInputSanitizer.sanitize(self, PVName)
+    PVName = pInputSanitizer.sanitize(PVName)
     PVName = PVName.replace(' ', '')
 
     try:
@@ -139,7 +139,7 @@ def DB_WritePV(self, PVName: str, newvalue, oldvalue='unknown'):
     pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
     pLogger: Logger = minidi.get(Logger)
 
-    PVName = pInputSanitizer.sanitize(self, PVName)
+    PVName = pInputSanitizer.sanitize(PVName)
     PVName = PVName.replace(' ', '')
     
     try:

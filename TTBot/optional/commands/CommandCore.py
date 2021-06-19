@@ -26,10 +26,10 @@ class CommandInvite(CommandCore):
         try:
             await self.pTwitchBot.join_channels([f'{self.messageAuthor}'])
 
-            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules(channel) VALUES('{self.messageAuthor}')")
-            return f'I joined your channel, {self.messageAuthor}, now you can control me over there.'
+            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{self.messageAuthor}');")
+            return f"@{self.messageAuthor} I joined your channel, now you can control me over there!"
         except:
-            return 'kem1W'
+            return "kem1W"
 # class CommandInvite(CommandCore)
 
 class CommandUninvite(CommandCore):
@@ -39,10 +39,10 @@ class CommandUninvite(CommandCore):
     
     async def execute(self, args) -> str:
         try:
-            self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel='{self.messageAuthor}'")
-            return f'I left your channel, {self.messageAuthor}, you can reinvite me in my channel!'
+            self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel = '{self.messageAuthor}';")
+            return f"@{self.messageAuthor} I left your channel, you can reinvite me in my channel!"
         except:
-            return 'kem1W'
+            return "kem1W"
 # class CommandUninvite(CommandCore)
 
 class CommandModule(CommandCore):
@@ -50,63 +50,76 @@ class CommandModule(CommandCore):
     def getCommandString() -> str:
         return 'module'
     
-    async def execute(self, args) -> str:
-        try:
-            if args[0].lower() == 'list':
-                cur = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}'")
-                #following should be reworked more diynamically and not at all hardcoded:
-                reply = "module:accesslevel - "
-                for (luckerscounter, joke, kem, mm, roll, score, ooga, ping, test) in cur:
-                    reply += f"luckerscounter:{luckerscounter}, "
-                    reply += f"joke:{joke}, "
-                    reply += f"kem:{kem}, "
-                    reply += f"mm:{mm}, "
-                    reply += f"roll:{roll}, "
-                    reply += f"score:{score}, "
-                    reply += f"ooga:{ooga}, "
-                    reply += f"ping:{ping}, "
-                    reply += f"test:{test}, "
-                # maybe put the evaluation above into the config.py file.
-                return f'{reply}{self.messageAuthor}'
-            else:
-                if args[0].lower() == 'add':
-                    if (len(args) == 3):
-                        pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
-                        if pInputSanitizer.isInteger(args[2]):
-                            self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}={args[2]} WHERE channel='{self.messageAuthor}'")
-                            return f'module {args[1]} added to your channel {self.messageAuthor} with access level {args[2]}'
-                    else:
-                        self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}=1 WHERE channel='{self.messageAuthor}'")
-                        return f'module {args[1]} added to your channel {self.messageAuthor} for everyone to use'
-                    pass
-                elif args[0].lower() == 'rem':
-                    self.pMariaDbWrapper.query(f"UPDATE modules SET {args[1]}=0 WHERE channel='{self.messageAuthor}'")
-                    return f'module {args[1]} removed from your channel, {self.messageAuthor}'
-        except:
-            return 'kem1W'
+    def _activateModule(self, args: list) -> str:
+        pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
+
+        moduleName = args[0]
+        hasMinimumUserLevel = len(args) >= 2 and pInputSanitizer.isInteger(args[1])
+        minimumUserLevel = args[1] if hasMinimumUserLevel else 1
+
+        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = {minimumUserLevel} WHERE channel = '{self.messageAuthor}';")
+        return f"@{self.messageAuthor} Module '{moduleName}' activated with access level {minimumUserLevel}!"
+    # def _activateModule(self, args: list) -> str
+
+    def _deactivateModule(self, moduleName: str) -> str:
+        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = 0 WHERE channel = '{self.messageAuthor}';")
+        return f"@{self.messageAuthor} Module '{moduleName}'' deactivated!"
+    # def _deactivateModule(self, moduleName: str) -> str
+    
+    async def execute(self, args: list) -> str:
+        arg = args[0].lower()
+
+        if arg == 'list':
+            return self._getModulesList()
+        elif arg == 'add' and len(args) >= 2:
+            return self._activateModule(args[1:])
+        elif arg == 'rem' and len(args) >= 2:
+            return self._deactivateModule(args[1])
+        else:
+            return "kem1W"
+    # async def execute(self, args: list) -> str
+
+    def _getModulesList(self) -> str:
+        rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}' LIMIT 1;")
+        if not rows:
+            return "kem1W"
+        
+        row = rows[0]
+        moduleAccessLevelList = [
+            f"luckerscounter:{row[0]}",
+            f"joke:{row[1]}",
+            f"kem:{row[2]}",
+            f"mm:{row[3]}",
+            f"roll:{row[4]}",
+            f"score:{row[5]}",
+            f"ooga:{row[6]}",
+            f"ping:{row[7]}",
+            f"test:{row[8]}",
+        ]
+
+        return f"@{self.messageAuthor} module:accesslevel - {', '.join(moduleAccessLevelList)}"
+    # def _getModulesList(self) -> str
 # class CommandModule(CommandCore)
 
-class CommandHelp(CommandCore):    
+class CommandHelp(CommandCore):
+    DEFAULT_HELP_MESSAGE = "Use '!help invite/uninvite/accesslevel/add/list/rem' for detailed information about this bots core commands!"
+    HELP_MESSAGES = {
+        'invite': "Use the command '!invite' to invite this bot to your channel!",
+        'uninvite': "Use the command '!uninvite' to make the bot leave your channel!",
+        'accesslevel': "Use the command '!module add modulename 10' to enable a module on your channel with a minimum access level required!",
+        'add': "Use the command '!module add modulename' to enable a module on your channel for everyone!",
+        'list': "Use the command '!module list' to view the enabled modules on your channel!",
+        'rem': "Use the command '!module rem' to disable the module on your channel!"
+    }
+
     @staticmethod
     def getCommandString() -> str:
         return 'help'
     
-    async def execute(self, args) -> str:
-        try:
-            if ("invite" in args):
-                return "use the command '!invite' to invite this bot to your channel"
-            elif ("uninvite" in args):
-                return "use the command '!uninvite' to make the bot leave your channel"
-            elif ("module" in args):
-                return "use the command '!module list' see the currently loaded modules (future feature)"
-            elif ("add" in args):
-                return "use the command '!module add modulename' to add the named module to your channel"
-            elif ("rem" in args):
-                return "use the command '!module rem modulename' remove the named module from your channel"
-            elif ("accesslevel" in args):
-                return "use the command '!module add modulename 10' to make the module available for moderators only"
-            else:
-                return "you can request help for the following topics !help invite/uninvite/module/add/remove/accesslevel"
-        except:
-            return 'kem1W'
+    async def execute(self, args: list) -> str:
+        if args:
+            return self.HELP_MESSAGES.get(args[0], self.DEFAULT_HELP_MESSAGE)
+        
+        return self.DEFAULT_HELP_MESSAGE
+    # async def execute(self, args: list) -> str
 # class CommandHelp(CommandCore)

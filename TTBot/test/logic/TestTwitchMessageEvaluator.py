@@ -6,6 +6,7 @@ from unittest import mock
 import twitchio
 
 # local
+from TTBot.logic.Environment import Environment
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class TestTwitchMessageEvaluator(unittest.TestCase):
@@ -21,6 +22,16 @@ class TestTwitchMessageEvaluator(unittest.TestCase):
 		self.assertEqual(pEvaluatedAuthor.name, 'unittest')
 	# def test_getAuthor(self)
 
+	def test_getAuthorName(self):
+		pAuthor = mock.Mock(twitchio.Chatter)
+		pAuthor.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.author = pAuthor
+
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		self.assertEqual(pTwitchMessageEvaluator.getAuthorName(pMessage), 'unittest')
+	# def test_getAuthor(self)
+
 	def test_getChannel(self):
 		pChannel = mock.Mock(twitchio.Channel)
 		pChannel.name = 'unittest'
@@ -32,6 +43,24 @@ class TestTwitchMessageEvaluator(unittest.TestCase):
 		self.assertEqual(pEvaluatedChannel, pChannel)
 		self.assertEqual(pEvaluatedChannel.name, 'unittest')
 	# def test_getChannel(self)
+
+	def test_getChannelName(self):
+		pChannel = mock.Mock(twitchio.Channel)
+		pChannel.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.channel = pChannel
+
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		self.assertEqual(pTwitchMessageEvaluator.getChannelName(pMessage), 'unittest')
+	# def test_getChannelName(self)
+
+	def test_getContent(self):
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.content = 'unittest'
+
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		self.assertEqual(pTwitchMessageEvaluator.getContent(pMessage), 'unittest')
+	# def test_getContent(self)
 
 	def test_getUserLevel_developer(self):
 		pAuthor = mock.Mock(twitchio.Chatter)
@@ -119,4 +148,64 @@ class TestTwitchMessageEvaluator(unittest.TestCase):
 		pAuthor.is_mod.assert_called_once()
 		pAuthor.is_subscriber.assert_called_once()
 	# def test_getUserLevel_viewer(self)
+
+	def test_isBotAuthor(self):
+		pEnvironment = Environment()
+		pEnvironment.getTwitchBotUsername = mock.Mock(return_value='unittest')
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		pTwitchMessageEvaluator.pEnvironment = pEnvironment
+		
+		pAuthor = mock.Mock(twitchio.Chatter)
+		pAuthor.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.author = pAuthor
+		self.assertTrue(pTwitchMessageEvaluator.isBotAuthor(pMessage))
+		
+		pAuthor = mock.Mock(twitchio.Chatter)
+		pAuthor.name = 'viewer'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.author = pAuthor
+		self.assertFalse(pTwitchMessageEvaluator.isBotAuthor(pMessage))
+	# def test_isBotAuthor(self)
+
+	def test_isBotChannel(self):
+		pEnvironment = Environment()
+		pEnvironment.getTwitchBotUsername = mock.Mock(return_value='unittest')
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		pTwitchMessageEvaluator.pEnvironment = pEnvironment
+		
+		pChannel = mock.Mock(twitchio.Channel)
+		pChannel.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.channel = pChannel
+		self.assertTrue(pTwitchMessageEvaluator.isBotChannel(pMessage))
+		
+		pChannel = mock.Mock(twitchio.Channel)
+		pChannel.name = 'viewer'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.channel = pChannel
+		self.assertFalse(pTwitchMessageEvaluator.isBotChannel(pMessage))
+	# def test_isBotChannel(self)
+
+	def test_isOwnerMessage(self):
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+
+		pAuthor = mock.Mock(twitchio.Chatter)
+		pAuthor.name = 'UNITTEST'
+		pChannel = mock.Mock(twitchio.Channel)
+		pChannel.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.author = pAuthor
+		pMessage.channel = pChannel
+		self.assertTrue(pTwitchMessageEvaluator.isOwnerMessage(pMessage))
+
+		pAuthor = mock.Mock(twitchio.Chatter)
+		pAuthor.name = 'viewer'
+		pChannel = mock.Mock(twitchio.Channel)
+		pChannel.name = 'unittest'
+		pMessage = mock.Mock(twitchio.Message)
+		pMessage.author = pAuthor
+		pMessage.channel = pChannel
+		self.assertFalse(pTwitchMessageEvaluator.isOwnerMessage(pMessage))
+	# def test_isOwnerMessage(self)
 # class TestTwitchMessageEvaluator(unittest.TestCase)

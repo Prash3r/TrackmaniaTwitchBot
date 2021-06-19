@@ -9,6 +9,7 @@ from twitchio.ext import commands
 # local
 from .logic.Environment import Environment
 from .logic.Logger import Logger
+from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class TrackmaniaTwitchBot(commands.Bot):
     from ._db import conn, creationcmds, tablelist, PV, DB, DB_connect, DB_init, DB_init_table, DB_init_processvars, DB_query, DB_GetPV, DB_WritePV
@@ -83,13 +84,14 @@ class TrackmaniaTwitchBot(commands.Bot):
     async def event_message(self, ctx):
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
-        if ctx.author is None:
+        pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
+        if pTwitchMessageEvaluator.getAuthor(ctx) is None:
             return
         
         # ignore thyself
-        pEnvironment: Environment = minidi.get(Environment)
-        if ctx.author.name.lower() == pEnvironment.getTwitchBotUsername():
-            logging.debug("own message detected and ignored")
+        if pTwitchMessageEvaluator.isBotAuthor(ctx):
+            pLogger: Logger = minidi.get(Logger)
+            pLogger.debug("own message detected and ignored")
             return
 
         # handle commands and evaluations

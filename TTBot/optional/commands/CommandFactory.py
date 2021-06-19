@@ -1,3 +1,7 @@
+# vendor
+import minidi
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+
 # local
 from .Command import Command
 from .CommandCore import CommandCore
@@ -20,9 +24,11 @@ class CommandFactory:
 			pCommandInstance.pTwitchBot = pTwitchBot
 			pCommandInstance.funcDB_query = pTwitchBot.DB_query
 			pCommandInstance.pctx = ctx
-		pCommandInstance.message = ctx.content
-		pCommandInstance.messageAuthor = ctx.author.name
-		pCommandInstance.messageChannel = ctx.channel.name # probably breaks for whispers
+		
+		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
+		pCommandInstance.message = pTwitchMessageEvaluator.getContent(ctx)
+		pCommandInstance.messageAuthor = pTwitchMessageEvaluator.getAuthorName(ctx)
+		pCommandInstance.messageChannel = pTwitchMessageEvaluator.getChannelName(ctx) # probably breaks for whispers
 
 		return pCommandInstance
 	# def create(CommandClass, pTwitchBot, ctx) -> Command

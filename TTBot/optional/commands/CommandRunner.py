@@ -1,13 +1,9 @@
-# pylib
-from TTBot.optional.commands.CommandCore import CommandCore
-import os
-import re
-
 # vendor
 import minidi
 from TTBot import _tools
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 # local
 from .CommandCore import CommandInvite
@@ -36,13 +32,13 @@ class CommandRunner:
 	]
 
 	async def execute(self, pTwitchBot, ctx) -> bool:
-		# check if first char is the command char
-		#if (ctx.content[:1] == os.environ['TWITCH_CMD_PREFIX']):
-		if (ctx.content[:1] != pTwitchBot._prefix):
+		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
+		content = pTwitchMessageEvaluator.getContent(ctx)
+		if (content[:1] != pTwitchBot._prefix):
 			return False # no command char -> no command, abort here
 		
 		pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
-		args = pInputSanitizer.sanitize(ctx.content[1:]).split()
+		args = pInputSanitizer.sanitize(content[1:]).split()
 		if len(args) < 1:
 			return False # only a ! no text after that
 		
@@ -58,9 +54,9 @@ class CommandRunner:
 						result = await pCommandInstance.execute([])
 					else:
 						result = await pCommandInstance.execute(args[1:])
-					await ctx.channel.send(result)
+					await pTwitchMessageEvaluator.getChannel(ctx).send(result)
 					
-					pLogger.info(f"{commandClass.__name__} triggered by {ctx.author.name}")
+					pLogger.info(f"{commandClass.__name__} triggered by {pTwitchMessageEvaluator.getAuthorName(ctx)}")
 				except Exception as e:
 					pLogger.exception(e)
 			# if _tools.rights(pTwitchBot, ctx, commandrClass.getRightsId())

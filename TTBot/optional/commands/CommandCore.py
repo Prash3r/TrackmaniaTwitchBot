@@ -1,6 +1,6 @@
 # vendor
 import minidi
-from twitchio.ext import commands
+import twitchio
 
 # local
 from .Command import Command
@@ -8,15 +8,16 @@ from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.MariaDbWrapper import MariaDbWrapper
 
 class CommandCore(Command):
-    pTwitchBot : commands.Bot
     pMariaDbWrapper: MariaDbWrapper
-    pctx : any
+    pMessage: twitchio.Message
+    pTwitchBot: twitchio.ext.commands.Bot
 
     @staticmethod
     def getRightsId() -> str:
         return 'core'
+# class CommandCore(Command)
 
-class CommandInvite(CommandCore):    
+class CommandInvite(CommandCore):
     @staticmethod
     def getCommandString() -> str:
         return 'invite'
@@ -24,12 +25,12 @@ class CommandInvite(CommandCore):
     async def execute(self, args) -> str:
         try:
             await self.pTwitchBot.join_channels([f'{self.messageAuthor}'])
+
             self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules(channel) VALUES('{self.messageAuthor}')")
-            #await self.pTwitchBot.get_channel(self.messageAuthor).send(f'/me coming in hot') # i have no idea why this doesnt work
-            #await self.pctx.channel.send(f'I joined your channel, {self.messageAuthor}. You can only control me over there')
-            return f'I joined your channel, {self.messageAuthor}. You can only control me over there'
+            return f'I joined your channel, {self.messageAuthor}, now you can control me over there.'
         except:
             return 'kem1W'
+# class CommandInvite(CommandCore)
 
 class CommandUninvite(CommandCore):
     @staticmethod
@@ -39,12 +40,10 @@ class CommandUninvite(CommandCore):
     async def execute(self, args) -> str:
         try:
             self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel='{self.messageAuthor}'")
-            # i know, this is bad, but for some reason i cant find the proper leave command from twitchio
-            #await ctx.channel.send(f'I am leaving your channel right now, {self.messageAuthor}. You can invite me in my channel again')
-            #await self.pTwitchBot.part_channels(self.messageAuthor) # ToDo this doesnt exist - will not join after restart thou.
-            return f'I wont join your channel anymore, {self.messageAuthor}. You can invite me in my channel again'
+            return f'I left your channel, {self.messageAuthor}, you can reinvite me in my channel!'
         except:
             return 'kem1W'
+# class CommandUninvite(CommandCore)
 
 class CommandModule(CommandCore):
     @staticmethod
@@ -69,8 +68,6 @@ class CommandModule(CommandCore):
                     reply += f"test:{test}, "
                 # maybe put the evaluation above into the config.py file.
                 return f'{reply}{self.messageAuthor}'
-            #elif ((args[1] not in self.modules) or (len(self.messageAuthor)<2)):
-            #    return # short names shouldnt happen and this way i dont need a list containing all active modules
             else:
                 if args[0].lower() == 'add':
                     if (len(args) == 3):
@@ -87,6 +84,7 @@ class CommandModule(CommandCore):
                     return f'module {args[1]} removed from your channel, {self.messageAuthor}'
         except:
             return 'kem1W'
+# class CommandModule(CommandCore)
 
 class CommandHelp(CommandCore):    
     @staticmethod
@@ -111,3 +109,4 @@ class CommandHelp(CommandCore):
                 return "you can request help for the following topics !help invite/uninvite/module/add/remove/accesslevel"
         except:
             return 'kem1W'
+# class CommandHelp(CommandCore)

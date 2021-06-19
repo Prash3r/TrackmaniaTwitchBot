@@ -15,30 +15,6 @@ _creationCommands = {
     "modules" : "CREATE TABLE IF NOT EXISTS modules (channel VARCHAR(255), ts TIMESTAMP, luckerscounter INT NOT NULL DEFAULT 0, joke INT NOT NULL DEFAULT 0, kem INT NOT NULL DEFAULT 0, mm INT NOT NULL DEFAULT 0, roll INT NOT NULL DEFAULT 0, score INT NOT NULL DEFAULT 0, ooga INT NOT NULL DEFAULT 0, ping INT NOT NULL DEFAULT 0, test INT NOT NULL DEFAULT 0, CONSTRAINT PRIMARY KEY USING HASH (channel));"
 }
 
-# if you need remanent data in the database put your process vars here:
-_processVariables = {
-    "luckerscounter": {
-        "typ": "int",
-        "defaultvalue": 0
-    },
-    "hoursonline": {
-        "typ": "int",
-        "defaultvalue": 0
-    },
-    "lastjoker": {
-        "typ": "str",
-        "defaultvalue": "Fegir"
-    },
-    "shamename": {
-        "typ": "str",
-        "defaultvalue": "prash3r"
-    },
-    "shamecounter": {
-        "typ": "int",
-        "defaultvalue": 3
-    },
-}
-
 class MariaDbWrapper(minidi.Injectable):
 	pEnvironment: Environment
 	pInputSanitizer: InputSanitizer
@@ -75,35 +51,12 @@ class MariaDbWrapper(minidi.Injectable):
 
 	def fetch(self, query: str) -> list:
 		return self._query(query).fetchall()
-	# def fetch(self, query: str) -> list
-
-	def getProcessVariable(self, processVariableName: str):
-		processVariableName = self.pInputSanitizer.sanitize(processVariableName)
-		processVariableName = processVariableName.replace(' ', '')
-
-		try:
-			cur = self.fetch(f"SELECT varname, typ, value FROM processvars WHERE varname = '{processVariableName}' LIMIT 1;")
-			# should be either a hit or we must ingest the default value
-			for (_, _, value) in cur:
-				if _processVariables[processVariableName]['typ'] == 'int':
-					return int(value)
-				if _processVariables[processVariableName]['typ'] == 'float':
-					return float(value)
-				else: # String
-					return value
-			self.pLogger.error(f"Retrieving process variable '{processVariableName}' failed - no data in DB!")
-			return _processVariables[processVariableName]['defaultvalue'] # return defaultvalue when cur doesnt carry data
-		except:
-			self.pLogger.error(f"Retrieving process variable '{processVariableName}' failed - error in query!")
-			return _processVariables[processVariableName]['defaultvalue'] # return defaultvalue when db command fails
-	# def getProcessVariable(self, processVariableName: str)
 
 	def init(self) -> bool:
 		success = True
 		for table in _creationCommands.keys():
 			success = success and self.initTable(table)
 		
-		success = success and self.initProcessVariables()
 		return success
 	# def init(self) -> bool
 
@@ -122,29 +75,6 @@ class MariaDbWrapper(minidi.Injectable):
 		return False
 	# def initTable(self, tablename) -> bool
 
-	def initProcessVariables(self) -> bool:
-		try:
-			for key, processVariable in _processVariables.items():
-				self.query(f"INSERT IGNORE INTO processvars SET varname = '{key}', typ = '{processVariable['typ']}', value = '{processVariable['defaultvalue']}';")
-
-			return True
-		except:
-			self.pLogger.error(f"Could not initialize process variable '{key}'!")
-			return False
-	# def initProcessVariables(self) -> bool
-
 	def query(self, query: str) -> int:
 		return self._query(query).rowcount
-	# def query(self, query: str) -> int
-
-	def writeProcessVariable(self, processVariableName: str, newvalue, oldvalue='unknown'):
-		processVariableName = self.pInputSanitizer.sanitize(processVariableName)
-		processVariableName = processVariableName.replace(' ', '')
-		
-		try:
-			self.query(f"UPDATE processvars SET value = '{newvalue}' WHERE varname = '{processVariableName}' LIMIT 1;")
-			self.pLogger.debug(f"Updated process variable '{processVariableName}' from '{oldvalue}' to '{newvalue}'!")
-		except:
-			self.pLogger.error(f"FAILED to update process variable '{processVariableName}' from '{oldvalue}' to '{newvalue}'!")
-	# def writeProcessVariable(self, processVariableName: str, newvalue, oldvalue='unknown')
 # class MariaDbWrapper(minidi.Injectable)

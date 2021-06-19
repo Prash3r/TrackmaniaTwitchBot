@@ -4,7 +4,7 @@ import minidi
 # local
 from .Evaluator import Evaluator
 from .EvaluatorLuckers import EvaluatorLuckers
-from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.ProcessVariables import ProcessVariables
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class EvaluatorFactory:
@@ -13,7 +13,7 @@ class EvaluatorFactory:
 		pEvaluatorInstance = evaluatorClass()
 
 		if isinstance(pEvaluatorInstance, EvaluatorLuckers):
-			pEvaluatorInstance.pMariaDbWrapper = minidi.get(MariaDbWrapper)
+			pEvaluatorInstance.pProcessVariables = minidi.get(ProcessVariables)
 
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)		
 		pEvaluatorInstance.message = pTwitchMessageEvaluator.getContent(ctx)

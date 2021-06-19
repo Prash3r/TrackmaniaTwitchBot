@@ -1,9 +1,9 @@
 # local
 from .Evaluator import Evaluator
-from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.ProcessVariables import ProcessVariables
 
 class EvaluatorLuckers(Evaluator):
-    pMariaDbWrapper: MariaDbWrapper
+    pProcessVariables: ProcessVariables
     messageAuthor: str
 
     @staticmethod
@@ -15,9 +15,9 @@ class EvaluatorLuckers(Evaluator):
         return 'luckerscounter'
     
     async def execute(self) -> str:
-        oldval = self.pMariaDbWrapper.getProcessVariable(self.getRightsId())
+        oldval = self.pProcessVariables.get(self.getRightsId(), 0)
         newval = oldval + 1
-        self.pMariaDbWrapper.writeProcessVariable(self.getRightsId(), newval, oldval)
+        self.pProcessVariables.write(self.getRightsId(), newval)
         return f"Turbo was called Luckers for {newval} times ... please just dont, @{self.messageAuthor}!"
     # async def execute(self) -> str
 # class EvaluatorLuckers(Evaluator)

@@ -1,11 +1,12 @@
 # pylib
 import random
+
 # local
 from .Command import Command
+from TTBot.logic.ProcessVariables import ProcessVariables
 
 class CommandJoke(Command):
-    funcGetPV: callable
-    funcWritePV: callable
+    pProcessVariables: ProcessVariables
     
     @staticmethod
     def getCommandString() -> str:
@@ -16,11 +17,12 @@ class CommandJoke(Command):
         return 'joke'
 
     async def execute(self, args) -> str:
-        lastjoker = self.funcGetPV('lastjoker')
+        lastjoker = self.pProcessVariables.get('lastjoker', 'fegir')
+        self.pProcessVariables.write('lastjoker', self.messageAuthor)
 
-        self.funcWritePV('lastjoker', self.messageAuthor, lastjoker)
         if self.messageAuthor.lower() == "fegir":
             return lastjoker
+        
         if self.messageAuthor.lower() == "amaterasutm":
             if random.choice([True, False, False, False, False, False, False]):
                 return 'kem1W'

@@ -7,6 +7,7 @@ from .CommandCore import CommandCore
 from .CommandJoke import CommandJoke
 from .CommandMm import CommandMm
 from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.ProcessVariables import ProcessVariables
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandFactory:
@@ -19,8 +20,7 @@ class CommandFactory:
 			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
 
 		if isinstance(pCommandInstance, CommandJoke):
-			pCommandInstance.funcGetPV = pMariaDbWrapper.getProcessVariable
-			pCommandInstance.funcWritePV = pMariaDbWrapper.writeProcessVariable
+			pCommandInstance.pProcessVariables = minidi.get(ProcessVariables)
 		
 		if isinstance(pCommandInstance, CommandCore):
 			pCommandInstance.pTwitchBot = pTwitchBot

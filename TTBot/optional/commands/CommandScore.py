@@ -1,10 +1,10 @@
 # pylib
 import random
+
 # local
 from .Command import Command
 
 class CommandScore(Command):
-    
     @staticmethod
     def getCommandString() -> str:
         return 'score'
@@ -13,13 +13,18 @@ class CommandScore(Command):
     def getRightsId() -> str:
         return 'score'
 
-    async def execute(self, args) -> str:
-        result = random.randint(0,100000)
+    async def execute(self, args: list) -> str:
+        result = random.randint(0, 100000)
+
         if result == 69:
-            return f'{result} - NICE'
-        if result == 69420:
-            return f'{result} - MEGANICE'
-        elif ('69' in str(result)):
-            return f'{result} - partly nice'
+            return f"@{self.messageAuthor} has {result} LP - nice!"
+        elif result == 42069:
+            return f"@{self.messageAuthor} has {result} LP - NICE!"
+        elif result == 69420:
+            return f"@{self.messageAuthor} has {result} LP - MEGANICE!"
+        elif '69' in str(result):
+            return f"@{self.messageAuthor} has {result} LP - partly nice!"
         else:
-            return f'{result}'
+            return f"@{self.messageAuthor} has {result} LP!"
+    # async def execute(self, args: list) -> str
+# class CommandScore(Command)

@@ -149,7 +149,7 @@ class TestTwitchMessageEvaluator(unittest.TestCase):
 		pAuthor.is_subscriber.assert_called_once()
 	# def test_getUserLevel_viewer(self)
 
-	def test_isBotAuthor(self):
+	def test_isBotAuthorOfMessage(self):
 		pEnvironment = Environment()
 		pEnvironment.getTwitchBotUsername = mock.Mock(return_value='unittest')
 		pTwitchMessageEvaluator = TwitchMessageEvaluator()
@@ -159,14 +159,14 @@ class TestTwitchMessageEvaluator(unittest.TestCase):
 		pAuthor.name = 'unittest'
 		pMessage = mock.Mock(twitchio.Message)
 		pMessage.author = pAuthor
-		self.assertTrue(pTwitchMessageEvaluator.isBotAuthor(pMessage))
+		self.assertTrue(pTwitchMessageEvaluator.isBotAuthorOfMessage(pMessage))
 		
 		pAuthor = mock.Mock(twitchio.Chatter)
 		pAuthor.name = 'viewer'
 		pMessage = mock.Mock(twitchio.Message)
 		pMessage.author = pAuthor
-		self.assertFalse(pTwitchMessageEvaluator.isBotAuthor(pMessage))
-	# def test_isBotAuthor(self)
+		self.assertFalse(pTwitchMessageEvaluator.isBotAuthorOfMessage(pMessage))
+	# def test_isBotAuthorOfMessage(self)
 
 	def test_isBotChannel(self):
 		pEnvironment = Environment()

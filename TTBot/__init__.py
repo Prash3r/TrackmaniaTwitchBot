@@ -11,10 +11,10 @@ from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from .optional.commands.CommandRunner import CommandRunner
+from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
-    from ._handle import handle
-
     def __init__(self):
         self.initLogger()
 
@@ -56,48 +56,64 @@ class TrackmaniaTwitchBot(commands.Bot):
 
         # We are logged in and ready to chat and use commands...
         pLogger.info(f'Logged in as | {self.nick}')
-        channellist = []
-        logentry = "joining the following channels on startup: \t"
-        try:
-            # join all channels present in the modules table:
-            cur = pMariaDbWrapper.fetch("SELECT channel from modules")
+        channelList = []
 
-            for channel in cur:
-                channellist.append(channel[0])
-                logentry += channel[0] + ', '
-            
-            logentry = logentry[:-2] # hackertricks
-            pLogger.info(logentry)
-            if not channellist:
-                raise Exception("channellist was empty")
-            
-            await self.join_channels(channellist)
+        try:
+            rows = pMariaDbWrapper.fetch("SELECT channel from modules")
+            channelList = [row.channel for row in rows]
         except:
             pEnvironment: Environment = minidi.get(Environment)
             twitchBotUsername = pEnvironment.getTwitchBotUsername()
 
-            pLogger.error("could not extract channel list from DB on startup")
-            pLogger.error(f"channellist:{channellist}")
-            #try to create create the bots channel in module table
-            pLogger.warning(f"trying to get my on channel into DB")
-            pMariaDbWrapper.query(f"INSERT IGNORE INTO modules(channel) VALUES('{twitchBotUsername}')")
+            pLogger.error("Could not extract channel list from DB!")
+            pLogger.error(f"channelList: {channelList}")
+            
+            if twitchBotUsername not in channelList:
+                pLogger.warning(f"Trying to insert own channel into DB...")
+                pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{twitchBotUsername}');")
+
+            os._exit(1)
+        # try fetch
+
+        if not channelList:
+            raise RuntimeError("Could not boot TTBot, channel list is empty!")
+            
+        pLogger.info(f"Joining channels: \t{', '.join(channelList)} ...")
+
+        try:
+            await self.join_channels(channelList)
+        except:
+            pLogger.error("Could not join twitch channels!")
+            pLogger.error(f"channelList: {channelList}")
             os._exit(1)
     # async def event_ready(self)
     
-    async def event_message(self, ctx):
+    async def event_message(self, pMessage):
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
         pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
-        if pTwitchMessageEvaluator.getAuthor(ctx) is None:
+        if pTwitchMessageEvaluator.getAuthor(pMessage) is None:
             return
         
         # ignore thyself
-        if pTwitchMessageEvaluator.isBotAuthor(ctx):
+        if pTwitchMessageEvaluator.isBotAuthorOfMessage(pMessage):
             pLogger: Logger = minidi.get(Logger)
             pLogger.debug("own message detected and ignored")
             return
 
         # handle commands and evaluations
-        await self.handle(ctx)
-    # async def event_message(self, ctx)
+        await self.handleMessage(pMessage)
+    # async def event_message(self, pMessage)
+
+    async def handleMessage(self, pMessage):
+        pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
+        pLogger: Logger = minidi.get(Logger)
+        pLogger.debug(f"{pTwitchMessageEvaluator.getAuthorName(pMessage)}\t:{pTwitchMessageEvaluator.getContent(pMessage)}")
+
+        pCommandRunner: CommandRunner = minidi.get(CommandRunner)
+        await pCommandRunner.execute(pMessage)
+
+        pEvaluatorRunner: EvaluatorRunner = minidi.get(EvaluatorRunner)
+        await pEvaluatorRunner.execute(pMessage)
+    # async def handle(self, pMessage)
 # class TrackmaniaTwitchBot(commands.Bot)

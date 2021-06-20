@@ -40,7 +40,7 @@ class TwitchMessageEvaluator(minidi.Injectable):
 			return 1
 	# def getUserLevel(self, pMessage: twitchio.Message) -> int
 
-	def isBotAuthor(self, pMessage: twitchio.Message) -> bool:
+	def isBotAuthorOfMessage(self, pMessage: twitchio.Message) -> bool:
 		authorName = self.getAuthorName(pMessage)
 		return self.pEnvironment.getTwitchBotUsername() == authorName.lower()
 	# def isBotChannel(self, pMessage: twitchio.Message) -> bool

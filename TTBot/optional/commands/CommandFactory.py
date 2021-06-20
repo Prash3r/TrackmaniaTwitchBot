@@ -7,24 +7,26 @@ from .CommandCore import CommandCore
 from .CommandJoke import CommandJoke
 from .CommandMm import CommandMm
 from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.MatchmakingCache import MatchmakingCache
 from TTBot.logic.ProcessVariables import ProcessVariables
+from TTBot.logic.TrackmaniaIO import TrackmaniaIO
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandFactory:
 	@staticmethod
 	def create(commandClass, pTwitchBot, ctx) -> Command:
 		pCommandInstance = commandClass()
-		pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
 
 		if isinstance(pCommandInstance, CommandMm):
-			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
+			pCommandInstance.pMatchmakingCache = minidi.get(MatchmakingCache)
+			pCommandInstance.pTrackmaniaIO = minidi.get(TrackmaniaIO)
 
 		if isinstance(pCommandInstance, CommandJoke):
 			pCommandInstance.pProcessVariables = minidi.get(ProcessVariables)
 		
 		if isinstance(pCommandInstance, CommandCore):
 			pCommandInstance.pTwitchBot = pTwitchBot
-			pCommandInstance.pMariaDbWrapper = pMariaDbWrapper
+			pCommandInstance.pMariaDbWrapper = minidi.get(MariaDbWrapper)
 		
 		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
 		pCommandInstance.message = pTwitchMessageEvaluator.getContent(ctx)

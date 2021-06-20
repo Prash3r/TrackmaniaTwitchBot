@@ -3,35 +3,20 @@ import minidi
 
 # local
 from .Command import Command
-from .CommandCore import CommandInvite
-from .CommandCore import CommandUninvite
-from .CommandCore import CommandModule
-from .CommandCore import CommandHelp
-from .CommandJoke import CommandJoke
-from .CommandKem import CommandKem
-from .CommandMm import CommandMm
-from .CommandRoll import CommandRoll
-from .CommandScore import CommandScore
+from .CommandList import CommandList
+from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
+from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.logic.UserRights import UserRights
 
 class CommandRunner(minidi.Injectable):
-	COMMANDS = [
-		CommandInvite,
-		CommandUninvite,
-		CommandModule,
-		CommandHelp,
-		CommandJoke,
-		CommandKem,
-		CommandMm,
-		CommandRoll,
-		CommandScore,
-	]
-
+	pCommandList: CommandList
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
+	pModuleFactory: ModuleFactory
+	pTwitchBotWrapper: TwitchBotWrapper
 	pTwitchMessageEvaluator: TwitchMessageEvaluator
 	pUserRights: UserRights
 
@@ -53,8 +38,9 @@ class CommandRunner(minidi.Injectable):
 			self.pLogger.exception(e)
 	# async def _executeSingle(self, pCommand: Command, pMessage, args: list)
 
-	async def execute(self, pTwitchBot, pMessage) -> bool:
+	async def _runPreChecks(self, pMessage):
 		message = self.pTwitchMessageEvaluator.getContent(pMessage)
+		pTwitchBot = self.pTwitchBotWrapper.get()
 
 		if not message.startswith(pTwitchBot._prefix):
 			return False
@@ -62,11 +48,19 @@ class CommandRunner(minidi.Injectable):
 		message = message[len(pTwitchBot._prefix):]
 		message = self.pInputSanitizer.sanitize(message)
 		args = message.split()
+		return args if args else False
+	# async def _runPreChecks(self, pMessage)
 
+	async def execute(self, pMessage):
+		args = await self._runPreChecks(pMessage)
 		if not args:
 			return False
 
-		for commandClass in self.COMMANDS:
-			await self._checkExecutionSingle(minidi.get(commandClass), pMessage, args)
-	# def execute(self, ctx)
+		commandClasses = self.pCommandList.getAllCommandClasses()
+
+		for commandClass in commandClasses:
+			pCommandClassInstance = self.pModuleFactory.createCommand(commandClass)
+			await self._checkExecutionSingle(pCommandClassInstance, pMessage, args)
+		# for commandClass in commandClasses
+	# def execute(self, pMessage)
 # class CommandRunner

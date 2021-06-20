@@ -6,21 +6,16 @@ import minidi
 
 # local
 from .Evaluator import Evaluator
-from .EvaluatorLuckers import EvaluatorLuckers
-from .EvaluatorOoga import EvaluatorOoga
-from .EvaluatorPing import EvaluatorPing
+from .EvaluatorList import EvaluatorList
 from TTBot.logic.Logger import Logger
+from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.logic.UserRights import UserRights
 
 class EvaluatorRunner(minidi.Injectable):
-	EVALUATORS = [
-		EvaluatorLuckers,
-		EvaluatorOoga,
-		EvaluatorPing
-	]
-
+	pEvaluatorList: EvaluatorList
 	pLogger: Logger
+	pModuleFactory: ModuleFactory
 	pTwitchMessageEvaluator: TwitchMessageEvaluator
 	pUserRights: UserRights
 
@@ -45,7 +40,11 @@ class EvaluatorRunner(minidi.Injectable):
 	# async def _executeSingle(self, pEvaluator: Evaluator, pMessage)
 
 	async def execute(self, pMessage):
-		for evaluatorClass in self.EVALUATORS:
-			await self._checkExecutionSingle(minidi.get(evaluatorClass), pMessage)
+		evaluatorClasses = self.pEvaluatorList.getAllEvaluatorClasses()
+
+		for evaluatorClass in evaluatorClasses:
+			pEvaluatorClassInstance = self.pModuleFactory.createEvaluator(evaluatorClass)
+			await self._checkExecutionSingle(pEvaluatorClassInstance, pMessage)
+		# for evaluatorClass in evaluatorClasses
 	# async def execute(self, pMessage)
 # class EvaluatorRunner

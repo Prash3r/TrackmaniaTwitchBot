@@ -9,6 +9,14 @@
 # from dotenv import load_dotenv
 # load_dotenv()
 
-import TTBot
-TTBot = TTBot.TrackmaniaTwitchBot()
-TTBot.run()
+# vendor
+import minidi
+
+# local
+from TTBot import TrackmaniaTwitchBot
+from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
+
+pTwitchBot = TrackmaniaTwitchBot()
+pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
+pTwitchBotWrapper.set(pTwitchBot)
+pTwitchBot.run()

@@ -1,35 +1,35 @@
 # pylib
 import random
 
-# vendor
-import minidi
-
 # local
 from .Command import Command
 from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandRoll(Command):
-    @staticmethod
-    def getCommandString() -> str:
+    pInputSanitizer: InputSanitizer
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
         return 'roll'
     
-    @staticmethod
-    def getRightsId() -> str:
+    def getRightsId(self) -> str:
         return 'roll'
 
-    async def execute(self, args) -> str:
-        pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
-        if not args or not pInputSanitizer.isInteger(args[0]):
-            return f"Use '!roll <max>' to roll a number out of max!"
+    async def execute(self, pMessage, args: list) -> str:
+        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+
+        if not args or not self.pInputSanitizer.isInteger(args[0]):
+            return f"@{messageAuthorName} Use '!roll <max>' to roll a number out of max!"
         
         maxValue = int(args[0])
         result = random.randint(1, maxValue)
 
         if result == 69:
-            return f"{result}/{maxValue} - NICE"
+            return f"@{messageAuthorName} {result}/{maxValue} - NICE"
         elif maxValue == 420:
-            return f"@{self.messageAuthor} we do not support drugs in this chat ({result}/{maxValue})"
+            return f"@{messageAuthorName} we do not support drugs in this chat ({result}/{maxValue})"
         else:
-            return f"{result}/{maxValue}"
-    # async def execute(self, args) -> str
+            return f"@{messageAuthorName} {result}/{maxValue}"
+    # async def execute(self, pMessage, args: list) -> str
 # class CommandRoll(Command)

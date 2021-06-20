@@ -2,14 +2,12 @@
 from .Evaluator import Evaluator
 
 class EvaluatorOoga(Evaluator):
-    @staticmethod
-    def getMessageRegex() -> str:
+    def getMessageRegex(self) -> str:
         return r'(ooga)\b'
     
-    @staticmethod
-    def getRightsId() -> str:
+    def getRightsId(self) -> str:
         return 'ooga'
     
-    async def execute(self) -> str:
+    async def execute(self, _) -> str:
         return 'booga'
 # class EvaluatorOoga(Evaluator)

@@ -6,7 +6,8 @@ from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing
 
 class TestEvaluatorPing(unittest.IsolatedAsyncioTestCase):
 	async def test_getMessageRegex(self):
-		regex = EvaluatorPing.getMessageRegex()
+		pEvaluatorPing = EvaluatorPing()
+		regex = pEvaluatorPing.getMessageRegex()
 		self.assertRegex('ping', regex)
 		self.assertRegex('hey ping ping', regex)
 		self.assertNotRegex('pnig', regex)
@@ -14,7 +15,7 @@ class TestEvaluatorPing(unittest.IsolatedAsyncioTestCase):
 
 	async def test_execute(self):
 		pEvaluatorPing = EvaluatorPing()
-		result = await pEvaluatorPing.execute()
+		result = await pEvaluatorPing.execute(object())
 		self.assertEqual(result, 'pong')
 	# async def test_execute(self)
 # class TestEvaluatorPing(unittest.IsolatedAsyncioTestCase)

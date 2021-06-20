@@ -1,24 +1,23 @@
 # vendor
 import minidi
-from TTBot.logic.InputSanitizer import InputSanitizer
-from TTBot.logic.Logger import Logger
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
-from TTBot.logic.UserRights import UserRights
 
 # local
+from .Command import Command
 from .CommandCore import CommandInvite
 from .CommandCore import CommandUninvite
 from .CommandCore import CommandModule
 from .CommandCore import CommandHelp
-from .CommandFactory import CommandFactory
 from .CommandJoke import CommandJoke
 from .CommandKem import CommandKem
 from .CommandMm import CommandMm
 from .CommandRoll import CommandRoll
 from .CommandScore import CommandScore
+from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.Logger import Logger
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.UserRights import UserRights
 
-
-class CommandRunner:
+class CommandRunner(minidi.Injectable):
 	COMMANDS = [
 		CommandInvite,
 		CommandUninvite,
@@ -31,37 +30,43 @@ class CommandRunner:
 		CommandScore,
 	]
 
-	async def execute(self, pTwitchBot, ctx) -> bool:
-		pTwitchMessageEvaluator: TwitchMessageEvaluator = minidi.get(TwitchMessageEvaluator)
-		content = pTwitchMessageEvaluator.getContent(ctx)
-		if (content[:1] != pTwitchBot._prefix):
-			return False # no command char -> no command, abort here
+	pInputSanitizer: InputSanitizer
+	pLogger: Logger
+	pTwitchMessageEvaluator: TwitchMessageEvaluator
+	pUserRights: UserRights
+
+	async def _checkExecutionSingle(self, pCommand: Command, pMessage, args: list):
+		if pCommand.getCommandString() != args[0]:
+			return
+
+		if self.pUserRights.allowModuleExecution(pCommand, pMessage):
+			await self._executeSingle(pCommand, pMessage, args[1:])
+	# async def _checkExecutionSingle(self, pMessage, pCommand: Command)
+
+	async def _executeSingle(self, pCommand: Command, pMessage, args: list):
+		try:
+			result = await pCommand.execute(pMessage, args)
+			await self.pTwitchMessageEvaluator.getChannel(pMessage).send(result)
+			messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+			self.pLogger.info(f"Command '{pCommand.getCommandString()}' triggered by {messageAuthorName}")
+		except Exception as e:
+			self.pLogger.exception(e)
+	# async def _executeSingle(self, pCommand: Command, pMessage, args: list)
+
+	async def execute(self, pTwitchBot, pMessage) -> bool:
+		message = self.pTwitchMessageEvaluator.getContent(pMessage)
+
+		if not message.startswith(pTwitchBot._prefix):
+			return False
 		
-		pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
-		args = pInputSanitizer.sanitize(content[1:]).split()
-		if len(args) < 1:
-			return False # only a ! no text after that
-		
-		pLogger: Logger = minidi.get(Logger)
-		pUserRights: UserRights = minidi.get(UserRights)
+		message = message[len(pTwitchBot._prefix):]
+		message = self.pInputSanitizer.sanitize(message)
+		args = message.split()
+
+		if not args:
+			return False
 
 		for commandClass in self.COMMANDS:
-			if (commandClass.getCommandString() != args[0]):
-				continue
-			#args.pop(0) # get rid of the command itself and only carry arguments from now on
-			if pUserRights.allowModuleExecution(ctx, commandClass):
-				pCommandInstance = CommandFactory.create(commandClass, pTwitchBot, ctx)
-				try:
-					if (args == None) or (len(args) < 2):
-						result = await pCommandInstance.execute([])
-					else:
-						result = await pCommandInstance.execute(args[1:])
-
-					await pTwitchMessageEvaluator.getChannel(ctx).send(result)
-					pLogger.info(f"{commandClass.__name__} triggered by {pTwitchMessageEvaluator.getAuthorName(ctx)}")
-				except Exception as e:
-					pLogger.exception(e)
-			# if pUserRights.allowModuleExecution(ctx, commandClass)
-		# for commandClass in self.COMMANDS
+			await self._checkExecutionSingle(minidi.get(commandClass), pMessage, args)
 	# def execute(self, ctx)
 # class CommandRunner

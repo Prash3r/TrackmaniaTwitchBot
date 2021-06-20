@@ -1,102 +1,97 @@
-# vendor
-import minidi
-import twitchio
-
 # local
 from .Command import Command
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 
 class CommandCore(Command):
-    pMariaDbWrapper: MariaDbWrapper
-    pTwitchBot: twitchio.ext.commands.Bot
-
-    @staticmethod
-    def getRightsId() -> str:
+    def getRightsId(self) -> str:
         return 'core'
 # class CommandCore(Command)
 
 class CommandInvite(CommandCore):
-    @staticmethod
-    def getCommandString() -> str:
+    pMariaDbWrapper: MariaDbWrapper
+    pTwitchBotWrapper: TwitchBotWrapper
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
         return 'invite'
     
-    async def execute(self, args) -> str:
+    async def execute(self, pMessage, _) -> str:
         try:
-            await self.pTwitchBot.join_channels([f'{self.messageAuthor}'])
+            messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+            pTwitchBot = self.pTwitchBotWrapper.get()
+            await pTwitchBot.join_channels([f'{messageAuthorName}'])
 
-            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{self.messageAuthor}');")
-            return f"@{self.messageAuthor} I joined your channel, now you can control me over there!"
+            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{messageAuthorName}');")
+            return f"@{messageAuthorName} I joined your channel, now you can control me over there!"
         except:
             return "kem1W"
+    # async def execute(self, pMessage, _) -> str
 # class CommandInvite(CommandCore)
 
 class CommandUninvite(CommandCore):
-    @staticmethod
-    def getCommandString() -> str:
+    pMariaDbWrapper: MariaDbWrapper
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
         return 'uninvite'
     
-    async def execute(self, args) -> str:
+    async def execute(self, pMessage, _) -> str:
         try:
-            self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel = '{self.messageAuthor}';")
-            return f"@{self.messageAuthor} I left your channel, you can reinvite me in my channel!"
+            messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+            self.pMariaDbWrapper.query(f"DELETE FROM modules WHERE channel = '{messageAuthorName}';")
+            return f"@{messageAuthorName} I left your channel, you can reinvite me in my channel!"
         except:
             return "kem1W"
+    # async def execute(self, pMessage, _) -> str
 # class CommandUninvite(CommandCore)
 
 class CommandModule(CommandCore):
-    @staticmethod
-    def getCommandString() -> str:
+    pInputSanitizer: InputSanitizer
+    pMariaDbWrapper: MariaDbWrapper
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
         return 'module'
     
     def _activateModule(self, args: list) -> str:
-        pInputSanitizer: InputSanitizer = minidi.get(InputSanitizer)
-
         moduleName = args[0]
-        hasMinimumUserLevel = len(args) >= 2 and pInputSanitizer.isInteger(args[1])
+        hasMinimumUserLevel = len(args) >= 2 and self.pInputSanitizer.isInteger(args[1])
         minimumUserLevel = args[1] if hasMinimumUserLevel else 1
 
         self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = {minimumUserLevel} WHERE channel = '{self.messageAuthor}';")
-        return f"@{self.messageAuthor} Module '{moduleName}' activated with access level {minimumUserLevel}!"
+        return f"Module '{moduleName}' activated with access level {minimumUserLevel}!"
     # def _activateModule(self, args: list) -> str
 
     def _deactivateModule(self, moduleName: str) -> str:
         self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = 0 WHERE channel = '{self.messageAuthor}';")
-        return f"@{self.messageAuthor} Module '{moduleName}'' deactivated!"
+        return f"Module '{moduleName}' deactivated!"
     # def _deactivateModule(self, moduleName: str) -> str
     
-    async def execute(self, args: list) -> str:
+    async def execute(self, pMessage, args: list) -> str:
+        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
         arg = args[0].lower()
 
         if arg == 'list':
-            return self._getModulesList()
+            return f"@{messageAuthorName} {self._getModulesList()}"
         elif arg == 'add' and len(args) >= 2:
-            return self._activateModule(args[1:])
+            return f"@{messageAuthorName} {self._activateModule(args[1:])}"
         elif arg == 'rem' and len(args) >= 2:
-            return self._deactivateModule(args[1])
+            return f"@{messageAuthorName} {self._deactivateModule(args[1])}"
         else:
             return "kem1W"
-    # async def execute(self, args: list) -> str
+    # async def execute(self, pMessage, args: list) -> str
 
     def _getModulesList(self) -> str:
         rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}' LIMIT 1;")
         if not rows:
             return "kem1W"
         
-        row = rows[0]
-        moduleAccessLevelList = [
-            f"luckerscounter:{row[0]}",
-            f"joke:{row[1]}",
-            f"kem:{row[2]}",
-            f"mm:{row[3]}",
-            f"roll:{row[4]}",
-            f"score:{row[5]}",
-            f"ooga:{row[6]}",
-            f"ping:{row[7]}",
-            f"test:{row[8]}",
-        ]
-
-        return f"@{self.messageAuthor} module:accesslevel - {', '.join(moduleAccessLevelList)}"
+        moduleList = rows[0]._asdict()
+        moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
+        return f"module:accesslevel - {', '.join(moduleAccessLevelList)}"
     # def _getModulesList(self) -> str
 # class CommandModule(CommandCore)
 
@@ -111,14 +106,17 @@ class CommandHelp(CommandCore):
         'rem': "Use the command '!module rem' to disable the module on your channel!"
     }
 
-    @staticmethod
-    def getCommandString() -> str:
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
         return 'help'
     
-    async def execute(self, args: list) -> str:
+    async def execute(self, pMessage, args: list) -> str:
+        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+
         if args:
-            return self.HELP_MESSAGES.get(args[0], self.DEFAULT_HELP_MESSAGE)
-        
-        return self.DEFAULT_HELP_MESSAGE
-    # async def execute(self, args: list) -> str
+            return f"@{messageAuthorName} {self.HELP_MESSAGES.get(args[0], self.DEFAULT_HELP_MESSAGE)}"
+                
+        return f"@{messageAuthorName} {self.DEFAULT_HELP_MESSAGE}"
+    # async def execute(self, pMessage, args: list) -> str
 # class CommandHelp(CommandCore)

@@ -4,11 +4,13 @@ from unittest import mock
 
 # local
 from TTBot.logic.ProcessVariables import ProcessVariables
+from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
 
 class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 	async def test_getMessageRegex(self):
-		regex = EvaluatorLuckers.getMessageRegex()
+		pEvaluatorLuckers = EvaluatorLuckers()
+		regex = pEvaluatorLuckers.getMessageRegex()
 		self.assertRegex('luckers', regex)
 		self.assertRegex('hey luckers', regex)
 		self.assertRegex('luckers, you KEKEGA', regex)
@@ -20,14 +22,19 @@ class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 		pProcessVariables.get = mock.Mock(return_value=3)
 		pProcessVariables.write = mock.Mock()
 
+		pTwitchMessageEvaluator = TwitchMessageEvaluator()
+		pTwitchMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
+
 		pEvaluatorLuckers = EvaluatorLuckers()
 		pEvaluatorLuckers.pProcessVariables = pProcessVariables
-		pEvaluatorLuckers.messageAuthor = 'unittest'
+		pEvaluatorLuckers.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
-		result = await pEvaluatorLuckers.execute()
+		pMessage = mock.Mock()
+		result = await pEvaluatorLuckers.execute(pMessage)
 		self.assertEqual(result, "Turbo was called Luckers for 4 times ... please just dont, @unittest!")
 
 		pEvaluatorLuckers.pProcessVariables.get.assert_called_once_with('luckerscounter', 0)
 		pEvaluatorLuckers.pProcessVariables.write.assert_called_once_with('luckerscounter', 4)
+		pEvaluatorLuckers.pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute(self)
 # class TestEvaluatorLuckers(EvaluatorLuckers)

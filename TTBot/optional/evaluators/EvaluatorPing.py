@@ -2,14 +2,12 @@
 from .Evaluator import Evaluator
 
 class EvaluatorPing(Evaluator):
-    @staticmethod
-    def getMessageRegex() -> str:
+    def getMessageRegex(self) -> str:
         return r'\b(ping)\b'
     
-    @staticmethod
-    def getRightsId() -> str:
+    def getRightsId(self) -> str:
         return 'ping'
     
-    async def execute(self) -> str:
+    async def execute(self, _) -> str:
         return 'pong'
 # class EvaluatorPing(Evaluator)

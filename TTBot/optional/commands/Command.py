@@ -1,12 +1,15 @@
 # pylib
-from abc import abstractstaticmethod
+from abc import abstractmethod
 
 # local
 from ..Module import Module
 
 class Command(Module):
-	@staticmethod
-	@abstractstaticmethod
-	def getCommandString() -> str:
+	@abstractmethod
+	def getCommandString(self) -> str:
+		pass
+
+	@abstractmethod
+	def execute(self, pMessage, args: list) -> str:
 		pass
 # class Command(Module)

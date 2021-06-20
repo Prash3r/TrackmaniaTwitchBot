@@ -1,12 +1,15 @@
 # pylib
-from abc import abstractstaticmethod
+from abc import abstractmethod
 
 # local
 from ..Module import Module
 
 class Evaluator(Module):
-	@staticmethod
-	@abstractstaticmethod
-	def getMessageRegex() -> str:
+	@abstractmethod
+	def getMessageRegex(self) -> str:
 		pass
-# class Evaluator(ABC)
+
+	@abstractmethod
+	def execute(self, pMessage) -> str:
+		pass
+# class Evaluator(Module)

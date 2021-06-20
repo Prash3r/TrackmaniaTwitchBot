@@ -11,11 +11,11 @@ class UserRights(minidi.Injectable):
 	pMariaDbWrapper: MariaDbWrapper
 	pTwitchMessageEvaluator: TwitchMessageEvaluator
 
-	def allowModuleExecution(self, pMessage, moduleClass):
-		if not issubclass(moduleClass, Module):
+	def allowModuleExecution(self, pModule: Module, pMessage):
+		if not isinstance(pModule, Module):
 			return False
 
-		isCoreCommand = issubclass(moduleClass, CommandCore)
+		isCoreCommand = isinstance(pModule, CommandCore)
 		isOwnerMessage = self.pTwitchMessageEvaluator.isOwnerMessage(pMessage)
 		isBotChannel = self.pTwitchMessageEvaluator.isBotChannel(pMessage)
 
@@ -23,7 +23,7 @@ class UserRights(minidi.Injectable):
 			return True
 		
 		channelName = self.pTwitchMessageEvaluator.getChannelName(pMessage)
-		rightsId = moduleClass.getRightsId()
+		rightsId = pModule.getRightsId()
 
 		try:
 			rows = self.pMariaDbWrapper.fetch(f"SELECT {rightsId} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")
@@ -38,5 +38,5 @@ class UserRights(minidi.Injectable):
 			return False
 
 		return self.pTwitchMessageEvaluator.getUserLevel(pMessage) >= minimumAccessLevel
-	# def allowModuleExecution(self, pMessage, moduleClass)
+	# def allowModuleExecution(self, pModule: Module, pMessage)
 # class UserRights(minidi.Injectable)

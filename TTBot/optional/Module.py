@@ -1,17 +1,11 @@
 # pylib
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import abstractmethod
 
-class Module(ABC):
-	message: str
-	messageAuthor: str
-	messageChannel: str
-	
-	@staticmethod
-	@abstractstaticmethod
-	def getRightsId() -> str:
-		pass
+# vendor
+import minidi
 
+class Module(minidi.Injectable):
 	@abstractmethod
-	async def execute(self) -> str:
+	def getRightsId(self) -> str:
 		pass
-# class Command(ABC)
+# class Module(minidi.Injectable)

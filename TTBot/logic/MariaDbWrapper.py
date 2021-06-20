@@ -22,12 +22,12 @@ class MariaDbWrapper(minidi.Injectable):
 
 	def _query(self, query: str):
 		try:
-			cursor = _pMariaDbConnection.cursor()
+			cursor = _pMariaDbConnection.cursor(named_tuple=True)
 			cursor.execute(query)
 		except (mariadb.Error, mariadb.InterfaceError) as e:
 			self.pLogger.info(f"Error connecting to MariaDB: {e}")
 			self.connect()
-			cursor = _pMariaDbConnection.cursor()
+			cursor = _pMariaDbConnection.cursor(named_tuple=True)
 			cursor.execute(query)
 		
 		return cursor

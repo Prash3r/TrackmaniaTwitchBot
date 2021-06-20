@@ -12,7 +12,7 @@ class CommandKem(Command):
         return 'kem'
 
     async def execute(self, _, args: list) -> str:
-        count = args[0] if args and self.pInputSanitizer.isInteger(args[0]) else 1
+        count = int(args[0]) if args and self.pInputSanitizer.isInteger(args[0]) else 1
         count = min(max(1, count), 10) # force 1 <= count <= 10
         listCount = ['kem1W'] * count
         return ' '.join(listCount)

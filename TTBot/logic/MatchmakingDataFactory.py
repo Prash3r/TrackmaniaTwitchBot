@@ -16,7 +16,7 @@ class MatchmakingDataFactory(minidi.Injectable):
 
 	def createFromTrackmaniaIO(self, cacheData: dict) -> MatchmakingData:
 		pMatchmakingData = MatchmakingData()
-		pMatchmakingData.setPlayer(cacheData['displayname'])
+		pMatchmakingData.setPlayer(cacheData['player']['name'])
 		pMatchmakingData.setRank(cacheData['matchmaking'][0]['rank'])
 		pMatchmakingData.setScore(cacheData['matchmaking'][0]['score'])
 		pMatchmakingData.setPlayerAccountId(cacheData['matchmaking'][0]['accountid'])

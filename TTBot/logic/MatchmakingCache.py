@@ -36,6 +36,7 @@ class MatchmakingCache(minidi.Injectable):
 
 			if isYoungerThanHalfDay and (isYoungerThanRank or isYoungerThanNice):
 				cachedData.append(pMatchmakingData)
+		# for row in rows
 		
 		return cachedData
 	# def get(self, playerLoginPart: str) -> list

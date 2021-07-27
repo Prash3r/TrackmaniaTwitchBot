@@ -14,12 +14,12 @@ class MatchmakingDataFactory(minidi.Injectable):
 		return pMatchmakingData
 	# def createFromCacheQuery(self, cacheData: list) -> MatchmakingData
 
-	def createFromTrackmaniaIO(self, cacheData: dict) -> MatchmakingData:
+	def createFromTrackmaniaIO(self, tmIoData: dict) -> MatchmakingData:
 		pMatchmakingData = MatchmakingData()
-		pMatchmakingData.setPlayer(cacheData['player']['name'])
-		pMatchmakingData.setRank(cacheData['matchmaking'][0]['rank'])
-		pMatchmakingData.setScore(cacheData['matchmaking'][0]['score'])
-		pMatchmakingData.setPlayerAccountId(cacheData['matchmaking'][0]['accountid'])
+		pMatchmakingData.setPlayer(tmIoData['player']['name'])
+		pMatchmakingData.setRank(tmIoData['matchmaking'][0]['rank'])
+		pMatchmakingData.setScore(tmIoData['matchmaking'][0]['score'])
+		pMatchmakingData.setPlayerAccountId(tmIoData['matchmaking'][0]['accountid'])
 		return pMatchmakingData
-	# def createFromTrackmaniaIO(self, cacheData: dict) -> MatchmakingData
+	# def createFromTrackmaniaIO(self, tmIoData: dict) -> MatchmakingData
 # class MatchmakingDataFactory(minidi.Injectable)

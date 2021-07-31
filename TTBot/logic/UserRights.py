@@ -11,10 +11,7 @@ class UserRights(minidi.Injectable):
 	pMariaDbWrapper: MariaDbWrapper
 	pTwitchMessageEvaluator: TwitchMessageEvaluator
 
-	def allowModuleExecution(self, pModule: Module, pMessage):
-		if not isinstance(pModule, Module):
-			return False
-
+	def allowModuleExecution(self, pModule: Module, pMessage) -> bool:
 		isCoreCommand = isinstance(pModule, CommandCore)
 		isOwnerMessage = self.pTwitchMessageEvaluator.isOwnerMessage(pMessage)
 		isBotChannel = self.pTwitchMessageEvaluator.isBotChannel(pMessage)
@@ -38,5 +35,5 @@ class UserRights(minidi.Injectable):
 			return False
 
 		return self.pTwitchMessageEvaluator.getUserLevel(pMessage) >= minimumAccessLevel
-	# def allowModuleExecution(self, pModule: Module, pMessage)
+	# def allowModuleExecution(self, pModule: Module, pMessage) -> bool
 # class UserRights(minidi.Injectable)

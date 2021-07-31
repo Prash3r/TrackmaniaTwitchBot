@@ -49,15 +49,12 @@ class ProcessVariables(minidi.Injectable):
 
 		if processVariableTypeString != defaultValueTypeString:
 			self.pLogger.error(f"Mismatched type of process variable '{name}': '{processVariableTypeString}' (database) != '{defaultValueTypeString}' (default)!")
-			return None
+			return defaultValue
 		
 		return defaultValueType(processVariable)
 	# def get(self, name: str, defaultValue)
 
 	def _insert(self, name: str, value) -> bool:
-		name = self.pInputSanitizer.sanitize(name)
-		name = name.replace(' ', '')
-
 		valueTypeString = type(value).__name__
 		
 		try:

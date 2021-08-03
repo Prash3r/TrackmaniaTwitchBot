@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# WARNING: this file run.sh is preinjected into the docker container as running.sh.
+# WARNING: If you need changes in run.sh/running.sh you need to update the docker container.
+# WARNING: this includes building, uploading to dockerhub and force updating on the host.
+
 set -o nounset
 set -o errexit
 set -o xtrace
@@ -9,6 +14,7 @@ DIR="/app/.git/"
 
 if [ -d "$DIR" ]; then
   ## if .git folder exists just go for git pull origin master (credentials in .git/config or remote settings)
+  # on my current hosting this folder is NOT persistent so this if statement is never true and this bracket was never tested.
   echo "The folder ${DIR} exists -> just git pull origin master"
   git pull origin master
 else
@@ -32,7 +38,7 @@ else
   echo "${GIT_PASSWORD}"
   #git config --get user.name
   rm requirements.txt
-  git pull origin universal_docker
+  git pull origin master
 fi
 
 # we got the current state of the bot inside the container

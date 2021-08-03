@@ -46,22 +46,26 @@ Feel free to create pull requests. This is an early stage of development so if y
 
 ### Some Tips and examples
 
- - if you need a **persistent variable** look at the evaluator [luckerscounter](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators/EvaluatorLuckers.py) and add your variable to the PV in [_db.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_db.py) accordingly
- - some useful functions can be found in [_tools.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/_tools.py)
+ - if you need a **persistent variable** look at the evaluator [luckerscounter](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators/EvaluatorLuckers.py)
+ - some useful functions can be found in [CommandJoke.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/optional/commands/CommandJoke.py)
 
 ### Guidelines
 
  1. dont commit sensitive data
- 2. dont commit your local SQLite database
- 3. preferrably rebase before pull request
- 4. Do NOT use unsanitized ctx.content to build your sql requests - instead use the presanitized args
+ 2. preferrably rebase before pull request
 
 ### Roadmap
 
  1. local module testing
- 2. alternative SQLite interface also for local testing
+ 2. alternative SQLite interface also for local testing (for now request access to the dev database and dev twitch bot user credentials)
 
 ### Deployment example
+#### run.sh unchanged 
+If there was no change in run.sh a simple
+    !update
+by an authorized user will be enough to make the server pull the current master branch and run it. The docker container is version independent now.
+
+#### run.sh changed
 build docker images with appropriate tags:
 
     docker build -t prash3r/trackmaniatwitchbot:v0.0.1 .

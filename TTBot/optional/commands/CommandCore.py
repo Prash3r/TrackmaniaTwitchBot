@@ -110,16 +110,8 @@ class CommandModule(CommandCore):
         rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{messageAuthorName}' LIMIT 1;")
         if not rows:
             return "kem1W"
-        
-        #moduleList = rows[0]._asdict()
-        #moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
-        #moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
         zwischen = str(rows[0])
-        return zwischen[12:-1]
-        #moduleAccessLevelList = []
-        #for (module, accessLevel) in rows[0]:
-        #    moduleAccessLevelList.append(f"{module}:{accessLevel}")
-        #return f"module:accesslevel - {', '.join(moduleAccessLevelList)}"
+        return zwischen[12:-1] # yea i have no ide what im doing, at least it is working
     # def _getModulesList(self) -> str
 # class CommandModule(CommandCore)
 

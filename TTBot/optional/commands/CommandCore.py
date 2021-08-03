@@ -24,7 +24,7 @@ class CommandUpdate(CommandCore):
                 exit()
             else:
                 return f"@{messageAuthorName}, you cant make me do that"
-        except:
+        except Exception:
             return "going down failed miserably"
     # async def execute(self, pMessage, _) -> str
 # class CommandUpdate(CommandCore)

@@ -30,20 +30,14 @@ else
   # option 2: git init, then add remote origin and inject credentials from environment
   git init
   git config credential.helper '!f() { sleep 1; echo "username=${GIT_USERNAME}"; echo "password=${GIT_PASSWORD}"; }; f'
-  #git config 
   git remote add origin "https://${GIT_USERNAME}@github.com/Prash3r/TrackmaniaTwitchBot"
-  git remote -v
-  cat /app/.git/config
-  echo "${GIT_USERNAME}"
-  echo "${GIT_PASSWORD}"
-  #git config --get user.name
   rm requirements.txt
   git pull origin master
 fi
 
 # we got the current state of the bot inside the container
 
-# now reinstall requirements - they could have been changed with the new commit
+# now reinstall requirements - they could have been changed with the new commits not present on the docker build state
 pip3 install -r requirements.txt
 
 # now run the bot

@@ -24,7 +24,7 @@ class CommandUpdate(CommandCore):
                 exit()
             else:
                 return f"@{messageAuthorName}, you cant make me do that"
-        except:
+        except Exception:
             return "going down failed miserably"
     # async def execute(self, pMessage, _) -> str
 # class CommandUpdate(CommandCore)
@@ -75,42 +75,51 @@ class CommandModule(CommandCore):
     def getCommandString(self) -> str:
         return 'module'
     
-    def _activateModule(self, args: list) -> str:
+    def _activateModule(self, messageAuthorName, args: list) -> str:
         moduleName = args[0]
         hasMinimumUserLevel = len(args) >= 2 and self.pInputSanitizer.isInteger(args[1])
         minimumUserLevel = args[1] if hasMinimumUserLevel else 1
 
-        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = {minimumUserLevel} WHERE channel = '{self.messageAuthor}';")
+        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = {minimumUserLevel} WHERE channel = '{messageAuthorName}';")
         return f"Module '{moduleName}' activated with access level {minimumUserLevel}!"
     # def _activateModule(self, args: list) -> str
 
-    def _deactivateModule(self, moduleName: str) -> str:
-        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = 0 WHERE channel = '{self.messageAuthor}';")
+    def _deactivateModule(self, messageAuthorName, moduleName: str) -> str:
+        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = 0 WHERE channel = '{messageAuthorName}';")
         return f"Module '{moduleName}' deactivated!"
     # def _deactivateModule(self, moduleName: str) -> str
     
     async def execute(self, pMessage, args: list) -> str:
         messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
-        arg = args[0].lower()
+        if len(args) > 0:
+            arg = args[0].lower()
+        else:
+            arg = 'list'
 
         if arg == 'list':
-            return f"@{messageAuthorName} {self._getModulesList()}"
+            return f"@{messageAuthorName} {self._getModulesList(messageAuthorName)}"
         elif arg == 'add' and len(args) >= 2:
-            return f"@{messageAuthorName} {self._activateModule(args[1:])}"
+            return f"@{messageAuthorName} {self._activateModule(messageAuthorName, args[1:])}"
         elif arg == 'rem' and len(args) >= 2:
-            return f"@{messageAuthorName} {self._deactivateModule(args[1])}"
+            return f"@{messageAuthorName} {self._deactivateModule(messageAuthorName, args[1])}"
         else:
             return "kem1W"
     # async def execute(self, pMessage, args: list) -> str
 
-    def _getModulesList(self) -> str:
-        rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{self.messageAuthor}' LIMIT 1;")
+    def _getModulesList(self, messageAuthorName) -> str:
+        rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{messageAuthorName}' LIMIT 1;")
         if not rows:
             return "kem1W"
         
-        moduleList = rows[0]._asdict()
-        moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
-        return f"module:accesslevel - {', '.join(moduleAccessLevelList)}"
+        #moduleList = rows[0]._asdict()
+        #moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
+        #moduleAccessLevelList = [f"{module}:{accessLevel}" for module, accessLevel in moduleList.items()]
+        zwischen = str(rows[0])
+        return zwischen[12:-1]
+        #moduleAccessLevelList = []
+        #for (module, accessLevel) in rows[0]:
+        #    moduleAccessLevelList.append(f"{module}:{accessLevel}")
+        #return f"module:accesslevel - {', '.join(moduleAccessLevelList)}"
     # def _getModulesList(self) -> str
 # class CommandModule(CommandCore)
 

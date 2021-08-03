@@ -103,7 +103,7 @@ class CommandModule(CommandCore):
         elif arg == 'rem' and len(args) >= 2:
             return f"@{messageAuthorName} {self._deactivateModule(messageAuthorName, args[1])}"
         else:
-            return "kem1W"
+            return "kem1W this one needs an argument"
     # async def execute(self, pMessage, args: list) -> str
 
     def _getModulesList(self, messageAuthorName) -> str:

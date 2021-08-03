@@ -10,6 +10,25 @@ class CommandCore(Command):
         return 'core'
 # class CommandCore(Command)
 
+class CommandUpdate(CommandCore):
+    pTwitchMessageEvaluator: TwitchMessageEvaluator
+
+    def getCommandString(self) -> str:
+        return 'update'
+    
+    async def execute(self, pMessage, _) -> str:
+        try:
+            messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+            if messageAuthorName in ["axelalex2", "prash3r"]:
+                from sys import exit
+                exit()
+            else:
+                return f"@{messageAuthorName}, you cant make me do that"
+        except:
+            return "going down failed miserably"
+    # async def execute(self, pMessage, _) -> str
+# class CommandUpdate(CommandCore)
+
 class CommandInvite(CommandCore):
     pMariaDbWrapper: MariaDbWrapper
     pTwitchBotWrapper: TwitchBotWrapper

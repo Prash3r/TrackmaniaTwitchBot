@@ -23,10 +23,15 @@ else
 
   # option 2: git init, then add remote origin and inject credentials from environment
   git init
-  git config credential.helper '!f() { sleep 1; echo "username=${GIT_USER}"; echo "password=${GIT_PASSWORD}"; }; f'
-  git add remote origin https://github.com/Prash3r/TrackmaniaTwitchBot
+  git config credential.helper '!f() { sleep 1; echo "username=${GIT_USERNAME}"; echo "password=${GIT_PASSWORD}"; }; f'
+  #git config 
+  git remote add origin "https://${GIT_USERNAME}@github.com/Prash3r/TrackmaniaTwitchBot"
+  git remote -v
   cat /app/.git/config
-  git config --get user.name
+  echo "${GIT_USERNAME}"
+  echo "${GIT_PASSWORD}"
+  #git config --get user.name
+  rm requirements.txt
   git pull origin universal_docker
 fi
 

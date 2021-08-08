@@ -1,5 +1,4 @@
 # pylib
-import asyncio
 import unittest
 from unittest import mock
 
@@ -9,25 +8,18 @@ from TTBot.logic.Randomizer import Randomizer
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.optional.commands.CommandJoke import CommandJoke
 
-class TestCommandJoke(unittest.TestCase):
-	def test_getCommandString(self):
+class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
+	async def test_getCommandString(self):
 		pCommandJoke = CommandJoke()
 		self.assertEqual(pCommandJoke.getCommandString(), 'joke')
-	# def test_getCommandString(self)
+	# async def test_getCommandString(self)
 
-	def test_getRightsId(self):
+	async def test_getRightsId(self):
 		pCommandJoke = CommandJoke()
 		self.assertEqual(pCommandJoke.getRightsId(), 'joke')
-	# def test_getRightsId(self)
+	# async def test_getRightsId(self)
 
-	def runTestExecute(self, pCommandJoke: CommandJoke, pMessage: object, result: str):
-		loop = asyncio.get_event_loop()
-		pCoroutine = pCommandJoke.execute(pMessage, 'unused')
-		resultCoroutine = loop.run_until_complete(asyncio.gather(pCoroutine))
-		self.assertEqual(resultCoroutine[0], result)
-	# def runTestExecute(self, pCommandJoke: CommandJoke, result: str)
-
-	def test_execute_default_randomDefault(self):
+	async def test_execute_default_randomDefault(self):
 		pProcessVariables = ProcessVariables()
 		pProcessVariables.get = mock.Mock()
 		pProcessVariables.write = mock.Mock()
@@ -44,7 +36,8 @@ class TestCommandJoke(unittest.TestCase):
 		pCommandJoke.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
 		pMessage = object()
-		self.runTestExecute(pCommandJoke, pMessage, "Fegir")
+		result = await pCommandJoke.execute(pMessage, 'unused')
+		self.assertEqual(result, "Fegir")
 
 		pProcessVariables.get.assert_not_called()
 		pProcessVariables.write.assert_not_called()
@@ -52,9 +45,9 @@ class TestCommandJoke(unittest.TestCase):
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
 
 		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
-	# def test_execute_default_randomDefault(self)
+	# async def test_execute_default_randomDefault(self)
 
-	def test_execute_default_randomSpecial(self):
+	async def test_execute_default_randomSpecial(self):
 		pProcessVariables = ProcessVariables()
 		pProcessVariables.get = mock.Mock()
 		pProcessVariables.write = mock.Mock()
@@ -71,7 +64,8 @@ class TestCommandJoke(unittest.TestCase):
 		pCommandJoke.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
 		pMessage = object()
-		self.runTestExecute(pCommandJoke, pMessage, "modCheck .. unittest .. KEKW")
+		result = await pCommandJoke.execute(pMessage, 'unused')
+		self.assertEqual(result, "modCheck .. unittest .. KEKW")
 
 		pProcessVariables.get.assert_not_called()
 		pProcessVariables.write.assert_not_called()
@@ -79,9 +73,9 @@ class TestCommandJoke(unittest.TestCase):
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
 
 		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
-	# def test_execute_default_randomSpecial(self)
+	# async def test_execute_default_randomSpecial(self)
 
-	def test_execute_userAmaterasu_randomDefault(self):
+	async def test_execute_userAmaterasu_randomDefault(self):
 		pProcessVariables = ProcessVariables()
 		pProcessVariables.get = mock.Mock(return_value='unittest')
 		pProcessVariables.write = mock.Mock()
@@ -98,7 +92,8 @@ class TestCommandJoke(unittest.TestCase):
 		pCommandJoke.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
 		pMessage = object()
-		self.runTestExecute(pCommandJoke, pMessage, "you know who!")
+		result = await pCommandJoke.execute(pMessage, 'unused')
+		self.assertEqual(result, "you know who!")
 
 		pProcessVariables.get.assert_called_once_with('lastjoker', 'fegir')
 		pProcessVariables.write.assert_called_once_with('lastjoker', 'amaterasutm')
@@ -106,9 +101,9 @@ class TestCommandJoke(unittest.TestCase):
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
 
 		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
-	# def test_execute_userAmaterasu_randomDefault(self)
+	# async def test_execute_userAmaterasu_randomDefault(self)
 
-	def test_execute_userAmaterasu_randomSpecial(self):
+	async def test_execute_userAmaterasu_randomSpecial(self):
 		pProcessVariables = ProcessVariables()
 		pProcessVariables.get = mock.Mock(return_value='unittest')
 		pProcessVariables.write = mock.Mock()
@@ -125,7 +120,8 @@ class TestCommandJoke(unittest.TestCase):
 		pCommandJoke.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
 		pMessage = object()
-		self.runTestExecute(pCommandJoke, pMessage, "kem1W")
+		result = await pCommandJoke.execute(pMessage, 'unused')
+		self.assertEqual(result, "kem1W")
 
 		pProcessVariables.get.assert_called_once_with('lastjoker', 'fegir')
 		pProcessVariables.write.assert_called_once_with('lastjoker', 'amaterasutm')
@@ -133,9 +129,9 @@ class TestCommandJoke(unittest.TestCase):
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
 
 		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
-	# def test_execute_userAmaterasu_randomSpecial(self)
+	# async def test_execute_userAmaterasu_randomSpecial(self)
 
-	def test_execute_userFegir(self):
+	async def test_execute_userFegir(self):
 		pProcessVariables = ProcessVariables()
 		pProcessVariables.get = mock.Mock(return_value='unittest')
 		pProcessVariables.write = mock.Mock()
@@ -152,7 +148,8 @@ class TestCommandJoke(unittest.TestCase):
 		pCommandJoke.pTwitchMessageEvaluator = pTwitchMessageEvaluator
 
 		pMessage = object()
-		self.runTestExecute(pCommandJoke, pMessage, "unittest")
+		result = await pCommandJoke.execute(pMessage, 'unused')
+		self.assertEqual(result, "unittest")
 
 		pProcessVariables.get.assert_called_once_with('lastjoker', 'fegir')
 		pProcessVariables.write.assert_called_once_with('lastjoker', 'fegir')
@@ -160,5 +157,5 @@ class TestCommandJoke(unittest.TestCase):
 		pRandomizer.uniformFloat.assert_not_called()
 
 		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
-	# def test_execute_userFegir(self)
-# class TestCommandJoke(unittest.TestCase)
+	# async def test_execute_userFegir(self)
+# class TestCommandJoke(unittest.IsolatedAsyncioTestCase)

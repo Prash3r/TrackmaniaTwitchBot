@@ -1,11 +1,10 @@
-# pylib
-import random
-
 # local
 from .Command import Command
+from TTBot.logic.Randomizer import Randomizer
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandScore(Command):
+    pRandomizer: Randomizer
     pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
@@ -16,7 +15,7 @@ class CommandScore(Command):
 
     async def execute(self, pMessage, _) -> str:
         messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
-        result = random.randint(0, 100000)
+        result = self.pRandomizer.uniformInt(0, 100000)
 
         if result == 69:
             return f"@{messageAuthorName} has {result} LP - nice!"

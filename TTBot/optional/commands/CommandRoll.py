@@ -1,13 +1,12 @@
-# pylib
-import random
-
 # local
 from .Command import Command
 from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.Randomizer import Randomizer
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandRoll(Command):
     pInputSanitizer: InputSanitizer
+    pRandomizer: Randomizer
     pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
@@ -23,7 +22,7 @@ class CommandRoll(Command):
             return f"@{messageAuthorName} Use '!roll <max>' to roll a number out of max!"
         
         maxValue = int(args[0])
-        result = random.randint(1, maxValue)
+        result = self.pRandomizer.uniformInt(1, maxValue)
 
         if result == 69:
             return f"@{messageAuthorName} {result}/{maxValue} - NICE"

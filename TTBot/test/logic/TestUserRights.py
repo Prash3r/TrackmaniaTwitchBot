@@ -1,5 +1,5 @@
 # pylib
-from TTBot.optional.commands.CommandCore import CommandInvite
+from TTBot.optional.commands.core.CommandCoreInvite import CommandCoreInvite
 import unittest
 from unittest import mock
 
@@ -38,7 +38,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
 
@@ -55,7 +55,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
 
@@ -72,7 +72,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
 		
@@ -89,7 +89,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
 
@@ -106,7 +106,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
@@ -124,7 +124,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
@@ -143,7 +143,7 @@ class TestUserRights(unittest.TestCase):
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
 		pMessage = object()
-		pModule = CommandInvite()
+		pModule = CommandCoreInvite()
 
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)

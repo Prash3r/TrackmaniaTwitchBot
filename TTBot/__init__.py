@@ -13,30 +13,36 @@ from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from .optional.commands.CommandRunner import CommandRunner
 from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
+from .optional.ModuleCallbackRunner import ModuleCallbackRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
     def __init__(self):
         self.initLogger()
+        pLogger: Logger = minidi.get(Logger)
 
         pEnvironment: Environment = minidi.get(Environment)
         super().__init__(
             token=pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
             client_id=pEnvironment.getVariable('TWITCH_CLIENT_ID'),
             prefix=pEnvironment.getVariable('TWITCH_CMD_PREFIX')#,
-            #intial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
+            #initial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
         pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
         pMariaDbWrapper.connect()
-        initSuccess = pMariaDbWrapper.init()
-        pLogger: Logger = minidi.get(Logger)
+        dbInitSuccess = pMariaDbWrapper.init()
 
-        if initSuccess:    
-            pLogger.info("Database successfully initialized!")
-            pLogger.info("Twitchio Bot successfully started!")
-        else:
+        if not dbInitSuccess:
             pLogger.error("Database initialization failed!")
             os._exit(1)
+        
+        pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
+        moduleInitSuccess = pModuleCallbackRunner.onBotStartup()
+        if not moduleInitSuccess:
+            pLogger.error("Module initialization failed!")
+            os._exit(1)
+        
+        pLogger.info("Twitchio Bot successfully started!")
     # def __init__(self)
     
     def initLogger(self):

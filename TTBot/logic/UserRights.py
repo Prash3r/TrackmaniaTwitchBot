@@ -4,7 +4,7 @@ import minidi
 # local
 from .MariaDbWrapper import MariaDbWrapper
 from .TwitchMessageEvaluator import TwitchMessageEvaluator
-from TTBot.optional.commands.CommandCore import CommandCore
+from TTBot.optional.commands.core.CommandCore import CommandCore
 from TTBot.optional.Module import Module
 
 class UserRights(minidi.Injectable):

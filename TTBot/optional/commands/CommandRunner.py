@@ -3,15 +3,17 @@ import minidi
 
 # local
 from .Command import Command
+from .core.CommandCoreList import CommandCoreList
 from .CommandList import CommandList
-from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
+from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.logic.UserRights import UserRights
 
 class CommandRunner(minidi.Injectable):
+	pCommandCoreList: CommandCoreList
 	pCommandList: CommandList
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
@@ -51,16 +53,18 @@ class CommandRunner(minidi.Injectable):
 		return args if args else False
 	# async def _runPreChecks(self, pMessage)
 
-	async def execute(self, pMessage):
+	async def execute(self, pMessage) -> bool:
 		args = await self._runPreChecks(pMessage)
 		if not args:
 			return False
 
-		commandClasses = self.pCommandList.getAllCommandClasses()
+		commandClasses = self.pCommandCoreList.getAllCommandCoreClasses() + self.pCommandList.getAllCommandClasses()
 
 		for commandClass in commandClasses:
 			pCommandClassInstance = self.pModuleFactory.createCommand(commandClass)
 			await self._checkExecutionSingle(pCommandClassInstance, pMessage, args)
 		# for commandClass in commandClasses
-	# def execute(self, pMessage)
+
+		return True
+	# def execute(self, pMessage) -> bool
 # class CommandRunner

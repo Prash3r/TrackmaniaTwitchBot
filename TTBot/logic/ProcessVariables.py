@@ -42,8 +42,8 @@ class ProcessVariables(minidi.Injectable):
 			self._insert(name, defaultValue)
 			return defaultValue
 		
-		row = list(rows[0])
-		processVariableTypeString, processVariable = row
+		row = rows[0]
+		processVariableTypeString, processVariable = row['typ'], row['value']
 		defaultValueType = type(defaultValue)
 		defaultValueTypeString = defaultValueType.__name__
 

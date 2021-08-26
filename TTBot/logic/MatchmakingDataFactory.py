@@ -7,10 +7,10 @@ from TTBot.data.MatchmakingData import MatchmakingData
 class MatchmakingDataFactory(minidi.Injectable):
 	def createFromCacheQuery(self, cacheData: list) -> MatchmakingData:
 		pMatchmakingData = MatchmakingData()
-		pMatchmakingData.setPlayer(cacheData[1])
-		pMatchmakingData.setRank(cacheData[0])
-		pMatchmakingData.setScore(cacheData[3])
-		pMatchmakingData.setTimestamp(cacheData[2])
+		pMatchmakingData.setPlayer(cacheData['ranks_displayname'])
+		pMatchmakingData.setRank(cacheData['ranks_rank'])
+		pMatchmakingData.setScore(cacheData['ranks_score'])
+		pMatchmakingData.setTimestamp(cacheData['ts'])
 		return pMatchmakingData
 	# def createFromCacheQuery(self, cacheData: list) -> MatchmakingData
 

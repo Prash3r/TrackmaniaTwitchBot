@@ -15,11 +15,11 @@ class TestMatchmakingCache(unittest.TestCase):
 		pTimestampTwoDays        = pTimestampNow - datetime.timedelta(days=2)
 
 		rows = [
-			[10, 'fetch_new', pTimestampTwoDays, 3947],
-			[42, 'use_cache', pTimestampNow, 3652],
-			[68, 'fetch_new', pTimestampSeventyMinutes, 3574],
-			[69, 'use_cache', pTimestampSeventyMinutes, 3572],
-			[70, 'fetch_new', pTimestampSeventyMinutes, 3569],
+			{'ranks_rank': 10, 'ranks_displayname': 'fetch_new', 'ts': pTimestampTwoDays       , 'ranks_score': 3947},
+			{'ranks_rank': 42, 'ranks_displayname': 'use_cache', 'ts': pTimestampNow           , 'ranks_score': 3652},
+			{'ranks_rank': 68, 'ranks_displayname': 'fetch_new', 'ts': pTimestampSeventyMinutes, 'ranks_score': 3574},
+			{'ranks_rank': 69, 'ranks_displayname': 'use_cache', 'ts': pTimestampSeventyMinutes, 'ranks_score': 3572},
+			{'ranks_rank': 70, 'ranks_displayname': 'fetch_new', 'ts': pTimestampSeventyMinutes, 'ranks_score': 3569}
 		]
 
 		pMariaDbWrapper = mock.Mock()

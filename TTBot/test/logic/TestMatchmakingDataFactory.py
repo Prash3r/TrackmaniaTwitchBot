@@ -9,7 +9,12 @@ class TestMatchmakingDataFactory(unittest.TestCase):
 	def test_createFromCacheQuery(self):
 		pMatchmakingDataFactory = MatchmakingDataFactory()
 		pTimestamp = datetime.datetime.now()
-		cacheData = [42, 'playername', pTimestamp, 1234]
+		cacheData = {
+			'ranks_rank': 42,
+			'ranks_displayname': 'playername',
+			'ts': pTimestamp,
+			'ranks_score': 1234
+		}
 
 		pMatchmakingData = pMatchmakingDataFactory.createFromCacheQuery(cacheData)
 		self.assertEqual(pMatchmakingData.getPlayer(), 'playername')

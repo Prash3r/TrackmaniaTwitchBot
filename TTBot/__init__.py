@@ -60,7 +60,7 @@ class TrackmaniaTwitchBot(commands.Bot):
 
         try:
             rows = pMariaDbWrapper.fetch("SELECT channel from modules")
-            channelList = [row.channel for row in rows]
+            channelList = [row['channel'] for row in rows]
         except:
             pEnvironment: Environment = minidi.get(Environment)
             twitchBotUsername = pEnvironment.getTwitchBotUsername()

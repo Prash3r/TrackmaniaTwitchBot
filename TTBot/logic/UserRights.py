@@ -30,7 +30,7 @@ class UserRights(minidi.Injectable):
 		if not rows:
 			return False
 		
-		minimumAccessLevel = rows[0][0]
+		minimumAccessLevel = rows[0][rightsId]
 		if minimumAccessLevel in [0, None]:
 			return False
 

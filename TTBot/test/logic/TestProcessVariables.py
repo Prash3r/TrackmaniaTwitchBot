@@ -26,6 +26,7 @@ class TestProcessVariables(unittest.TestCase):
 
 		processVariable = pProcessVariables.get('process%variable', 0)
 		self.assertEqual(processVariable, 0)
+
 		pInputSanitizer.sanitize.assert_called_once_with('process%variable')
 		pLogger.info.assert_called_once_with("Retrieving process variable 'processvariable' failed - no data in DB!")
 		pMariaDbWrapper.fetch.assert_called_once_with("SELECT typ, value FROM processvars WHERE varname = 'processvariable' LIMIT 1;")
@@ -38,7 +39,7 @@ class TestProcessVariables(unittest.TestCase):
 
 		pLogger = mock.Mock()
 
-		rows = [['int', '42']]
+		rows = [{'typ': 'int', 'value': '42'}]
 
 		pMariaDbWrapper = mock.Mock()
 		pMariaDbWrapper.fetch = mock.Mock(return_value=rows)
@@ -83,7 +84,7 @@ class TestProcessVariables(unittest.TestCase):
 		pLogger = mock.Mock()
 		pLogger.error = mock.Mock()
 
-		rows = [['int', '42']]
+		rows = [{'typ': 'int', 'value': '42'}]
 
 		pMariaDbWrapper = mock.Mock()
 		pMariaDbWrapper.fetch = mock.Mock(return_value=rows)

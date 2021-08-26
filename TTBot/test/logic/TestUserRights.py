@@ -33,7 +33,7 @@ class TestUserRights(unittest.TestCase):
 	# def setUpUserRights(self, pMariaDbWrapper: mock.Mock, pTwitchMessageEvaluator: mock.Mock) -> UserRights
 
 	def test_allowModuleExecution_allow(self):
-		pMariaDbWrapper = self.setUpMariaDbWrapper([[5]])
+		pMariaDbWrapper = self.setUpMariaDbWrapper([{'core': 5}])
 		pTwitchMessageEvaluator = self.setUpTwitchMessageEvaluator(5, False, False)
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
@@ -50,7 +50,7 @@ class TestUserRights(unittest.TestCase):
 	# def test_allowModuleExecution_allow(self)
 
 	def test_allowModuleExecution_botChannel(self):
-		pMariaDbWrapper = self.setUpMariaDbWrapper([[5]])
+		pMariaDbWrapper = self.setUpMariaDbWrapper([{'core': 5}])
 		pTwitchMessageEvaluator = self.setUpTwitchMessageEvaluator(5, True, False)
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
@@ -67,7 +67,7 @@ class TestUserRights(unittest.TestCase):
 	# def test_allowModuleExecution_botChannel(self)
 	
 	def test_allowModuleExecution_disabled(self):
-		pMariaDbWrapper = self.setUpMariaDbWrapper([[0]])
+		pMariaDbWrapper = self.setUpMariaDbWrapper([{'core': 0}])
 		pTwitchMessageEvaluator = self.setUpTwitchMessageEvaluator(5, False, False)
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
@@ -84,7 +84,7 @@ class TestUserRights(unittest.TestCase):
 	# def test_allowModuleExecution_disabled(self)
 
 	def test_allowModuleExecution_disallow(self):
-		pMariaDbWrapper = self.setUpMariaDbWrapper([[5]])
+		pMariaDbWrapper = self.setUpMariaDbWrapper([{'core': 5}])
 		pTwitchMessageEvaluator = self.setUpTwitchMessageEvaluator(1, False, False)
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 
@@ -101,7 +101,7 @@ class TestUserRights(unittest.TestCase):
 	# def test_allowModuleExecution_disallow(self)
 
 	def test_allowModuleExecution_ownerMessage(self):
-		pMariaDbWrapper = self.setUpMariaDbWrapper([[5]])
+		pMariaDbWrapper = self.setUpMariaDbWrapper([{'core': 5}])
 		pTwitchMessageEvaluator = self.setUpTwitchMessageEvaluator(5, False, True)
 		pUserRights = self.setUpUserRights(pMariaDbWrapper, pTwitchMessageEvaluator)
 

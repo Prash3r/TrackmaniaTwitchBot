@@ -106,13 +106,22 @@ class CommandModule(CommandCore):
             return "kem1W this one needs an argument"
     # async def execute(self, pMessage, args: list) -> str
 
-    def _getModulesList(self, messageAuthorName) -> str:
-        rows = self.pMariaDbWrapper.fetch(f"SELECT luckerscounter, joke, kem, mm, roll, score, ooga, ping, test FROM modules WHERE channel = '{messageAuthorName}' LIMIT 1;")
+    def _getModulesList(self, messageAuthorName: str) -> str:
+        rows = self.pMariaDbWrapper.fetch(f"SELECT * FROM modules WHERE channel = '{messageAuthorName}' LIMIT 1;")
         if not rows:
             return "kem1W"
-        zwischen = str(rows[0])
-        return zwischen[12:-1] # yea i have no ide what im doing, at least it is working
-    # def _getModulesList(self) -> str
+        
+        output = []
+        row = rows[0]
+        for moduleName, userLevel in row.items():
+            if moduleName in ['channel', 'ts']:
+                continue
+
+            output.append(f"{moduleName}: {userLevel}")
+        # for moduleName, userLevel in row.items()
+
+        return ', '.join(output)
+    # def _getModulesList(self, messageAuthorName: str) -> str
 # class CommandModule(CommandCore)
 
 class CommandHelp(CommandCore):

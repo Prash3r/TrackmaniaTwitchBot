@@ -12,10 +12,10 @@ class TestCommandKem(unittest.IsolatedAsyncioTestCase):
 		self.assertEqual(pCommandKem.getCommandString(), 'kem')
 	# async def test_getCommandString(self)
 
-	async def test_getRightsId(self):
+	async def test_getModuleId(self):
 		pCommandKem = CommandKem()
-		self.assertEqual(pCommandKem.getRightsId(), 'kem')
-	# async def test_getRightsId(self)
+		self.assertEqual(pCommandKem.getModuleId(), 'kem')
+	# async def test_getModuleId(self)
 
 	async def test_execute_default(self):
 		pInputSanitizer = InputSanitizer()

@@ -20,7 +20,7 @@ class UserRights(minidi.Injectable):
 			return True
 		
 		channelName = self.pTwitchMessageEvaluator.getChannelName(pMessage)
-		rightsId = pModule.getRightsId()
+		rightsId = pModule.getModuleId()
 
 		try:
 			rows = self.pMariaDbWrapper.fetch(f"SELECT {rightsId} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")

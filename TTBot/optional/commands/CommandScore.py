@@ -10,7 +10,7 @@ class CommandScore(Command):
     def getCommandString(self) -> str:
         return 'score'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'score'
 
     async def execute(self, pMessage, _) -> str:

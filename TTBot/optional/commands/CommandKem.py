@@ -8,7 +8,7 @@ class CommandKem(Command):
     def getCommandString(self) -> str:
         return 'kem'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'kem'
 
     async def execute(self, _, args: list) -> str:

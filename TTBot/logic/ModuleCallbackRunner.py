@@ -27,7 +27,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)
-			if pModuleClassInstance.getRightsId() == moduleName:
+			if pModuleClassInstance.getModuleId() == moduleName:
 				pModuleClassInstance.onModuleEnable()
 		# for moduleClass in moduleClasses
 	# def onModuleEnable(self, moduleName: str)
@@ -37,7 +37,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)
-			if pModuleClassInstance.getRightsId() == moduleName:
+			if pModuleClassInstance.getModuleId() == moduleName:
 				pModuleClassInstance.onModuleDisable()
 		# for moduleClass in moduleClasses
 	# def onModuleDisable(self, moduleName: str)

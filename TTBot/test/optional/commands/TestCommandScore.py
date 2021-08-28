@@ -13,10 +13,10 @@ class TestCommandScore(unittest.IsolatedAsyncioTestCase):
 		self.assertEqual(pCommandScore.getCommandString(), 'score')
 	# async def test_getCommandString(self)
 
-	async def test_getRightsId(self):
+	async def test_getModuleId(self):
 		pCommandScore = CommandScore()
-		self.assertEqual(pCommandScore.getRightsId(), 'score')
-	# async def test_getRightsId(self)
+		self.assertEqual(pCommandScore.getModuleId(), 'score')
+	# async def test_getModuleId(self)
 
 	async def test_execute_default(self):
 		pRandomizer = Randomizer()

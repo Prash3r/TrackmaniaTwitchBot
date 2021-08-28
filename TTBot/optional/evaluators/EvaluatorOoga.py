@@ -5,7 +5,7 @@ class EvaluatorOoga(Evaluator):
     def getMessageRegex(self) -> str:
         return r'(ooga)\b'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'ooga'
     
     async def execute(self, _) -> str:

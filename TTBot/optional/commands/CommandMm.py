@@ -13,7 +13,7 @@ class CommandMm(Command):
     def getCommandString(self) -> str:
         return 'mm'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'mm'
     
     def _buildFullMessage(self, matchmakingDataList: list) -> str:

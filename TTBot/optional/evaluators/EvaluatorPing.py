@@ -5,7 +5,7 @@ class EvaluatorPing(Evaluator):
     def getMessageRegex(self) -> str:
         return r'\b(ping)\b'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'ping'
     
     async def execute(self, _) -> str:

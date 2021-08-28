@@ -10,13 +10,13 @@ class EvaluatorLuckers(Evaluator):
     def getMessageRegex(self) -> str:
         return r'(luckers)\b'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'luckerscounter'
     
     async def execute(self, pMessage) -> str:
-        oldval = self.pProcessVariables.get(self.getRightsId(), 0)
+        oldval = self.pProcessVariables.get(self.getModuleId(), 0)
         newval = oldval + 1
-        self.pProcessVariables.write(self.getRightsId(), newval)
+        self.pProcessVariables.write(self.getModuleId(), newval)
 
         messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
         return f"Turbo was called Luckers for {newval} times ... please just dont, @{messageAuthorName}!"

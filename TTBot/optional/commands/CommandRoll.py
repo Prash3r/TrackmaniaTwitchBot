@@ -12,7 +12,7 @@ class CommandRoll(Command):
     def getCommandString(self) -> str:
         return 'roll'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'roll'
 
     async def execute(self, pMessage, args: list) -> str:

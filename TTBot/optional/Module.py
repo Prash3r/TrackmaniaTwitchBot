@@ -6,7 +6,7 @@ import minidi
 
 class Module(minidi.Injectable):
 	@abstractmethod
-	def getRightsId(self) -> str:
+	def getModuleId(self) -> str:
 		pass
 
 	def onBotStartup(self) -> bool:

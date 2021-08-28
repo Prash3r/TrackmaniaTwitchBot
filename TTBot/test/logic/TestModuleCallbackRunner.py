@@ -9,7 +9,7 @@ from TTBot.optional.Module import Module
 from TTBot.optional.ModuleList import ModuleList
 
 class FalseModule(Module):
-	def getRightsId(self) -> str:
+	def getModuleId(self) -> str:
 		return 'false'
 	
 	def onBotStartup(self) -> bool:
@@ -17,12 +17,12 @@ class FalseModule(Module):
 # class FalseModule(Module)
 
 class MockModule(Module):
-	def getRightsId(self) -> str:
+	def getModuleId(self) -> str:
 		return 'mock'
 # class MockModule(Module)
 
 class TrueModule(Module):
-	def getRightsId(self) -> str:
+	def getModuleId(self) -> str:
 		return 'true'
 	
 	def onBotStartup(self) -> bool:

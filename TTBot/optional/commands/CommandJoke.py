@@ -12,7 +12,7 @@ class CommandJoke(Command):
     def getCommandString(self) -> str:
         return 'joke'
     
-    def getRightsId(self) -> str:
+    def getModuleId(self) -> str:
         return 'joke'
     
     def _getJokeUserSpecials(self) -> dict:

@@ -14,10 +14,10 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 		self.assertEqual(pCommandRoll.getCommandString(), 'roll')
 	# async def test_getCommandString(self)
 
-	async def test_getRightsId(self):
+	async def test_getModuleId(self):
 		pCommandRoll = CommandRoll()
-		self.assertEqual(pCommandRoll.getRightsId(), 'roll')
-	# async def test_getRightsId(self)
+		self.assertEqual(pCommandRoll.getModuleId(), 'roll')
+	# async def test_getModuleId(self)
 
 	async def test_execute_default(self):
 		pInputSanitizer = InputSanitizer()

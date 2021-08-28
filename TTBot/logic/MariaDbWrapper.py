@@ -10,9 +10,20 @@ from .Logger import Logger
 _pMariaDbConnection = None
 
 _creationCommands = {
-    "processvars": "CREATE TABLE IF NOT EXISTS processvars (varname VARCHAR(255), typ VARCHAR(255), value VARCHAR(255), ts TIMESTAMP, CONSTRAINT PRIMARY KEY USING HASH (varname));",
-    "mmranking": "CREATE TABLE IF NOT EXISTS mmranking ( `ranks_rank` INT, `ranks_score` INT, `ranks_division_position` INT, `ranks_division_rule` VARCHAR(12) CHARACTER SET utf8, `ranks_division_minpoints` INT, `ranks_division_maxpoints` INT, `ranks_displayname` VARCHAR(50) CHARACTER SET utf8, `ranks_accountid` VARCHAR(36) CHARACTER SET utf8, `ranks_zone_name` VARCHAR(28) CHARACTER SET utf8, `ranks_zone_flag` VARCHAR(28) CHARACTER SET utf8, `ranks_zone_parent_name` VARCHAR(23) CHARACTER SET utf8, `ranks_zone_parent_flag` VARCHAR(23) CHARACTER SET utf8, `ranks_zone_parent_parent_name` VARCHAR(13) CHARACTER SET utf8, `ranks_zone_parent_parent_flag` VARCHAR(8) CHARACTER SET utf8, `ranks_zone_parent_parent_parent_name` VARCHAR(6) CHARACTER SET utf8, `ranks_zone_parent_parent_parent_flag` VARCHAR(6) CHARACTER SET utf8, `ranks_zone_parent_parent_parent_parent_name` VARCHAR(5) CHARACTER SET utf8, `ranks_zone_parent_parent_parent_parent_flag` VARCHAR(3) CHARACTER SET utf8, `page` INT, `note` INT, `ts` TIMESTAMP, CONSTRAINT accountid PRIMARY KEY USING BTREE (ranks_accountid));",
-    "modules" : "CREATE TABLE IF NOT EXISTS modules (channel VARCHAR(255), ts TIMESTAMP, luckerscounter INT NOT NULL DEFAULT 0, joke INT NOT NULL DEFAULT 0, kem INT NOT NULL DEFAULT 0, mm INT NOT NULL DEFAULT 0, roll INT NOT NULL DEFAULT 0, score INT NOT NULL DEFAULT 0, ooga INT NOT NULL DEFAULT 0, ping INT NOT NULL DEFAULT 0, test INT NOT NULL DEFAULT 0, CONSTRAINT PRIMARY KEY USING HASH (channel));"
+    "modules" : "CREATE TABLE IF NOT EXISTS `modules` (\
+		`channel` VARCHAR(255),\
+		`ts` TIMESTAMP,\
+		`luckerscounter` INT NOT NULL DEFAULT 0,\
+		`joke` INT NOT NULL DEFAULT 0,\
+		`kem` INT NOT NULL DEFAULT 0,\
+		`mm` INT NOT NULL DEFAULT 0,\
+		`roll` INT NOT NULL DEFAULT 0,\
+		`score` INT NOT NULL DEFAULT 0,\
+		`ooga` INT NOT NULL DEFAULT 0,\
+		`ping` INT NOT NULL DEFAULT 0,\
+		`test` INT NOT NULL DEFAULT 0,\
+		CONSTRAINT PRIMARY KEY USING HASH (`channel`)\
+	);"
 }
 
 class MariaDbWrapper(minidi.Injectable):

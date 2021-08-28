@@ -27,6 +27,18 @@ class ProcessVariables(minidi.Injectable):
 	pLogger: Logger
 	pMariaDbWrapper: MariaDbWrapper
 
+	def afterInit(self):
+		query = "CREATE TABLE IF NOT EXISTS `processvars` (\
+			`varname` VARCHAR(255),\
+			`typ` VARCHAR(255),\
+			`value` VARCHAR(255),\
+			`ts` TIMESTAMP,\
+			CONSTRAINT PRIMARY KEY USING HASH (`varname`)\
+		);"
+		
+		self.pMariaDbWrapper.query(query)
+	# def afterInit(self)
+
 	def get(self, name: str, defaultValue):
 		name = self.pInputSanitizer.sanitize(name)
 		name = name.replace(' ', '')

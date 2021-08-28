@@ -4,29 +4,36 @@ import minidi
 # local
 from .MariaDbWrapper import MariaDbWrapper
 from .ModuleCallbackRunner import ModuleCallbackRunner
+from TTBot.optional.ModuleList import ModuleList
 
 class ModuleManager(minidi.Injectable):
 	pMariaDbWrapper: MariaDbWrapper
 	pModuleCallbackRunner: ModuleCallbackRunner
+	pModuleList: ModuleList
 
 	def afterInit(self):
 		query = "CREATE TABLE IF NOT EXISTS `modules` (\
 			`channel` VARCHAR(255),\
 			`ts` TIMESTAMP,\
-			`luckerscounter` INT NOT NULL DEFAULT 0,\
-			`joke` INT NOT NULL DEFAULT 0,\
-			`kem` INT NOT NULL DEFAULT 0,\
-			`mm` INT NOT NULL DEFAULT 0,\
-			`roll` INT NOT NULL DEFAULT 0,\
-			`score` INT NOT NULL DEFAULT 0,\
-			`ooga` INT NOT NULL DEFAULT 0,\
-			`ping` INT NOT NULL DEFAULT 0,\
-			`test` INT NOT NULL DEFAULT 0,\
 			CONSTRAINT PRIMARY KEY USING HASH (`channel`)\
 		);"
-
 		self.pMariaDbWrapper.query(query)
+
+		moduleList = self.listModules()
+
+		moduleIds = self.pModuleList.getAllModuleIds()
+		for moduleId in moduleIds:
+			if moduleId not in moduleList:
+				self._createColumn(moduleId)
+		# for moduleId in moduleIds
 	# def afterInit(self)
+
+	def _createColumn(self, moduleId: str):
+		query = f"ALTER TABLE `modules`\
+			ADD COLUMN `{moduleId}` INT NOT NULL DEFAULT 0;"
+		
+		self.pMariaDbWrapper.query(query)
+	# def _createColumn(self, moduleId: str)
 
 	def _setModule(self, channelName: str, moduleName: str, minimumUserLevel: int) -> bool:
 		query = f"UPDATE `modules`\
@@ -43,8 +50,13 @@ class ModuleManager(minidi.Injectable):
 
 	def deactivateModule(self, channelName: str, moduleName: str) -> bool:
 		return self._setModule(channelName, moduleName, 0)
+	
+	def listModules(self) -> list:
+		rows = self.pMariaDbWrapper.query("SHOW FIELDS FROM `modules`;")
+		return [row['Field'] for row in rows]
+	# def listModules(self) -> list
 
-	def listModules(self, channelName: str) -> dict:
+	def listModulesForChannel(self, channelName: str) -> dict:
 		query = f"SELECT *\
 			FROM `modules`\
 			WHERE `channel` = '{channelName}'\
@@ -58,5 +70,5 @@ class ModuleManager(minidi.Injectable):
 		del modules['channel']
 		del modules['ts']
 		return modules
-	# def listModules(self, channelName: str) -> dict
+	# def listModulesForChannel(self, channelName: str) -> dict
 # class ModuleManager(minidi.Injectable)

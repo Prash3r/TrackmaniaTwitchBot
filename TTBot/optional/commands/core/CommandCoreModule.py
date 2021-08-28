@@ -50,7 +50,7 @@ class CommandCoreModule(CommandCore):
     # async def execute(self, pMessage, args: list) -> str
 
     def _getModulesList(self, messageAuthorName: str) -> str:
-        modules = self.pModuleManager.listModules(messageAuthorName)
+        modules = self.pModuleManager.listModulesForChannel(messageAuthorName)
 
         if not modules:
             return "kem1W"

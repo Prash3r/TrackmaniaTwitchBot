@@ -11,4 +11,7 @@ class ModuleList(minidi.Injectable):
 
 	def getAllModuleClasses(self) -> list:
 		return self.pCommandList.getAllCommandClasses() + self.pEvaluatorList.getAllEvaluatorClasses()
+	
+	def getAllModuleIds(self) -> list:
+		return [moduleClass().getModuleId() for moduleClass in self.getAllModuleClasses()]
 # class ModuleList(minidi.Injectable)

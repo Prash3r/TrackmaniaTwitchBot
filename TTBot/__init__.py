@@ -29,9 +29,6 @@ class TrackmaniaTwitchBot(commands.Bot):
             #initial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
-        pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
-        pMariaDbConnection.connect()
-        
         pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
         moduleInitSuccess = pModuleCallbackRunner.onBotStartup()
         if not moduleInitSuccess:

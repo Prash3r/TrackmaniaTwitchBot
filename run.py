@@ -10,13 +10,38 @@
 # load_dotenv()
 
 # vendor
+import mariadb
 import minidi
 
 # local
 from TTBot import TrackmaniaTwitchBot
+from TTBot.logic.Environment import Environment
+from TTBot.logic.MariaDbConnection import MariaDbConnection
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 
-pTwitchBot = TrackmaniaTwitchBot()
-pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
-pTwitchBotWrapper.set(pTwitchBot)
-pTwitchBot.run()
+def initDatabase():
+	pEnvironment: Environment = minidi.get(Environment)
+
+	pDb = mariadb.connect(
+		user     =     pEnvironment.getVariable('DBUSER') ,
+		password =     pEnvironment.getVariable('DBPASS') ,
+		host     =     pEnvironment.getVariable('DBHOST') ,
+		port     = int(pEnvironment.getVariable('DBPORT')),
+		database =     pEnvironment.getVariable('DBNAME')
+	)
+	pDb.autocommit = True
+	pDb.auto_reconnect = True
+
+	pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
+	pMariaDbConnection.set(pDb)
+# def initDatabase()
+
+if __name__ == '__main__':
+	initDatabase()
+
+	pTwitchBot = TrackmaniaTwitchBot()
+	pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
+	pTwitchBotWrapper.set(pTwitchBot)
+
+	pTwitchBot.run()
+# if __name__ == '__main__'

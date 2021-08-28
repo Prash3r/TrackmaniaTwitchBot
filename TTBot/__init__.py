@@ -42,25 +42,8 @@ class TrackmaniaTwitchBot(commands.Bot):
     async def event_ready(self):
         # We are logged in and ready to chat and use commands...
         self.pLogger.info(f'Logged in as | {self.nick}')
-        channelList = []
 
-        try:
-            rows = self.pMariaDbConnector.fetch("SELECT channel from modules")
-            channelList = [row['channel'] for row in rows]
-        except:
-            twitchBotUsername = self.pEnvironment.getTwitchBotUsername()
-
-            self.pLogger.error("Could not extract channel list from DB!")
-            self.pLogger.error(f"channelList: {channelList}")
-            
-            if twitchBotUsername not in channelList:
-                self.pLogger.warning(f"Trying to insert own channel into DB...")
-                self.pMariaDbConnector.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{twitchBotUsername}');")
-            # if twitchBotUsername not in channelList
-
-            os._exit(1)
-        # try fetch
-
+        channelList = self.getChannelList()
         if not channelList:
             raise RuntimeError("Could not boot TTBot, channel list is empty!")
             
@@ -73,6 +56,18 @@ class TrackmaniaTwitchBot(commands.Bot):
             self.pLogger.error(f"channelList: {channelList}")
             os._exit(1)
     # async def event_ready(self)
+
+    def getChannelList(self) -> list:
+        try:
+            rows = self.pMariaDbConnector.fetch("SELECT `channel` FROM `modules`;")
+            return [row['channel'] for row in rows]
+        except:
+            twitchBotUsername = self.pEnvironment.getTwitchBotUsername()
+            self.pLogger.error("Could not extract channel list from DB!")
+            self.pLogger.warning(f"Trying to insert own channel into DB...")
+            self.pMariaDbConnector.query(f"INSERT IGNORE INTO `modules` (`channel`) VALUES ('{twitchBotUsername}');")
+            os._exit(1)
+    # def getChannelList(self) -> list
     
     async def event_message(self, pMessage):
         # Runs every time a message is sent to the channel

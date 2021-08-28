@@ -10,7 +10,7 @@ from twitchio.ext import commands
 from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbConnection import MariaDbConnection
-from .logic.MariaDbWrapper import MariaDbWrapper
+from .logic.MariaDbConnector import MariaDbConnector
 from .logic.ModuleCallbackRunner import ModuleCallbackRunner
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from .optional.commands.CommandRunner import CommandRunner
@@ -54,14 +54,14 @@ class TrackmaniaTwitchBot(commands.Bot):
 
     async def event_ready(self):
         pLogger: Logger = minidi.get(Logger)
-        pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
+        pMariaDbConnector: MariaDbConnector = minidi.get(MariaDbConnector)
 
         # We are logged in and ready to chat and use commands...
         pLogger.info(f'Logged in as | {self.nick}')
         channelList = []
 
         try:
-            rows = pMariaDbWrapper.fetch("SELECT channel from modules")
+            rows = pMariaDbConnector.fetch("SELECT channel from modules")
             channelList = [row['channel'] for row in rows]
         except:
             pEnvironment: Environment = minidi.get(Environment)
@@ -72,7 +72,7 @@ class TrackmaniaTwitchBot(commands.Bot):
             
             if twitchBotUsername not in channelList:
                 pLogger.warning(f"Trying to insert own channel into DB...")
-                pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{twitchBotUsername}');")
+                pMariaDbConnector.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{twitchBotUsername}');")
 
             os._exit(1)
         # try fetch

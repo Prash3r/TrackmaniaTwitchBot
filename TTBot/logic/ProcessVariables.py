@@ -4,7 +4,7 @@ import minidi
 # local
 from .InputSanitizer import InputSanitizer
 from .Logger import Logger
-from .MariaDbWrapper import MariaDbWrapper
+from .MariaDbConnector import MariaDbConnector
 
 # if you need remanent data in the database put your process vars here:
 _unusedProcessVariables = {
@@ -25,7 +25,7 @@ _unusedProcessVariables = {
 class ProcessVariables(minidi.Injectable):
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
-	pMariaDbWrapper: MariaDbWrapper
+	pMariaDbConnector: MariaDbConnector
 
 	def afterInit(self):
 		query = "CREATE TABLE IF NOT EXISTS `processvars` (\
@@ -36,7 +36,7 @@ class ProcessVariables(minidi.Injectable):
 			CONSTRAINT PRIMARY KEY USING HASH (`varname`)\
 		);"
 		
-		self.pMariaDbWrapper.query(query)
+		self.pMariaDbConnector.query(query)
 	# def afterInit(self)
 
 	def get(self, name: str, defaultValue):
@@ -44,7 +44,7 @@ class ProcessVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 
 		try:
-			rows = self.pMariaDbWrapper.fetch(f"SELECT typ, value FROM processvars WHERE varname = '{name}' LIMIT 1;")
+			rows = self.pMariaDbConnector.fetch(f"SELECT typ, value FROM processvars WHERE varname = '{name}' LIMIT 1;")
 		except:
 			self.pLogger.error(f"Retrieving process variable '{name}' failed - error in query!")
 			return defaultValue
@@ -70,7 +70,7 @@ class ProcessVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pMariaDbWrapper.query(f"INSERT IGNORE INTO processvars SET varname = '{name}', typ = '{valueTypeString}', value = '{value}';")
+			self.pMariaDbConnector.query(f"INSERT IGNORE INTO processvars SET varname = '{name}', typ = '{valueTypeString}', value = '{value}';")
 			return True
 		except:
 			self.pLogger.error(f"Could not insert process variable '{name}'!")
@@ -82,7 +82,7 @@ class ProcessVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 		
 		try:
-			self.pMariaDbWrapper.query(f"UPDATE processvars SET value = '{newValue}' WHERE varname = '{name}' LIMIT 1;")
+			self.pMariaDbConnector.query(f"UPDATE processvars SET value = '{newValue}' WHERE varname = '{name}' LIMIT 1;")
 			self.pLogger.debug(f"Updated process variable '{name}' to '{newValue}'!")
 			return True
 		except:

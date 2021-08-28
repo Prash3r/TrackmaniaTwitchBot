@@ -2,13 +2,13 @@
 import minidi
 
 # local
-from .MariaDbWrapper import MariaDbWrapper
+from .MariaDbConnector import MariaDbConnector
 from .TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.optional.commands.core.CommandCore import CommandCore
 from TTBot.optional.Module import Module
 
 class UserRights(minidi.Injectable):
-	pMariaDbWrapper: MariaDbWrapper
+	pMariaDbConnector: MariaDbConnector
 	pTwitchMessageEvaluator: TwitchMessageEvaluator
 
 	def allowModuleExecution(self, pModule: Module, pMessage) -> bool:
@@ -23,7 +23,7 @@ class UserRights(minidi.Injectable):
 		rightsId = pModule.getModuleId()
 
 		try:
-			rows = self.pMariaDbWrapper.fetch(f"SELECT {rightsId} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")
+			rows = self.pMariaDbConnector.fetch(f"SELECT {rightsId} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")
 		except:
 			return False
 		

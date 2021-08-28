@@ -22,16 +22,16 @@ class TestMatchmakingCache(unittest.TestCase):
 			{'ranks_rank': 70, 'ranks_displayname': 'fetch_new', 'ts': pTimestampSeventyMinutes, 'ranks_score': 3569}
 		]
 
-		pMariaDbWrapper = mock.Mock()
-		pMariaDbWrapper.fetch = mock.Mock(return_value=rows)
+		pMariaDbConnector = mock.Mock()
+		pMariaDbConnector.fetch = mock.Mock(return_value=rows)
 
 		pMatchmakingCache = MatchmakingCache()
 		pMatchmakingCache.pDateTimeChecker = DateTimeChecker()
-		pMatchmakingCache.pMariaDbWrapper = pMariaDbWrapper
+		pMatchmakingCache.pMariaDbConnector = pMariaDbConnector
 		pMatchmakingCache.pMatchmakingDataFactory = MatchmakingDataFactory()
 
 		cachedData = pMatchmakingCache.get('playerLoginPart')
-		pMariaDbWrapper.fetch.assert_called_once_with("SELECT ranks_rank, ranks_displayname, ts, ranks_score FROM mmranking WHERE ranks_displayname = 'playerLoginPart';")
+		pMariaDbConnector.fetch.assert_called_once_with("SELECT ranks_rank, ranks_displayname, ts, ranks_score FROM mmranking WHERE ranks_displayname = 'playerLoginPart';")
 
 		for pMatchmakingData in cachedData:
 			self.assertIn(pMatchmakingData.getRank(), [42, 69])

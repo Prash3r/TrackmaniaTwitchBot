@@ -1,11 +1,11 @@
 # local
 from .CommandCore import CommandCore
-from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.MariaDbConnector import MariaDbConnector
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandCoreInvite(CommandCore):
-    pMariaDbWrapper: MariaDbWrapper
+    pMariaDbConnector: MariaDbConnector
     pTwitchBotWrapper: TwitchBotWrapper
     pTwitchMessageEvaluator: TwitchMessageEvaluator
 
@@ -18,7 +18,7 @@ class CommandCoreInvite(CommandCore):
             pTwitchBot = self.pTwitchBotWrapper.get()
             await pTwitchBot.join_channels([f'{messageAuthorName}'])
 
-            self.pMariaDbWrapper.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{messageAuthorName}');")
+            self.pMariaDbConnector.query(f"INSERT IGNORE INTO modules (channel) VALUES ('{messageAuthorName}');")
             return f"@{messageAuthorName} I joined your channel, now you can control me over there!"
         except:
             return "kem1W"

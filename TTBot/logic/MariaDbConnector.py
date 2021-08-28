@@ -4,7 +4,7 @@ import minidi
 # local
 from .MariaDbConnection import MariaDbConnection
 
-class MariaDbWrapper(minidi.Injectable):
+class MariaDbConnector(minidi.Injectable):
 	pMariaDbConnection: MariaDbConnection
 
 	def fetch(self, query: str) -> list:
@@ -27,4 +27,4 @@ class MariaDbWrapper(minidi.Injectable):
 
 	def query(self, query: str) -> int:
 		return self.pMariaDbConnection.query(query).rowcount
-# class MariaDbWrapper(minidi.Injectable)
+# class MariaDbConnector(minidi.Injectable)

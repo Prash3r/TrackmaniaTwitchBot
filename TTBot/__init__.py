@@ -9,6 +9,7 @@ from twitchio.ext import commands
 # local
 from .logic.Environment import Environment
 from .logic.Logger import Logger
+from .logic.MariaDbConnection import MariaDbConnection
 from .logic.MariaDbWrapper import MariaDbWrapper
 from .logic.ModuleCallbackRunner import ModuleCallbackRunner
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
@@ -28,8 +29,8 @@ class TrackmaniaTwitchBot(commands.Bot):
             #initial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
-        pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
-        pMariaDbWrapper.connect()
+        pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
+        pMariaDbConnection.connect()
         
         pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
         moduleInitSuccess = pModuleCallbackRunner.onBotStartup()

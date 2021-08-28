@@ -52,7 +52,7 @@ class ModuleManager(minidi.Injectable):
 		return self._setModule(channelName, moduleName, 0)
 	
 	def listModules(self) -> list:
-		rows = self.pMariaDbConnector.query("SHOW FIELDS FROM `modules`;")
+		rows = self.pMariaDbConnector.fetch("SHOW FIELDS FROM `modules`;")
 		return [row['Field'] for row in rows]
 	# def listModules(self) -> list
 

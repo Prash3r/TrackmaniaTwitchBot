@@ -12,9 +12,9 @@ class Module(minidi.Injectable):
 	def onBotStartup(self) -> bool:
 		return True
 
-	def onModuleEnable(self) -> bool:
-		return True
+	def onModuleEnable(self):
+		pass
 
-	def onModuleDisable(self) -> bool:
-		return True
+	def onModuleDisable(self):
+		pass
 # class Module(minidi.Injectable)

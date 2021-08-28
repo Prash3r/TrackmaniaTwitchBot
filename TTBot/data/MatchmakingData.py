@@ -19,11 +19,11 @@ class MatchmakingData:
 	def getRank(self) -> int:
 		return self._rank
 	
-	def getTimestamp(self) -> datetime.datetime:
-		return self._pTimestamp
-	
 	def getScore(self) -> int:
 		return self._score
+	
+	def getTimestamp(self) -> datetime.datetime:
+		return self._pTimestamp
 	
 	def setPlayer(self, player: str):
 		self._player = player
@@ -34,9 +34,9 @@ class MatchmakingData:
 	def setRank(self, rank: int):
 		self._rank = rank
 	
-	def setTimestamp(self, pTimestamp: datetime.datetime):
-		self._pTimestamp = pTimestamp
-	
 	def setScore(self, score: int):
 		self._score = score
+	
+	def setTimestamp(self, pTimestamp: datetime.datetime):
+		self._pTimestamp = pTimestamp
 # class MatchmakingData

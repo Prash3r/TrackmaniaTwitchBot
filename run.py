@@ -10,12 +10,14 @@
 # load_dotenv()
 
 # vendor
+import logging
 import mariadb
 import minidi
 
 # local
 from TTBot import TrackmaniaTwitchBot
 from TTBot.logic.Environment import Environment
+from TTBot.logic.Logger import Logger
 from TTBot.logic.MariaDbConnection import MariaDbConnection
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 
@@ -35,11 +37,24 @@ def initDatabase():
 	pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
 	pMariaDbConnection.set(pDb)
 # def initDatabase()
+    
+def initLogger():
+	pEnvironment: Environment = minidi.get(Environment)
+	pLogger: Logger = minidi.get(Logger)
+
+	pLogger.setLevel(logging.DEBUG if pEnvironment.isDebug() else logging.INFO)
+	pFormatter = logging.Formatter("%(asctime)s [%(levelname)s.%(funcName)s] %(message)s")
+	pStreamHandler = logging.StreamHandler()
+	pStreamHandler.setFormatter(pFormatter)
+	pLogger.addHandler(pStreamHandler)
+# def initLogger()
 
 if __name__ == '__main__':
+	initLogger()
 	initDatabase()
 
 	pTwitchBot = TrackmaniaTwitchBot()
+
 	pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
 	pTwitchBotWrapper.set(pTwitchBot)
 

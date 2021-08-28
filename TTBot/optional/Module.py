@@ -9,12 +9,12 @@ class Module(minidi.Injectable):
 	def getRightsId(self) -> str:
 		pass
 
-	async def onBotStartup(self) -> bool:
-		pass
+	def onBotStartup(self) -> bool:
+		return True
 
 	def onModuleEnable(self) -> bool:
-		pass
+		return True
 
 	def onModuleDisable(self) -> bool:
-		pass
+		return True
 # class Module(minidi.Injectable)

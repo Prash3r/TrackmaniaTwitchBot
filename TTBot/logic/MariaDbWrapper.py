@@ -9,23 +9,6 @@ from .Logger import Logger
 
 _pMariaDbConnection = None
 
-_creationCommands = {
-    "modules" : "CREATE TABLE IF NOT EXISTS `modules` (\
-		`channel` VARCHAR(255),\
-		`ts` TIMESTAMP,\
-		`luckerscounter` INT NOT NULL DEFAULT 0,\
-		`joke` INT NOT NULL DEFAULT 0,\
-		`kem` INT NOT NULL DEFAULT 0,\
-		`mm` INT NOT NULL DEFAULT 0,\
-		`roll` INT NOT NULL DEFAULT 0,\
-		`score` INT NOT NULL DEFAULT 0,\
-		`ooga` INT NOT NULL DEFAULT 0,\
-		`ping` INT NOT NULL DEFAULT 0,\
-		`test` INT NOT NULL DEFAULT 0,\
-		CONSTRAINT PRIMARY KEY USING HASH (`channel`)\
-	);"
-}
-
 class MariaDbWrapper(minidi.Injectable):
 	pEnvironment: Environment
 	pInputSanitizer: InputSanitizer
@@ -77,31 +60,6 @@ class MariaDbWrapper(minidi.Injectable):
 
 		return outputRows
 	# def fetch(self, query: str) -> list
-
-	def init(self) -> bool:
-		for tableName in _creationCommands.keys():
-			success = self.initTable(tableName)
-			if not success:
-				return False
-		# for tableName in _creationCommands.keys()
-		
-		return True
-	# def init(self) -> bool
-
-	def initTable(self, tableName: str) -> bool:
-		cur = self.fetch(f"SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{tableName}' LIMIT 1;")
-		for r in cur:
-			if r['COUNT(*)'] == 0:
-				self.pLogger.info(f"Table '{tableName}' does not exist - creating ...")
-				self.query(_creationCommands[tableName])
-				self.pLogger.info(f"Successfully created table '{tableName}'!")
-			# if r['COUNT(*)'] == 0
-
-			return True
-		# for r in cur
-
-		return False
-	# def initTable(self, tableName: str) -> bool
 
 	def query(self, query: str) -> int:
 		return self._query(query).rowcount

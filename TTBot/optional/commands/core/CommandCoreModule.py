@@ -1,14 +1,12 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.logic.InputSanitizer import InputSanitizer
-from TTBot.logic.MariaDbWrapper import MariaDbWrapper
+from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
-from TTBot.optional.ModuleCallbackRunner import ModuleCallbackRunner
 
 class CommandCoreModule(CommandCore):
     pInputSanitizer: InputSanitizer
-    pMariaDbWrapper: MariaDbWrapper
-    pModuleCallbackRunner: ModuleCallbackRunner
+    pModuleManager: ModuleManager
     pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
@@ -22,29 +20,24 @@ class CommandCoreModule(CommandCore):
         if minimumUserLevel <= 0:
             return self._deactivateModule(messageAuthorName, moduleName)
 
-        success = self.pModuleCallbackRunner.onModuleEnable(moduleName)
-        if not success:
-            return f"Error activating module '{moduleName}!"
+        success = self.pModuleManager.activateModule(messageAuthorName, moduleName, minimumUserLevel)
 
-        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = {minimumUserLevel} WHERE channel = '{messageAuthorName}';")
-        return f"Module '{moduleName}' activated with access level {minimumUserLevel}!"
+        return f"Module '{moduleName}' activated with access level {minimumUserLevel}!" \
+            if success \
+            else f"Error activating module '{moduleName}!"
     # def _activateModule(self, messageAuthorName: str, args: list) -> str
 
     def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str:
-        success = self.pModuleCallbackRunner.onModuleDisable(moduleName)
-        if not success:
-            return f"Error deactivating module '{moduleName}!"
+        success = self.pModuleManager.deactivateModule(messageAuthorName, moduleName)
 
-        self.pMariaDbWrapper.query(f"UPDATE modules SET `{moduleName}` = 0 WHERE channel = '{messageAuthorName}';")
-        return f"Module '{moduleName}' deactivated!"
+        return f"Module '{moduleName}' deactivated!" \
+            if success \
+            else f"Error deactivating module '{moduleName}!"
     # def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str
     
     async def execute(self, pMessage, args: list) -> str:
         messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
-        if len(args) > 0:
-            arg = args[0].lower()
-        else:
-            arg = 'list'
+        arg = args[0].lower() if len(args) > 0 else 'list'
 
         if arg == 'list':
             return f"@{messageAuthorName} {self._getModulesList(messageAuthorName)}"
@@ -57,19 +50,11 @@ class CommandCoreModule(CommandCore):
     # async def execute(self, pMessage, args: list) -> str
 
     def _getModulesList(self, messageAuthorName: str) -> str:
-        rows = self.pMariaDbWrapper.fetch(f"SELECT * FROM modules WHERE channel = '{messageAuthorName}' LIMIT 1;")
-        if not rows:
+        modules = self.pModuleManager.listModules(messageAuthorName)
+
+        if not modules:
             return "kem1W"
-        
-        output = []
-        row = rows[0]
-        for moduleName, userLevel in row.items():
-            if moduleName in ['channel', 'ts']:
-                continue
 
-            output.append(f"{moduleName}: {userLevel}")
-        # for moduleName, userLevel in row.items()
-
-        return ', '.join(output)
+        return ', '.join([f'{moduleName}: {userLevel}' for moduleName, userLevel in modules.items()])
     # def _getModulesList(self, messageAuthorName: str) -> str
 # class CommandCoreModule(CommandCore)

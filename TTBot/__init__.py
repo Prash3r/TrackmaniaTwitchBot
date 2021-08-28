@@ -10,10 +10,10 @@ from twitchio.ext import commands
 from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbWrapper import MariaDbWrapper
+from .logic.ModuleCallbackRunner import ModuleCallbackRunner
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from .optional.commands.CommandRunner import CommandRunner
 from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
-from .optional.ModuleCallbackRunner import ModuleCallbackRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
     def __init__(self):
@@ -30,11 +30,6 @@ class TrackmaniaTwitchBot(commands.Bot):
         
         pMariaDbWrapper: MariaDbWrapper = minidi.get(MariaDbWrapper)
         pMariaDbWrapper.connect()
-        dbInitSuccess = pMariaDbWrapper.init()
-
-        if not dbInitSuccess:
-            pLogger.error("Database initialization failed!")
-            os._exit(1)
         
         pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
         moduleInitSuccess = pModuleCallbackRunner.onBotStartup()

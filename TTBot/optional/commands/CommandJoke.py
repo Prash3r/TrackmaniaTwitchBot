@@ -1,11 +1,11 @@
 # local
 from .Command import Command
-from TTBot.logic.ProcessVariables import ProcessVariables
+from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.Randomizer import Randomizer
 from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandJoke(Command):
-    pProcessVariables: ProcessVariables
+    pGlobalVariables: GlobalVariables
     pRandomizer: Randomizer
     pTwitchMessageEvaluator: TwitchMessageEvaluator
     
@@ -46,8 +46,8 @@ class CommandJoke(Command):
         jokeUserSpecials = self._getJokeUserSpecials()
 
         if messageAuthorName in jokeUserSpecials.keys():
-            lastJoker = self.pProcessVariables.get('lastjoker', 'fegir')
-            self.pProcessVariables.write('lastjoker', messageAuthorName)
+            lastJoker = self.pGlobalVariables.get('lastjoker', 'fegir')
+            self.pGlobalVariables.write('lastjoker', messageAuthorName)
 
             return jokeUserSpecials[messageAuthorName](lastJoker)
         # if messageAuthorName in jokeUserSpecials.keys()

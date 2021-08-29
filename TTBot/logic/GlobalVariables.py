@@ -2,14 +2,14 @@
 import minidi
 
 # local
+from .DbConnector import DbConnector
 from .InputSanitizer import InputSanitizer
 from .Logger import Logger
-from .MariaDbConnector import MariaDbConnector
 
 class GlobalVariables(minidi.Injectable):
+	pDbConnector: DbConnector
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
-	pMariaDbConnector: MariaDbConnector
 
 	def afterInit(self):
 		query = "CREATE TABLE IF NOT EXISTS `global_vars` ( \
@@ -20,7 +20,7 @@ class GlobalVariables(minidi.Injectable):
 			CONSTRAINT PRIMARY KEY USING HASH (`varname`) \
 		);"
 		
-		self.pMariaDbConnector.query(query)
+		self.pDbConnector.execute(query)
 	# def afterInit(self)
 
 	def get(self, name: str, defaultValue):
@@ -28,7 +28,7 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 
 		try:
-			rows = self.pMariaDbConnector.fetch(f"SELECT `typ`, `value` \
+			rows = self.pDbConnector.fetch(f"SELECT `typ`, `value` \
 				FROM `global_vars` \
 				WHERE `varname` = '{name}' \
 				LIMIT 1; \
@@ -58,7 +58,7 @@ class GlobalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pMariaDbConnector.query(f"INSERT IGNORE INTO `global_vars` SET \
+			self.pDbConnector.execute(f"INSERT IGNORE INTO `global_vars` SET \
 				`varname` = '{name}', \
 				`typ` = '{valueTypeString}', \
 				`value` = '{value}'; \
@@ -74,7 +74,7 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 		
 		try:
-			self.pMariaDbConnector.query(f"UPDATE `global_vars` \
+			self.pDbConnector.execute(f"UPDATE `global_vars` \
 				SET `value` = '{newValue}' \
 				WHERE `varname` = '{name}' \
 				LIMIT 1; \

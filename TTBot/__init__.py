@@ -7,9 +7,9 @@ from twitchio.ext import commands
 
 # local
 from .data.Message import Message
+from .logic.DbConnector import DbConnector
 from .logic.Environment import Environment
 from .logic.Logger import Logger
-from .logic.MariaDbConnector import MariaDbConnector
 from .logic.interface.MessageConverter import MessageConverter
 from .logic.MessageEvaluator import MessageEvaluator
 from .logic.ModuleCallbackRunner import ModuleCallbackRunner
@@ -19,10 +19,10 @@ from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
 class TrackmaniaTwitchBot(commands.Bot):
     def __init__(self, **kwargs):
         self.pCommandRunner        = kwargs.get('CommandRunner'       , minidi.get(CommandRunner))
+        self.pDbConnector          = kwargs.get('DbConnector'         , minidi.get(DbConnector))
         self.pEnvironment          = kwargs.get('Environment'         , minidi.get(Environment))
         self.pEvaluatorRunner      = kwargs.get('EvaluatorRunner'     , minidi.get(EvaluatorRunner))
         self.pLogger               = kwargs.get('Logger'              , minidi.get(Logger))
-        self.pMariaDbConnector     = kwargs.get('MariaDbConnector'    , minidi.get(MariaDbConnector))
         self.pMessageConverter     = kwargs.get('MessageConverter'    , minidi.get(MessageConverter))
         self.pMessageEvaluator     = kwargs.get('MessageEvaluator'    , minidi.get(MessageEvaluator))
         self.pModuleCallbackRunner = kwargs.get('ModuleCallbackRunner', minidi.get(ModuleCallbackRunner))
@@ -62,13 +62,13 @@ class TrackmaniaTwitchBot(commands.Bot):
 
     def getChannelList(self) -> list:
         try:
-            rows = self.pMariaDbConnector.fetch("SELECT `channel` FROM `modules`;")
+            rows = self.pDbConnector.fetch("SELECT `channel` FROM `modules`;")
             return [row['channel'] for row in rows]
         except:
-            twitchBotUsername = self.pEnvironment.getTwitchBotUsername()
             self.pLogger.error("Could not extract channel list from DB!")
             self.pLogger.warning(f"Trying to insert own channel into DB...")
-            self.pMariaDbConnector.query(f"INSERT IGNORE INTO `modules` (`channel`) VALUES ('{twitchBotUsername}');")
+            twitchBotUsername = self.pEnvironment.getTwitchBotUsername()
+            self.pDbConnector.execute(f"INSERT IGNORE INTO `modules` (`channel`) VALUES ('{twitchBotUsername}');")
             os._exit(1)
     # def getChannelList(self) -> list
     

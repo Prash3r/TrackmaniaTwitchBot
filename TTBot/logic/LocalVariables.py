@@ -2,14 +2,14 @@
 import minidi
 
 # local
+from .DbConnector import DbConnector
 from .InputSanitizer import InputSanitizer
 from .Logger import Logger
-from .MariaDbConnector import MariaDbConnector
 
 class LocalVariables(minidi.Injectable):
+	pDbConnector: DbConnector
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
-	pMariaDbConnector: MariaDbConnector
 
 	def afterInit(self):
 		query = "CREATE TABLE IF NOT EXISTS `local_vars` ( \
@@ -21,7 +21,7 @@ class LocalVariables(minidi.Injectable):
             PRIMARY KEY (`varname`, `channelname`) USING HASH \
 		);"
 		
-		self.pMariaDbConnector.query(query)
+		self.pDbConnector.execute(query)
 	# def afterInit(self)
 
 	def get(self, name: str, channel: str, defaultValue):
@@ -31,7 +31,7 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 
 		try:
-			rows = self.pMariaDbConnector.fetch(f"SELECT `typ`, `value` \
+			rows = self.pDbConnector.fetch(f"SELECT `typ`, `value` \
 				FROM `local_vars` \
 				WHERE `varname` = '{name}' AND `channelname` = '{channel}' \
 				LIMIT 1; \
@@ -61,7 +61,7 @@ class LocalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pMariaDbConnector.query(f"INSERT IGNORE INTO `local_vars` SET \
+			self.pDbConnector.execute(f"INSERT IGNORE INTO `local_vars` SET \
 				`varname` = '{name}', \
 				`channelname` = '{channel}', \
 				`typ` = '{valueTypeString}', \
@@ -80,7 +80,7 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 		
 		try:
-			self.pMariaDbConnector.query(f"UPDATE `local_vars` \
+			self.pDbConnector.execute(f"UPDATE `local_vars` \
 				SET `value` = '{newValue}' \
 				WHERE `varname` = '{name}' AND `channelname` = '{channel}' \
 				LIMIT 1;\

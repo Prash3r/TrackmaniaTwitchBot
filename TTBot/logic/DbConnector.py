@@ -4,8 +4,11 @@ import minidi
 # local
 from .DbConnection import DbConnection
 
-class MariaDbConnector(minidi.Injectable):
+class DbConnector(minidi.Injectable):
 	pDbConnection: DbConnection
+
+	def execute(self, query: str) -> int:
+		return self.pDbConnection.query(query).rowcount
 
 	def fetch(self, query: str) -> list:
 		outputRows = []
@@ -24,7 +27,4 @@ class MariaDbConnector(minidi.Injectable):
 
 		return outputRows
 	# def fetch(self, query: str) -> list
-
-	def query(self, query: str) -> int:
-		return self.pDbConnection.query(query).rowcount
-# class MariaDbConnector(minidi.Injectable)
+# class DbConnector(minidi.Injectable)

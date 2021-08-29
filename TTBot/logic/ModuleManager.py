@@ -2,12 +2,12 @@
 import minidi
 
 # local
-from .MariaDbConnector import MariaDbConnector
+from .DbConnector import DbConnector
 from .ModuleCallbackRunner import ModuleCallbackRunner
 from TTBot.optional.ModuleList import ModuleList
 
 class ModuleManager(minidi.Injectable):
-	pMariaDbConnector: MariaDbConnector
+	pDbConnector: DbConnector
 	pModuleCallbackRunner: ModuleCallbackRunner
 	pModuleList: ModuleList
 
@@ -17,7 +17,7 @@ class ModuleManager(minidi.Injectable):
 			`ts` TIMESTAMP,\
 			CONSTRAINT PRIMARY KEY USING HASH (`channel`)\
 		);"
-		self.pMariaDbConnector.query(query)
+		self.pDbConnector.execute(query)
 
 		moduleList = self.listModules()
 
@@ -32,7 +32,7 @@ class ModuleManager(minidi.Injectable):
 		query = f"ALTER TABLE `modules`\
 			ADD COLUMN `{moduleId}` INT NOT NULL DEFAULT 0;"
 		
-		self.pMariaDbConnector.query(query)
+		self.pDbConnector.execute(query)
 	# def _createColumn(self, moduleId: str)
 
 	def _setModule(self, channelName: str, moduleName: str, minimumUserLevel: int) -> bool:
@@ -40,7 +40,7 @@ class ModuleManager(minidi.Injectable):
 			SET `{moduleName}` = {minimumUserLevel}\
 			WHERE `channel` = '{channelName}';"
 
-		rowcount = self.pMariaDbConnector.query(query)
+		rowcount = self.pDbConnector.execute(query)
 		self.pModuleCallbackRunner.onModuleEnable(moduleName)
 		return rowcount == 1
 	# def _setModule(self, channelName: str, moduleName: str, minimumUserLevel: int) -> bool
@@ -52,7 +52,7 @@ class ModuleManager(minidi.Injectable):
 		return self._setModule(channelName, moduleName, 0)
 	
 	def listModules(self) -> list:
-		rows = self.pMariaDbConnector.fetch("SHOW FIELDS FROM `modules`;")
+		rows = self.pDbConnector.fetch("SHOW FIELDS FROM `modules`;")
 		return [row['Field'] for row in rows]
 	# def listModules(self) -> list
 
@@ -61,7 +61,7 @@ class ModuleManager(minidi.Injectable):
 			FROM `modules`\
 			WHERE `channel` = '{channelName}'\
 			LIMIT 1;"
-		rows = self.pMariaDbConnector.fetch(query)
+		rows = self.pDbConnector.fetch(query)
 
 		if not rows:
 			return {}

@@ -2,15 +2,15 @@
 import minidi
 
 # local
+from .DbConnector import DbConnector
 from .Environment import Environment
-from .MariaDbConnector import MariaDbConnector
 from .MessageEvaluator import MessageEvaluator
 from TTBot.optional.commands.core.CommandCore import CommandCore
 from TTBot.optional.Module import Module
 
 class UserRights(minidi.Injectable):
+	pDbConnector: DbConnector
 	pEnvironment: Environment
-	pMariaDbConnector: MariaDbConnector
 	pMessageEvaluator: MessageEvaluator
 
 	def allowModuleExecution(self, pModule: Module, pMessage) -> bool:
@@ -25,7 +25,7 @@ class UserRights(minidi.Injectable):
 		
 		rightsId = pModule.getModuleId()
 
-		rows = self.pMariaDbConnector.fetch(f"SELECT `{rightsId}` FROM `modules` WHERE `channel` = '{channelName}' LIMIT 1;")		
+		rows = self.pDbConnector.fetch(f"SELECT `{rightsId}` FROM `modules` WHERE `channel` = '{channelName}' LIMIT 1;")		
 		if not rows:
 			return False
 		

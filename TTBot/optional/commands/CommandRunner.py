@@ -33,7 +33,8 @@ class CommandRunner(minidi.Injectable):
 	async def _executeSingle(self, pCommand: Command, pMessage, args: list):
 		try:
 			result = await pCommand.execute(pMessage, args)
-			await self.pTwitchMessageEvaluator.getChannel(pMessage).send(result)
+			pChannel = self.pTwitchMessageEvaluator.getChannel(pMessage)
+			await pChannel.sendMessage(result)
 			messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
 			self.pLogger.info(f"Command '{pCommand.getCommandString()}' triggered by {messageAuthorName}")
 		except Exception as e:

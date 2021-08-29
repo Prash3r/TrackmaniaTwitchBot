@@ -9,6 +9,7 @@ from twitchio.ext import commands
 from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbConnector import MariaDbConnector
+from .logic.interface.MessageConverter import MessageConverter
 from .logic.ModuleCallbackRunner import ModuleCallbackRunner
 from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from .optional.commands.CommandRunner import CommandRunner
@@ -21,6 +22,7 @@ class TrackmaniaTwitchBot(commands.Bot):
         self.pEvaluatorRunner        = kwargs.get('EvaluatorRunner'       , minidi.get(EvaluatorRunner))
         self.pLogger                 = kwargs.get('Logger'                , minidi.get(Logger))
         self.pMariaDbConnector       = kwargs.get('MariaDbConnector'      , minidi.get(MariaDbConnector))
+        self.pMessageConverter       = kwargs.get('MessageConverter'      , minidi.get(MessageConverter))
         self.pModuleCallbackRunner   = kwargs.get('ModuleCallbackRunner'  , minidi.get(ModuleCallbackRunner))
         self.pTwitchMessageEvaluator = kwargs.get('TwitchMessageEvaluator', minidi.get(TwitchMessageEvaluator))
 
@@ -70,6 +72,11 @@ class TrackmaniaTwitchBot(commands.Bot):
     # def getChannelList(self) -> list
     
     async def event_message(self, pMessage):
+        try:
+            pMessage = self.pMessageConverter.convert(pMessage)
+        except:
+            return
+        
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
         if self.pTwitchMessageEvaluator.getAuthor(pMessage) is None:

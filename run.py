@@ -9,8 +9,10 @@
 # from dotenv import load_dotenv
 # load_dotenv()
 
-# vendor
+# pylib
 import logging
+
+# vendor
 import mariadb
 import minidi
 
@@ -19,7 +21,9 @@ from TTBot import TrackmaniaTwitchBot
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
 from TTBot.logic.MariaDbConnection import MariaDbConnection
+from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
+from TTBot.logic.production.TwitchMessageConverter import TwitchMessageConverter
 
 def initDatabase():
 	pEnvironment: Environment = minidi.get(Environment)
@@ -49,9 +53,14 @@ def initLogger():
 	pLogger.addHandler(pStreamHandler)
 # def initLogger()
 
+def initLogic():
+	minidi.set(MessageConverter, minidi.get(TwitchMessageConverter))
+# def initLogic()
+
 if __name__ == '__main__':
 	initLogger()
 	initDatabase()
+	initLogic()
 
 	pTwitchBot = TrackmaniaTwitchBot()
 

@@ -33,7 +33,7 @@ class EvaluatorRunner(minidi.Injectable):
 		try:
 			result = await pEvaluator.execute(pMessage)
 			pChannel = self.pTwitchMessageEvaluator.getChannel(pMessage)
-			await pChannel.send(result)
+			await pChannel.sendMessage(result)
 			self.pLogger.info(f"{pEvaluator.__class__.__name__} did trigger")
 		except Exception as e:
 			self.pLogger.exception(e)

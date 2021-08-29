@@ -1,5 +1,6 @@
 # local
 from .CommandCore import CommandCore
+from TTBot.data.Message import Message
 
 class CommandCoreHelp(CommandCore):
     DEFAULT_HELP_MESSAGE = "Use '!help invite/uninvite/accesslevel/add/list/rem' for detailed information about this bots core commands!"
@@ -15,12 +16,12 @@ class CommandCoreHelp(CommandCore):
     def getCommandString(self) -> str:
         return 'help'
     
-    async def execute(self, pMessage, args: list) -> str:
+    async def execute(self, pMessage: Message, args: list) -> str:
         messageAuthorName = pMessage.getAuthor().getName()
 
         if args:
             return f"@{messageAuthorName} {self.HELP_MESSAGES.get(args[0], self.DEFAULT_HELP_MESSAGE)}"
                 
         return f"@{messageAuthorName} {self.DEFAULT_HELP_MESSAGE}"
-    # async def execute(self, pMessage, args: list) -> str
+    # async def execute(self, pMessage: Message, args: list) -> str
 # class CommandCoreHelp(CommandCore)

@@ -2,6 +2,7 @@
 from abc import abstractmethod
 
 # local
+from TTBot.data.Message import Message
 from ..Module import Module
 
 class Command(Module):
@@ -10,6 +11,6 @@ class Command(Module):
 		pass
 
 	@abstractmethod
-	def execute(self, pMessage, args: list) -> str:
+	def execute(self, pMessage: Message, args: list) -> str:
 		pass
 # class Command(Module)

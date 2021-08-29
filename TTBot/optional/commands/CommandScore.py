@@ -1,5 +1,6 @@
 # local
 from .Command import Command
+from TTBot.data.Message import Message
 from TTBot.logic.Randomizer import Randomizer
 
 class CommandScore(Command):
@@ -11,7 +12,7 @@ class CommandScore(Command):
     def getModuleId(self) -> str:
         return 'score'
 
-    async def execute(self, pMessage, _) -> str:
+    async def execute(self, pMessage: Message, _) -> str:
         messageAuthorName = pMessage.getAuthor().getName()
         result = self.pRandomizer.uniformInt(0, 100000)
 
@@ -25,5 +26,5 @@ class CommandScore(Command):
             return f"@{messageAuthorName} has {result} LP - partly nice!"
         else:
             return f"@{messageAuthorName} has {result} LP!"
-    # async def execute(self, pMessage, _) -> str
+    # async def execute(self, pMessage: Message, _) -> str
 # class CommandScore(Command)

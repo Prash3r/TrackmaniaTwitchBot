@@ -6,6 +6,7 @@ import minidi
 from twitchio.ext import commands
 
 # local
+from .data.Message import Message
 from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbConnector import MariaDbConnector
@@ -91,12 +92,12 @@ class TrackmaniaTwitchBot(commands.Bot):
         await self.handleMessage(pMessage)
     # async def event_message(self, pMessage)
 
-    async def handleMessage(self, pMessage):
+    async def handleMessage(self, pMessage: Message):
         messageAuthorName = pMessage.getAuthor().getName()
         message = pMessage.getContent()
         self.pLogger.debug(f"{messageAuthorName}\t:{message}")
 
         await self.pCommandRunner.execute(pMessage)
         await self.pEvaluatorRunner.execute(pMessage)
-    # async def handle(self, pMessage)
+    # async def handle(self, pMessage: Message)
 # class TrackmaniaTwitchBot(commands.Bot)

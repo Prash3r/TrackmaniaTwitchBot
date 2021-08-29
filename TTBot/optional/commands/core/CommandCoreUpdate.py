@@ -3,12 +3,13 @@ import sys
 
 # local
 from .CommandCore import CommandCore
+from TTBot.data.Message import Message
 
 class CommandCoreUpdate(CommandCore):
     def getCommandString(self) -> str:
         return 'update'
     
-    async def execute(self, pMessage, _) -> str:
+    async def execute(self, pMessage: Message, _) -> str:
         try:
             messageAuthorName = pMessage.getAuthor().getName()
             if messageAuthorName in ["axelalex2", "prash3r"]:
@@ -18,5 +19,5 @@ class CommandCoreUpdate(CommandCore):
                 return f"@{messageAuthorName}, you cannot make me do that!"
         except Exception:
             return "Going down failed miserably!"
-    # async def execute(self, pMessage, _) -> str
+    # async def execute(self, pMessage: Message, _) -> str
 # class CommandCoreUpdate(CommandCore)

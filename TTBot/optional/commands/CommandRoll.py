@@ -1,5 +1,6 @@
 # local
 from .Command import Command
+from TTBot.data.Message import Message
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Randomizer import Randomizer
 
@@ -13,7 +14,7 @@ class CommandRoll(Command):
     def getModuleId(self) -> str:
         return 'roll'
 
-    async def execute(self, pMessage, args: list) -> str:
+    async def execute(self, pMessage: Message, args: list) -> str:
         messageAuthorName = pMessage.getAuthor().getName()
 
         if not args or not self.pInputSanitizer.isInteger(args[0]):
@@ -28,5 +29,5 @@ class CommandRoll(Command):
             return f"@{messageAuthorName} we do not support drugs in this chat ({result}/{maxValue})"
         else:
             return f"@{messageAuthorName} {result}/{maxValue}"
-    # async def execute(self, pMessage, args: list) -> str
+    # async def execute(self, pMessage: Message, args: list) -> str
 # class CommandRoll(Command)

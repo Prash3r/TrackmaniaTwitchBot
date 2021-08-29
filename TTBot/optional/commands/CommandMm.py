@@ -1,6 +1,7 @@
 # local
 from .Command import Command
 from TTBot.data.MatchmakingData import MatchmakingData
+from TTBot.data.Message import Message
 from TTBot.logic.MatchmakingCache import MatchmakingCache
 from TTBot.logic.TrackmaniaIO import TrackmaniaIO
 
@@ -22,7 +23,7 @@ class CommandMm(Command):
     def _buildSingleMessage(self, pMatchmakingData: MatchmakingData) -> str:
         return f"#{pMatchmakingData.getRank()}: {pMatchmakingData.getPlayer()} ({pMatchmakingData.getScore()} points)"
 
-    async def execute(self, pMessage, args: list) -> str:
+    async def execute(self, pMessage: Message, args: list) -> str:
         messageAuthorName = pMessage.getAuthor().getName()
 
         playerNamePart = args[0]
@@ -39,5 +40,5 @@ class CommandMm(Command):
                 return f"@{messageAuthorName} {self._buildFullMessage(matchmakingData)}"
             else:
                 return f"@{messageAuthorName} No player found in TM2020 matchmaking resembling the name '{playerNamePart}'!"
-    # async def execute(self, pMessage, args: list) -> str
+    # async def execute(self, pMessage: Message, args: list) -> str
 # class CommandMm(Command)

@@ -1,5 +1,6 @@
 # local
 from .Evaluator import Evaluator
+from TTBot.data.Message import Message
 
 class EvaluatorPing(Evaluator):
     def getMessageRegex(self) -> str:
@@ -8,6 +9,6 @@ class EvaluatorPing(Evaluator):
     def getModuleId(self) -> str:
         return 'ping'
     
-    async def execute(self, _) -> str:
+    async def execute(self, _: Message) -> str:
         return 'pong'
 # class EvaluatorPing(Evaluator)

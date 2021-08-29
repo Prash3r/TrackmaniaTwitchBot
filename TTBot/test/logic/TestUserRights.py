@@ -3,6 +3,8 @@ import unittest
 from unittest import mock
 
 # local
+from TTBot.data.Message import Message
+from TTBot.data.MessageChannel import MessageChannel
 from TTBot.logic.Environment import Environment
 from TTBot.logic.MariaDbConnector import MariaDbConnector
 from TTBot.logic.MessageEvaluator import MessageEvaluator
@@ -26,7 +28,6 @@ class TestUserRights(unittest.TestCase):
 
 	def setUpMessageEvaluator(self, getUserLevel: int, isOwnerMessage: bool) -> MessageEvaluator:
 		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getChannelName = mock.Mock(return_value='UnitTest')
 		pMessageEvaluator.getUserLevel = mock.Mock(return_value=getUserLevel)
 		pMessageEvaluator.isOwnerMessage = mock.Mock(return_value=isOwnerMessage)
 
@@ -48,14 +49,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(5, False)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_called_once_with("SELECT `core` FROM `modules` WHERE `channel` = 'unittest' LIMIT 1;")
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_allow(self)
@@ -66,14 +66,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(5, False)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_not_called()
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_not_called()
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_botChannel(self)
@@ -84,14 +83,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(5, False)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_called_once_with("SELECT `core` FROM `modules` WHERE `channel` = 'unittest' LIMIT 1;")
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_not_called()
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_disabled(self)
@@ -102,14 +100,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(1, False)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_called_once_with("SELECT `core` FROM `modules` WHERE `channel` = 'unittest' LIMIT 1;")
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_disallow(self)
@@ -120,15 +117,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(5, True)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
-
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertTrue(allowModuleExecution)
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_not_called()
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_not_called()
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_ownerMessage(self)
@@ -139,15 +134,13 @@ class TestUserRights(unittest.TestCase):
 		pMessageEvaluator = self.setUpMessageEvaluator(5, False)
 		pUserRights = self.setUpUserRights(pEnvironment, pMariaDbConnector, pMessageEvaluator)
 
-		pMessage = object()
+		pMessage = Message(channel=MessageChannel(name='unittest'))
 		pModule = CommandCoreInvite()
-
 		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
 		self.assertFalse(allowModuleExecution)
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMariaDbConnector.fetch.assert_called_once_with("SELECT `core` FROM `modules` WHERE `channel` = 'unittest' LIMIT 1;")
-		pMessageEvaluator.getChannelName.assert_called_once_with(pMessage)
 		pMessageEvaluator.getUserLevel.assert_not_called()
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 	# def test_allowModuleExecution_queryEmpty(self)

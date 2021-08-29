@@ -3,6 +3,8 @@ import unittest
 from unittest import mock
 
 # local
+from TTBot.data.Message import Message
+from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.Randomizer import Randomizer
 from TTBot.logic.MessageEvaluator import MessageEvaluator
@@ -27,15 +29,11 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformFloat = mock.Mock(return_value=0.8)
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
-
 		pCommandJoke = CommandJoke()
 		pCommandJoke.pGlobalVariables = pGlobalVariables
 		pCommandJoke.pRandomizer = pRandomizer
-		pCommandJoke.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = object()
+		pMessage = Message(author=MessageAuthor(name='unittest'))
 		result = await pCommandJoke.execute(pMessage, 'unused')
 		self.assertEqual(result, "Fegir")
 
@@ -43,8 +41,6 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.write.assert_not_called()
 
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
-
-		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_default_randomDefault(self)
 
 	async def test_execute_default_randomSpecial(self):
@@ -55,15 +51,11 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformFloat = mock.Mock(return_value=0.9)
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
-
 		pCommandJoke = CommandJoke()
 		pCommandJoke.pGlobalVariables = pGlobalVariables
 		pCommandJoke.pRandomizer = pRandomizer
-		pCommandJoke.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = object()
+		pMessage = Message(author=MessageAuthor(name='unittest'))
 		result = await pCommandJoke.execute(pMessage, 'unused')
 		self.assertEqual(result, "modCheck .. unittest .. KEKW")
 
@@ -71,8 +63,6 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.write.assert_not_called()
 
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
-
-		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_default_randomSpecial(self)
 
 	async def test_execute_userAmaterasu_randomDefault(self):
@@ -83,15 +73,11 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformFloat = mock.Mock(return_value=0.8)
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='amaterasutm')
-
 		pCommandJoke = CommandJoke()
 		pCommandJoke.pGlobalVariables = pGlobalVariables
 		pCommandJoke.pRandomizer = pRandomizer
-		pCommandJoke.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = object()
+		pMessage = Message(author=MessageAuthor(name='amaterasutm'))
 		result = await pCommandJoke.execute(pMessage, 'unused')
 		self.assertEqual(result, "you know who!")
 
@@ -99,8 +85,6 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.write.assert_called_once_with('lastjoker', 'amaterasutm')
 
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
-
-		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_userAmaterasu_randomDefault(self)
 
 	async def test_execute_userAmaterasu_randomSpecial(self):
@@ -111,15 +95,11 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformFloat = mock.Mock(return_value=0.9)
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='amaterasutm')
-
 		pCommandJoke = CommandJoke()
 		pCommandJoke.pGlobalVariables = pGlobalVariables
 		pCommandJoke.pRandomizer = pRandomizer
-		pCommandJoke.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = object()
+		pMessage = Message(author=MessageAuthor(name='amaterasutm'))
 		result = await pCommandJoke.execute(pMessage, 'unused')
 		self.assertEqual(result, "kem1W")
 
@@ -127,8 +107,6 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.write.assert_called_once_with('lastjoker', 'amaterasutm')
 
 		pRandomizer.uniformFloat.assert_called_once_with(0., 1.)
-
-		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_userAmaterasu_randomSpecial(self)
 
 	async def test_execute_userFegir(self):
@@ -139,15 +117,11 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformFloat = mock.Mock()
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='fegir')
-
 		pCommandJoke = CommandJoke()
 		pCommandJoke.pGlobalVariables = pGlobalVariables
 		pCommandJoke.pRandomizer = pRandomizer
-		pCommandJoke.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = object()
+		pMessage = Message(author=MessageAuthor(name='fegir'))
 		result = await pCommandJoke.execute(pMessage, 'unused')
 		self.assertEqual(result, "unittest")
 
@@ -155,7 +129,5 @@ class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.write.assert_called_once_with('lastjoker', 'fegir')
 
 		pRandomizer.uniformFloat.assert_not_called()
-
-		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_userFegir(self)
 # class TestCommandJoke(unittest.IsolatedAsyncioTestCase)

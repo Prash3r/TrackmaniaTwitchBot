@@ -1,12 +1,10 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.logic.InputSanitizer import InputSanitizer
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleManager import ModuleManager
 
 class CommandCoreModule(CommandCore):
     pInputSanitizer: InputSanitizer
-    pMessageEvaluator: MessageEvaluator
     pModuleManager: ModuleManager
 
     def getCommandString(self) -> str:
@@ -36,7 +34,7 @@ class CommandCoreModule(CommandCore):
     # def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str
     
     async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = pMessage.getAuthor().getName()
         arg = args[0].lower() if len(args) > 0 else 'list'
 
         if arg == 'list':

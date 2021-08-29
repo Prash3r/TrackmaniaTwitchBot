@@ -1,12 +1,10 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.logic.MariaDbConnector import MariaDbConnector
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 
 class CommandCoreInvite(CommandCore):
     pMariaDbConnector: MariaDbConnector
-    pMessageEvaluator: MessageEvaluator
     pTwitchBotWrapper: TwitchBotWrapper
 
     def getCommandString(self) -> str:
@@ -14,7 +12,7 @@ class CommandCoreInvite(CommandCore):
     
     async def execute(self, pMessage, _) -> str:
         try:
-            messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
+            messageAuthorName = pMessage.getAuthor().getName()
             pTwitchBot = self.pTwitchBotWrapper.get()
             await pTwitchBot.join_channels([f'{messageAuthorName}'])
 

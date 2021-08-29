@@ -79,11 +79,11 @@ class TrackmaniaTwitchBot(commands.Bot):
         
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
-        if self.pMessageEvaluator.getAuthor(pMessage) is None:
+        if pMessage.getAuthor() is None:
             return
         
         # ignore thyself
-        if self.pEnvironment.getTwitchBotUsername() == self.pMessageEvaluator.getAuthorName(pMessage).lower():
+        if self.pEnvironment.getTwitchBotUsername() == pMessage.getAuthor().getName().lower():
             self.pLogger.debug("Own message detected and ignored")
             return
 
@@ -92,8 +92,8 @@ class TrackmaniaTwitchBot(commands.Bot):
     # async def event_message(self, pMessage)
 
     async def handleMessage(self, pMessage):
-        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
-        message = self.pMessageEvaluator.getContent(pMessage)
+        messageAuthorName = pMessage.getAuthor().getName()
+        message = pMessage.getContent()
         self.pLogger.debug(f"{messageAuthorName}\t:{message}")
 
         await self.pCommandRunner.execute(pMessage)

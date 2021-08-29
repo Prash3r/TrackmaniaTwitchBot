@@ -14,7 +14,7 @@ class UserRights(minidi.Injectable):
 	pMessageEvaluator: MessageEvaluator
 
 	def allowModuleExecution(self, pModule: Module, pMessage) -> bool:
-		channelName = self.pMessageEvaluator.getChannelName(pMessage).lower()
+		channelName = pMessage.getChannel().getName().lower()
 
 		isCoreCommand = isinstance(pModule, CommandCore)
 		isOwnerMessage = self.pMessageEvaluator.isOwnerMessage(pMessage)

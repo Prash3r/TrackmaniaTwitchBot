@@ -1,6 +1,5 @@
 # pylib
 import unittest
-from unittest import mock
 
 # local
 from TTBot.data.Message import Message
@@ -9,49 +8,6 @@ from TTBot.data.MessageChannel import MessageChannel
 from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class TestMessageEvaluator(unittest.TestCase):
-	def test_getAuthor(self):
-		pAuthor = MessageAuthor(name='unittest')
-		pMessage = Message(author=pAuthor)
-
-		pMessageEvaluator = MessageEvaluator()
-		pEvaluatedAuthor = pMessageEvaluator.getAuthor(pMessage)
-		self.assertIs(pEvaluatedAuthor, pAuthor)
-		self.assertEqual(pEvaluatedAuthor.getName(), 'unittest')
-	# def test_getAuthor(self)
-
-	def test_getAuthorName(self):
-		pAuthor = MessageAuthor(name='unittest')
-		pMessage = Message(author=pAuthor)
-
-		pMessageEvaluator = MessageEvaluator()
-		self.assertEqual(pMessageEvaluator.getAuthorName(pMessage), 'unittest')
-	# def test_getAuthor(self)
-
-	def test_getChannel(self):
-		pChannel = MessageChannel(name='unittest')
-		pMessage = Message(channel=pChannel)
-
-		pMessageEvaluator = MessageEvaluator()
-		pEvaluatedChannel = pMessageEvaluator.getChannel(pMessage)
-		self.assertIs(pEvaluatedChannel, pChannel)
-		self.assertEqual(pEvaluatedChannel.getName(), 'unittest')
-	# def test_getChannel(self)
-
-	def test_getChannelName(self):
-		pChannel = MessageChannel(name='unittest')
-		pMessage = Message(channel=pChannel)
-
-		pMessageEvaluator = MessageEvaluator()
-		self.assertEqual(pMessageEvaluator.getChannelName(pMessage), 'unittest')
-	# def test_getChannelName(self)
-
-	def test_getContent(self):
-		pMessage = Message(content='unittest')
-
-		pMessageEvaluator = MessageEvaluator()
-		self.assertEqual(pMessageEvaluator.getContent(pMessage), 'unittest')
-	# def test_getContent(self)
-
 	def test_getUserLevel_developer(self):
 		pAuthor = MessageAuthor(name='PRASH3R')
 		pChannel = MessageChannel(name='unittest')

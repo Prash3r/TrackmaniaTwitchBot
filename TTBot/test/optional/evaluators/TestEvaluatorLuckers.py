@@ -3,8 +3,9 @@ import unittest
 from unittest import mock
 
 # local
+from TTBot.data.Message import Message
+from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.GlobalVariables import GlobalVariables
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
 
 class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
@@ -22,19 +23,14 @@ class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 		pGlobalVariables.get = mock.Mock(return_value=3)
 		pGlobalVariables.write = mock.Mock()
 
-		pMessageEvaluator = MessageEvaluator()
-		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
-
 		pEvaluatorLuckers = EvaluatorLuckers()
 		pEvaluatorLuckers.pGlobalVariables = pGlobalVariables
-		pEvaluatorLuckers.pMessageEvaluator = pMessageEvaluator
 
-		pMessage = mock.Mock()
+		pMessage = Message(author=MessageAuthor(name='unittest'))
 		result = await pEvaluatorLuckers.execute(pMessage)
 		self.assertEqual(result, "Turbo was called Luckers for 4 times ... please just dont, @unittest!")
 
-		pEvaluatorLuckers.pGlobalVariables.get.assert_called_once_with('luckerscounter', 0)
-		pEvaluatorLuckers.pGlobalVariables.write.assert_called_once_with('luckerscounter', 4)
-		pEvaluatorLuckers.pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
+		pGlobalVariables.get.assert_called_once_with('luckerscounter', 0)
+		pGlobalVariables.write.assert_called_once_with('luckerscounter', 4)
 	# async def test_execute(self)
 # class TestEvaluatorLuckers(EvaluatorLuckers)

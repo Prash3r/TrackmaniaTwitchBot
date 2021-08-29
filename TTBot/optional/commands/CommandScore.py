@@ -1,10 +1,8 @@
 # local
 from .Command import Command
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.Randomizer import Randomizer
 
 class CommandScore(Command):
-    pMessageEvaluator: MessageEvaluator
     pRandomizer: Randomizer
 
     def getCommandString(self) -> str:
@@ -14,7 +12,7 @@ class CommandScore(Command):
         return 'score'
 
     async def execute(self, pMessage, _) -> str:
-        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = pMessage.getAuthor().getName()
         result = self.pRandomizer.uniformInt(0, 100000)
 
         if result == 69:

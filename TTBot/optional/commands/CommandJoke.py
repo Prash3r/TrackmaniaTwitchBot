@@ -1,12 +1,10 @@
 # local
 from .Command import Command
 from TTBot.logic.GlobalVariables import GlobalVariables
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.Randomizer import Randomizer
 
 class CommandJoke(Command):
     pGlobalVariables: GlobalVariables
-    pMessageEvaluator: MessageEvaluator
     pRandomizer: Randomizer
     
     def getCommandString(self) -> str:
@@ -40,8 +38,7 @@ class CommandJoke(Command):
         return lastJoker
 
     async def execute(self, pMessage, _) -> str:
-        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
-        messageAuthorName = messageAuthorName.lower()
+        messageAuthorName = pMessage.getAuthor().getName().lower()
 
         jokeUserSpecials = self._getJokeUserSpecials()
 

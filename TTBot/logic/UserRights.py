@@ -22,11 +22,7 @@ class UserRights(minidi.Injectable):
 		channelName = self.pTwitchMessageEvaluator.getChannelName(pMessage)
 		rightsId = pModule.getModuleId()
 
-		try:
-			rows = self.pMariaDbConnector.fetch(f"SELECT {rightsId} FROM modules WHERE channel = '{channelName.lower()}' LIMIT 1;")
-		except:
-			return False
-		
+		rows = self.pMariaDbConnector.fetch(f"SELECT `{rightsId}` FROM `modules` WHERE `channel` = '{channelName.lower()}' LIMIT 1;")		
 		if not rows:
 			return False
 		

@@ -20,7 +20,7 @@ import minidi
 from TTBot import TrackmaniaTwitchBot
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
-from TTBot.logic.MariaDbConnection import MariaDbConnection
+from TTBot.logic.DbConnection import DbConnection
 from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.logic.production.TwitchMessageConverter import TwitchMessageConverter
@@ -38,8 +38,8 @@ def initDatabase():
 	pDb.autocommit = True
 	pDb.auto_reconnect = True
 
-	pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
-	pMariaDbConnection.set(pDb)
+	pDbConnection: DbConnection = minidi.get(DbConnection)
+	pDbConnection.set(pDb)
 # def initDatabase()
     
 def initLogger():

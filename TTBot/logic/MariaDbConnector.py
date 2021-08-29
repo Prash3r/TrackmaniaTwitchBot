@@ -2,15 +2,15 @@
 import minidi
 
 # local
-from .MariaDbConnection import MariaDbConnection
+from .DbConnection import DbConnection
 
 class MariaDbConnector(minidi.Injectable):
-	pMariaDbConnection: MariaDbConnection
+	pDbConnection: DbConnection
 
 	def fetch(self, query: str) -> list:
 		outputRows = []
 
-		pQueryResult = self.pMariaDbConnection.query(query)
+		pQueryResult = self.pDbConnection.query(query)
 		columns = [desc[0] for desc in pQueryResult.description]
 		rows = pQueryResult.fetchall()
 
@@ -26,5 +26,5 @@ class MariaDbConnector(minidi.Injectable):
 	# def fetch(self, query: str) -> list
 
 	def query(self, query: str) -> int:
-		return self.pMariaDbConnection.query(query).rowcount
+		return self.pDbConnection.query(query).rowcount
 # class MariaDbConnector(minidi.Injectable)

@@ -25,17 +25,22 @@ class MessageEvaluator(minidi.Injectable):
 	def getContent(self, pMessage: Message) -> str:
 		return pMessage.getContent()
 
-	@abstractmethod
 	def getUserLevel(self, pMessage: Message) -> int:
-		pass
-	
-	@abstractmethod
-	def isBotAuthorOfMessage(self, pMessage: Message) -> bool:
-		pass
+		pAuthor = self.getAuthor(pMessage)
+		authorName = self.getAuthorName(pMessage)
 
-	@abstractmethod
-	def isBotChannel(self, pMessage: Message) -> bool:
-		pass
+		try:
+			if authorName.lower() == 'prash3r' or self.isOwnerMessage(pMessage):
+				return 100
+			elif pAuthor.isMod():
+				return 10
+			elif pAuthor.isSubscriber():
+				return 5
+			else:
+				return 1
+		except:
+			return 1
+	# def getUserLevel(self, pMessage: Message) -> int
 
 	def isOwnerMessage(self, pMessage: Message) -> bool:
 		authorName = self.getAuthorName(pMessage)

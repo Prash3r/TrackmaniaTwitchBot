@@ -5,7 +5,7 @@ from unittest import mock
 # local
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Randomizer import Randomizer
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.optional.commands.CommandRoll import CommandRoll
 
 class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
@@ -26,13 +26,13 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformInt = mock.Mock(return_value=1337)
 
-		pTwitchMessageEvaluator = TwitchMessageEvaluator()
-		pTwitchMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
+		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
 
 		pCommandRoll = CommandRoll()
 		pCommandRoll.pInputSanitizer = pInputSanitizer
 		pCommandRoll.pRandomizer = pRandomizer
-		pCommandRoll.pTwitchMessageEvaluator = pTwitchMessageEvaluator
+		pCommandRoll.pMessageEvaluator = pMessageEvaluator
 
 		pMessage = object()
 		result = await pCommandRoll.execute(pMessage, [])
@@ -40,7 +40,7 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 
 		pInputSanitizer.isInteger.assert_not_called()
 		pRandomizer.uniformInt.assert_not_called()
-		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
+		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_default(self)
 
 	async def test_execute_default6(self):
@@ -50,13 +50,13 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformInt = mock.Mock(return_value=4)
 
-		pTwitchMessageEvaluator = TwitchMessageEvaluator()
-		pTwitchMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
+		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
 
 		pCommandRoll = CommandRoll()
 		pCommandRoll.pInputSanitizer = pInputSanitizer
 		pCommandRoll.pRandomizer = pRandomizer
-		pCommandRoll.pTwitchMessageEvaluator = pTwitchMessageEvaluator
+		pCommandRoll.pMessageEvaluator = pMessageEvaluator
 
 		pMessage = object()
 		result = await pCommandRoll.execute(pMessage, ['6', 'unused'])
@@ -64,7 +64,7 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 
 		pInputSanitizer.isInteger.assert_called_once_with('6')
 		pRandomizer.uniformInt.assert_called_once_with(1, 6)
-		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
+		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_default6(self)
 
 	async def test_execute_special69(self):
@@ -74,13 +74,13 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformInt = mock.Mock(return_value=69)
 
-		pTwitchMessageEvaluator = TwitchMessageEvaluator()
-		pTwitchMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
+		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
 
 		pCommandRoll = CommandRoll()
 		pCommandRoll.pInputSanitizer = pInputSanitizer
 		pCommandRoll.pRandomizer = pRandomizer
-		pCommandRoll.pTwitchMessageEvaluator = pTwitchMessageEvaluator
+		pCommandRoll.pMessageEvaluator = pMessageEvaluator
 
 		pMessage = object()
 		result = await pCommandRoll.execute(pMessage, ['100', 'unused'])
@@ -88,7 +88,7 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 
 		pInputSanitizer.isInteger.assert_called_once_with('100')
 		pRandomizer.uniformInt.assert_called_once_with(1, 100)
-		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
+		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_special69(self)
 
 	async def test_execute_special420(self):
@@ -98,13 +98,13 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 		pRandomizer = Randomizer()
 		pRandomizer.uniformInt = mock.Mock(return_value=169)
 
-		pTwitchMessageEvaluator = TwitchMessageEvaluator()
-		pTwitchMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
+		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.getAuthorName = mock.Mock(return_value='unittest')
 
 		pCommandRoll = CommandRoll()
 		pCommandRoll.pInputSanitizer = pInputSanitizer
 		pCommandRoll.pRandomizer = pRandomizer
-		pCommandRoll.pTwitchMessageEvaluator = pTwitchMessageEvaluator
+		pCommandRoll.pMessageEvaluator = pMessageEvaluator
 
 		pMessage = object()
 		result = await pCommandRoll.execute(pMessage, ['420', 'unused'])
@@ -112,6 +112,6 @@ class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 
 		pInputSanitizer.isInteger.assert_called_once_with('420')
 		pRandomizer.uniformInt.assert_called_once_with(1, 420)
-		pTwitchMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
+		pMessageEvaluator.getAuthorName.assert_called_once_with(pMessage)
 	# async def test_execute_special420(self)
 # class TestCommandRoll(unittest.IsolatedAsyncioTestCase)

@@ -1,13 +1,13 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleManager import ModuleManager
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandCoreModule(CommandCore):
     pInputSanitizer: InputSanitizer
+    pMessageEvaluator: MessageEvaluator
     pModuleManager: ModuleManager
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
         return 'module'
@@ -36,7 +36,7 @@ class CommandCoreModule(CommandCore):
     # def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str
     
     async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
         arg = args[0].lower() if len(args) > 0 else 'list'
 
         if arg == 'list':

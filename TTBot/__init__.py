@@ -10,21 +10,21 @@ from .logic.Environment import Environment
 from .logic.Logger import Logger
 from .logic.MariaDbConnector import MariaDbConnector
 from .logic.interface.MessageConverter import MessageConverter
+from .logic.MessageEvaluator import MessageEvaluator
 from .logic.ModuleCallbackRunner import ModuleCallbackRunner
-from .logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from .optional.commands.CommandRunner import CommandRunner
 from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
     def __init__(self, **kwargs):
-        self.pCommandRunner          = kwargs.get('CommandRunner'         , minidi.get(CommandRunner))
-        self.pEnvironment            = kwargs.get('Environment'           , minidi.get(Environment))
-        self.pEvaluatorRunner        = kwargs.get('EvaluatorRunner'       , minidi.get(EvaluatorRunner))
-        self.pLogger                 = kwargs.get('Logger'                , minidi.get(Logger))
-        self.pMariaDbConnector       = kwargs.get('MariaDbConnector'      , minidi.get(MariaDbConnector))
-        self.pMessageConverter       = kwargs.get('MessageConverter'      , minidi.get(MessageConverter))
-        self.pModuleCallbackRunner   = kwargs.get('ModuleCallbackRunner'  , minidi.get(ModuleCallbackRunner))
-        self.pTwitchMessageEvaluator = kwargs.get('TwitchMessageEvaluator', minidi.get(TwitchMessageEvaluator))
+        self.pCommandRunner        = kwargs.get('CommandRunner'       , minidi.get(CommandRunner))
+        self.pEnvironment          = kwargs.get('Environment'         , minidi.get(Environment))
+        self.pEvaluatorRunner      = kwargs.get('EvaluatorRunner'     , minidi.get(EvaluatorRunner))
+        self.pLogger               = kwargs.get('Logger'              , minidi.get(Logger))
+        self.pMariaDbConnector     = kwargs.get('MariaDbConnector'    , minidi.get(MariaDbConnector))
+        self.pMessageConverter     = kwargs.get('MessageConverter'    , minidi.get(MessageConverter))
+        self.pMessageEvaluator     = kwargs.get('MessageEvaluator'    , minidi.get(MessageEvaluator))
+        self.pModuleCallbackRunner = kwargs.get('ModuleCallbackRunner', minidi.get(ModuleCallbackRunner))
 
         super().__init__(
             token=self.pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
@@ -79,12 +79,12 @@ class TrackmaniaTwitchBot(commands.Bot):
         
         # Runs every time a message is sent to the channel
         # ignore non existent author (twitchio bug):
-        if self.pTwitchMessageEvaluator.getAuthor(pMessage) is None:
+        if self.pMessageEvaluator.getAuthor(pMessage) is None:
             return
         
         # ignore thyself
-        if self.pTwitchMessageEvaluator.isBotAuthorOfMessage(pMessage):
-            self.pLogger.debug("own message detected and ignored")
+        if self.pEnvironment.getTwitchBotUsername() == self.pMessageEvaluator.getAuthorName(pMessage).lower():
+            self.pLogger.debug("Own message detected and ignored")
             return
 
         # handle commands and evaluations
@@ -92,8 +92,8 @@ class TrackmaniaTwitchBot(commands.Bot):
     # async def event_message(self, pMessage)
 
     async def handleMessage(self, pMessage):
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
-        message = self.pTwitchMessageEvaluator.getContent(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
+        message = self.pMessageEvaluator.getContent(pMessage)
         self.pLogger.debug(f"{messageAuthorName}\t:{message}")
 
         await self.pCommandRunner.execute(pMessage)

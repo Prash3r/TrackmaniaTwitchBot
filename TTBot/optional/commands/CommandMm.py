@@ -2,13 +2,13 @@
 from .Command import Command
 from TTBot.data.MatchmakingData import MatchmakingData
 from TTBot.logic.MatchmakingCache import MatchmakingCache
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.TrackmaniaIO import TrackmaniaIO
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandMm(Command):
     pMatchmakingCache: MatchmakingCache
+    pMessageEvaluator: MessageEvaluator
     pTrackmaniaIO: TrackmaniaIO
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
     
     def getCommandString(self) -> str:
         return 'mm'
@@ -25,7 +25,7 @@ class CommandMm(Command):
         return f"#{pMatchmakingData.getRank()}: {pMatchmakingData.getPlayer()} ({pMatchmakingData.getScore()} points)"
 
     async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
 
         playerNamePart = args[0]
         cachedData = self.pMatchmakingCache.get(playerNamePart)

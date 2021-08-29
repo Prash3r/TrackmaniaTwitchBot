@@ -8,19 +8,19 @@ import minidi
 from .Evaluator import Evaluator
 from .EvaluatorList import EvaluatorList
 from TTBot.logic.Logger import Logger
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleFactory import ModuleFactory
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.logic.UserRights import UserRights
 
 class EvaluatorRunner(minidi.Injectable):
 	pEvaluatorList: EvaluatorList
 	pLogger: Logger
+	pMessageEvaluator: MessageEvaluator
 	pModuleFactory: ModuleFactory
-	pTwitchMessageEvaluator: TwitchMessageEvaluator
 	pUserRights: UserRights
 
 	async def _checkExecutionSingle(self, pEvaluator: Evaluator, pMessage):
-		messageContent = self.pTwitchMessageEvaluator.getContent(pMessage)
+		messageContent = self.pMessageEvaluator.getContent(pMessage)
 
 		if not re.search(pEvaluator.getMessageRegex(), messageContent.lower()):
 			return
@@ -32,7 +32,7 @@ class EvaluatorRunner(minidi.Injectable):
 	async def _executeSingle(self, pEvaluator: Evaluator, pMessage):
 		try:
 			result = await pEvaluator.execute(pMessage)
-			pChannel = self.pTwitchMessageEvaluator.getChannel(pMessage)
+			pChannel = self.pMessageEvaluator.getChannel(pMessage)
 			await pChannel.sendMessage(result)
 			self.pLogger.info(f"{pEvaluator.__class__.__name__} did trigger")
 		except Exception as e:

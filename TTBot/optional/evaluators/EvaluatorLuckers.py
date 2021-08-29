@@ -1,11 +1,11 @@
 # local
 from .Evaluator import Evaluator
 from TTBot.logic.GlobalVariables import GlobalVariables
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class EvaluatorLuckers(Evaluator):
     pGlobalVariables: GlobalVariables
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
+    pMessageEvaluator: MessageEvaluator
 
     def getMessageRegex(self) -> str:
         return r'(luckers)\b'
@@ -18,7 +18,7 @@ class EvaluatorLuckers(Evaluator):
         newval = oldval + 1
         self.pGlobalVariables.write(self.getModuleId(), newval)
 
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
         return f"Turbo was called Luckers for {newval} times ... please just dont, @{messageAuthorName}!"
     # async def execute(self, pMessage) -> str
 # class EvaluatorLuckers(Evaluator)

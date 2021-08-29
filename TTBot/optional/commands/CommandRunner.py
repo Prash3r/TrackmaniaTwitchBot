@@ -7,9 +7,9 @@ from .core.CommandCoreList import CommandCoreList
 from .CommandList import CommandList
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 from TTBot.logic.UserRights import UserRights
 
 class CommandRunner(minidi.Injectable):
@@ -17,9 +17,9 @@ class CommandRunner(minidi.Injectable):
 	pCommandList: CommandList
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
+	pMessageEvaluator: MessageEvaluator
 	pModuleFactory: ModuleFactory
 	pTwitchBotWrapper: TwitchBotWrapper
-	pTwitchMessageEvaluator: TwitchMessageEvaluator
 	pUserRights: UserRights
 
 	async def _checkExecutionSingle(self, pCommand: Command, pMessage, args: list):
@@ -33,16 +33,16 @@ class CommandRunner(minidi.Injectable):
 	async def _executeSingle(self, pCommand: Command, pMessage, args: list):
 		try:
 			result = await pCommand.execute(pMessage, args)
-			pChannel = self.pTwitchMessageEvaluator.getChannel(pMessage)
+			pChannel = self.pMessageEvaluator.getChannel(pMessage)
 			await pChannel.sendMessage(result)
-			messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+			messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
 			self.pLogger.info(f"Command '{pCommand.getCommandString()}' triggered by {messageAuthorName}")
 		except Exception as e:
 			self.pLogger.exception(e)
 	# async def _executeSingle(self, pCommand: Command, pMessage, args: list)
 
 	async def _runPreChecks(self, pMessage):
-		message = self.pTwitchMessageEvaluator.getContent(pMessage)
+		message = self.pMessageEvaluator.getContent(pMessage)
 		pTwitchBot = self.pTwitchBotWrapper.get()
 
 		if not message.startswith(pTwitchBot._prefix):

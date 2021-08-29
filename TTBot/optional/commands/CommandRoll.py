@@ -1,13 +1,13 @@
 # local
 from .Command import Command
 from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.Randomizer import Randomizer
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandRoll(Command):
     pInputSanitizer: InputSanitizer
+    pMessageEvaluator: MessageEvaluator
     pRandomizer: Randomizer
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
         return 'roll'
@@ -16,7 +16,7 @@ class CommandRoll(Command):
         return 'roll'
 
     async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
 
         if not args or not self.pInputSanitizer.isInteger(args[0]):
             return f"@{messageAuthorName} Use '!roll <max>' to roll a number out of max!"

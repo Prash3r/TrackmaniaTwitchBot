@@ -1,18 +1,18 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.logic.MariaDbConnector import MariaDbConnector
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class CommandCoreUninvite(CommandCore):
     pMariaDbConnector: MariaDbConnector
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
+    pMessageEvaluator: MessageEvaluator
 
     def getCommandString(self) -> str:
         return 'uninvite'
     
     async def execute(self, pMessage, _) -> str:
         try:
-            messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+            messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
             self.pMariaDbConnector.query(f"DELETE FROM modules WHERE channel = '{messageAuthorName}';")
             return f"@{messageAuthorName} I left your channel, you can reinvite me in my channel!"
         except:

@@ -3,17 +3,17 @@ import sys
 
 # local
 from .CommandCore import CommandCore
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class CommandCoreUpdate(CommandCore):
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
+    pMessageEvaluator: MessageEvaluator
 
     def getCommandString(self) -> str:
         return 'update'
     
     async def execute(self, pMessage, _) -> str:
         try:
-            messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+            messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
             if messageAuthorName in ["axelalex2", "prash3r"]:
 				# the system itself will reboot the bot for us
                 sys.exit()

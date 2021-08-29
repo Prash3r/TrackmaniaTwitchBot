@@ -1,6 +1,6 @@
 # local
 from .CommandCore import CommandCore
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class CommandCoreHelp(CommandCore):
     DEFAULT_HELP_MESSAGE = "Use '!help invite/uninvite/accesslevel/add/list/rem' for detailed information about this bots core commands!"
@@ -13,13 +13,13 @@ class CommandCoreHelp(CommandCore):
         'rem': "Use the command '!module rem' to disable the module on your channel!"
     }
 
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
+    pMessageEvaluator: MessageEvaluator
 
     def getCommandString(self) -> str:
         return 'help'
     
     async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+        messageAuthorName = self.pMessageEvaluator.getAuthorName(pMessage)
 
         if args:
             return f"@{messageAuthorName} {self.HELP_MESSAGES.get(args[0], self.DEFAULT_HELP_MESSAGE)}"

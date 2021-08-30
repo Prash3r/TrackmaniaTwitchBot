@@ -2,19 +2,22 @@
 import minidi
 
 # local
-from .DbConnector import DbConnector
 from .Environment import Environment
 from .MessageEvaluator import MessageEvaluator
+from .ModuleManager import ModuleManager
+from TTBot.data.Message import Message
 from TTBot.optional.commands.core.CommandCore import CommandCore
 from TTBot.optional.Module import Module
 
 class UserRights(minidi.Injectable):
-	pDbConnector: DbConnector
 	pEnvironment: Environment
 	pMessageEvaluator: MessageEvaluator
+	pModuleManager: ModuleManager
 
-	def allowModuleExecution(self, pModule: Module, pMessage) -> bool:
-		channelName = pMessage.getChannel().getName().lower()
+	def allowModuleExecution(self, pModule: Module, pMessage: Message) -> bool:
+		channelName = pMessage.getChannel().getName()
+		if channelName not in self.pModuleManager.getChannels():
+			raise RuntimeError(f"Cannot execute code on channel '{channelName}', did not join yet!")
 
 		isCoreCommand = isinstance(pModule, CommandCore)
 		isOwnerMessage = self.pMessageEvaluator.isOwnerMessage(pMessage)
@@ -23,16 +26,8 @@ class UserRights(minidi.Injectable):
 		if isCoreCommand and (isOwnerMessage or isBotChannel):
 			return True
 		
-		rightsId = pModule.getModuleId()
-
-		rows = self.pDbConnector.fetch(f"SELECT `{rightsId}` FROM `modules` WHERE `channel` = '{channelName}' LIMIT 1;")		
-		if not rows:
-			return False
-		
-		minimumAccessLevel = rows[0][rightsId]
-		if minimumAccessLevel in [0, None]:
-			return False
-
+		moduleId = pModule.getModuleId()
+		minimumAccessLevel = self.pModuleManager.getMinimumAccessLevel(channelName, moduleId)
 		return self.pMessageEvaluator.getUserLevel(pMessage) >= minimumAccessLevel
-	# def allowModuleExecution(self, pModule: Module, pMessage) -> bool
+	# def allowModuleExecution(self, pModule: Module, pMessage: Message) -> bool
 # class UserRights(minidi.Injectable)

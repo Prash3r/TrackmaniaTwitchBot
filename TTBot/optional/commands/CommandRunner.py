@@ -6,19 +6,19 @@ from .Command import Command
 from .core.CommandCoreList import CommandCoreList
 from .CommandList import CommandList
 from TTBot.data.Message import Message
+from TTBot.logic.Environment import Environment
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
 from TTBot.logic.ModuleFactory import ModuleFactory
-from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.logic.UserRights import UserRights
 
 class CommandRunner(minidi.Injectable):
 	pCommandCoreList: CommandCoreList
 	pCommandList: CommandList
+	pEnvironment: Environment
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
 	pModuleFactory: ModuleFactory
-	pTwitchBotWrapper: TwitchBotWrapper
 	pUserRights: UserRights
 
 	async def _checkExecutionSingle(self, pCommand: Command, pMessage: Message, args: list):
@@ -42,12 +42,12 @@ class CommandRunner(minidi.Injectable):
 
 	async def _runPreChecks(self, pMessage: Message):
 		message = pMessage.getContent()
-		pTwitchBot = self.pTwitchBotWrapper.get()
+		commandPrefix = self.pEnvironment.getVariable('TWITCH_CMD_PREFIX')
 
-		if not message.startswith(pTwitchBot._prefix):
+		if not message.startswith(commandPrefix):
 			return False
 		
-		message = message[len(pTwitchBot._prefix):]
+		message = message[len(commandPrefix):]
 		message = self.pInputSanitizer.sanitize(message)
 		args = message.split()
 		return args if args else False

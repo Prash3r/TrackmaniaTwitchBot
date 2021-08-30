@@ -2,14 +2,18 @@
 import minidi
 
 # local
+from .interface.DbQueryDialectConverter import DbQueryDialectConverter
 from .Logger import Logger
 
 _pDbConnection = None
 
 class DbConnection(minidi.Injectable):
 	pLogger: Logger
+	pDbQueryDialectConverter: DbQueryDialectConverter
 
 	def query(self, query: str):
+		query = self.pDbQueryDialectConverter.convert(query)
+
 		try:
 			cursor = _pDbConnection.cursor()
 			cursor.execute(query)

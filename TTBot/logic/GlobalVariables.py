@@ -17,7 +17,7 @@ class GlobalVariables(minidi.Injectable):
 			`typ` VARCHAR(255), \
 			`value` VARCHAR(255), \
 			`ts` TIMESTAMP, \
-			CONSTRAINT PRIMARY KEY USING HASH (`varname`) \
+			PRIMARY KEY USING HASH (`varname`) \
 		);"
 		
 		self.pDbConnector.execute(query)

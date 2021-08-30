@@ -35,7 +35,7 @@ class MatchmakingCache(minidi.Injectable):
 			`page` INT,\
 			`note` INT,\
 			`ts` TIMESTAMP,\
-			CONSTRAINT accountid PRIMARY KEY USING BTREE (`ranks_accountid`)\
+			PRIMARY KEY USING BTREE (`ranks_accountid`)\
 		);"
 		
 		self.pDbConnector.execute(query)

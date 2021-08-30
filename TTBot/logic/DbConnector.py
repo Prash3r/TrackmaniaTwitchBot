@@ -8,7 +8,9 @@ class DbConnector(minidi.Injectable):
 	pDbConnection: DbConnection
 
 	def execute(self, query: str) -> int:
-		return self.pDbConnection.query(query).rowcount
+		pQueryResult = self.pDbConnection.query(query)
+		return pQueryResult.rowcount
+	# def execute(self, query: str) -> int
 
 	def fetch(self, query: str) -> list:
 		outputRows = []
@@ -27,4 +29,9 @@ class DbConnector(minidi.Injectable):
 
 		return outputRows
 	# def fetch(self, query: str) -> list
+
+	def getColumns(self, table: str) -> list:
+		pQueryResult = self.pDbConnection.query(f"SELECT * FROM `{table}` WHERE 0=1;")
+		return [desc[0] for desc in pQueryResult.description]
+	# def getColumns(self, table: str) -> list
 # class DbConnector(minidi.Injectable)

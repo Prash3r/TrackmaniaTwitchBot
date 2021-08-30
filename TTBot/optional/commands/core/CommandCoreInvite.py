@@ -1,11 +1,11 @@
 # local
 from .CommandCore import CommandCore
 from TTBot.data.Message import Message
-from TTBot.logic.DbConnector import DbConnector
+from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 
 class CommandCoreInvite(CommandCore):
-    pDbConnector: DbConnector
+    pModuleManager: ModuleManager
     pTwitchBotWrapper: TwitchBotWrapper
 
     def getCommandString(self) -> str:
@@ -17,7 +17,7 @@ class CommandCoreInvite(CommandCore):
             pTwitchBot = self.pTwitchBotWrapper.get()
             await pTwitchBot.join_channels([f'{messageAuthorName}'])
 
-            self.pDbConnector.execute(f"INSERT IGNORE INTO modules (channel) VALUES ('{messageAuthorName}');")
+            self.pModuleManager.addChannel(messageAuthorName)
             return f"@{messageAuthorName} I joined your channel, now you can control me over there!"
         except:
             return "kem1W"

@@ -16,8 +16,6 @@ class UserRights(minidi.Injectable):
 
 	def allowModuleExecution(self, pModule: Module, pMessage: Message) -> bool:
 		channelName = pMessage.getChannel().getName()
-		if channelName not in self.pModuleManager.getChannels():
-			raise RuntimeError(f"Cannot execute code on channel '{channelName}', did not join yet!")
 
 		isCoreCommand = isinstance(pModule, CommandCore)
 		isOwnerMessage = self.pMessageEvaluator.isOwnerMessage(pMessage)
@@ -25,6 +23,9 @@ class UserRights(minidi.Injectable):
 
 		if isCoreCommand and (isOwnerMessage or isBotChannel):
 			return True
+		
+		if channelName not in self.pModuleManager.getChannels():
+			raise RuntimeError(f"Cannot execute code on channel '{channelName}', did not join yet!")
 		
 		moduleId = pModule.getModuleId()
 		minimumAccessLevel = self.pModuleManager.getMinimumAccessLevel(channelName, moduleId)

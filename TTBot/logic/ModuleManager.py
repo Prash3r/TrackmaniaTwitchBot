@@ -86,4 +86,7 @@ class ModuleManager(minidi.Injectable):
 		del modules['ts']
 		return modules
 	# def listModulesForChannel(self, channelName: str) -> dict
+
+	def removeChannel(self, channelName: str):
+		self.pDbConnector.execute(f"DELETE FROM `modules` WHERE `channel` = '{channelName}';")
 # class ModuleManager(minidi.Injectable)

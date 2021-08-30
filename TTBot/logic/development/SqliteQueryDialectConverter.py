@@ -6,8 +6,9 @@ from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverte
 
 class SqliteQueryDialectConverter(DbQueryDialectConverter):
 	def convert(self, query: str) -> str:
+		query = re.sub(r'INSERT IGNORE', 'INSERT OR IGNORE', query, flags=re.IGNORECASE)
 		query = re.sub(r'USING (HASH|BTREE)', '', query, flags=re.IGNORECASE)
-		query = re.sub(r'CHARACTER SET \w', '', query, flags=re.IGNORECASE)
+		query = re.sub(r'CHARACTER SET \w+', '', query, flags=re.IGNORECASE)
 		return query
 	# def convert(self, query: str) -> str
 # class SqliteQueryDialectConverter(DbQueryDialectConverter)

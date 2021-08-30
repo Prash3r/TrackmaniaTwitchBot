@@ -5,7 +5,7 @@ from TTBot.data.MessageChannel import MessageChannel
 from TTBot.logic.interface.MessageConverter import MessageConverter
 
 async def _asyncPrint(message: str):
-	print(message)
+	print('>>>', message)
 
 class TerminalMessageConverter(MessageConverter):
 	def convert(self, message) -> Message:

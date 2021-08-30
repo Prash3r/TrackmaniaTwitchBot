@@ -19,6 +19,7 @@ class DbConnection(minidi.Injectable):
 			cursor.execute(query)
 		except Exception as pException:
 			self.pLogger.info(f"Error executing query: {pException}")
+			self.pLogger.debug(query)
 		
 		return cursor
 	# def query(self, query: str)

@@ -24,6 +24,7 @@ from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverte
 from TTBot.logic.Logger import Logger
 from TTBot.logic.development.SqliteQueryDialectConverter import SqliteQueryDialectConverter
 from TTBot.logic.development.TerminalMessageConverter import TerminalMessageConverter
+from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.optional.commands.CommandRunner import CommandRunner
 from TTBot.optional.evaluators.EvaluatorRunner import EvaluatorRunner
 
@@ -52,10 +53,22 @@ def initLogger():
 	pLogger.addHandler(pStreamHandler)
 # def initLogger()
 
+class TwitchBotMock:
+	async def join_channels(self, _: list):
+		pass
+# class TwitchBotMock
+
+def initTwitchBotMock():
+	pTwitchBotMock = TwitchBotMock()
+	pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
+	pTwitchBotWrapper.set(pTwitchBotMock)
+# def initTwitchBotMock()
+
 if __name__ == '__main__':
 	initEnvironment()
 	initLogger()
 	initDatabase()
+	initTwitchBotMock()
 
 	pCommandRunner: CommandRunner = minidi.get(CommandRunner)
 	pEvaluatorRunner: EvaluatorRunner = minidi.get(EvaluatorRunner)

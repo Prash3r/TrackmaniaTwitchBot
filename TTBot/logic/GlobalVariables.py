@@ -28,7 +28,8 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 
 		try:
-			rows = self.pDbConnector.fetch(f"SELECT `typ`, `value` \
+			rows = self.pDbConnector.fetch(f" \
+				SELECT `typ`, `value` \
 				FROM `global_vars` \
 				WHERE `varname` = '{name}' \
 				LIMIT 1; \
@@ -58,10 +59,9 @@ class GlobalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pDbConnector.execute(f"INSERT IGNORE INTO `global_vars` SET \
-				`varname` = '{name}', \
-				`typ` = '{valueTypeString}', \
-				`value` = '{value}'; \
+			self.pDbConnector.execute(f" \
+				INSERT IGNORE INTO `global_vars` (`varname`, `typ`, `value`) \
+				VALUES ('{name}', '{valueTypeString}', '{value}'); \
 			")
 			return True
 		except:
@@ -74,10 +74,10 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 		
 		try:
-			self.pDbConnector.execute(f"UPDATE `global_vars` \
+			self.pDbConnector.execute(f" \
+				UPDATE `global_vars` \
 				SET `value` = '{newValue}' \
-				WHERE `varname` = '{name}' \
-				LIMIT 1; \
+				WHERE `varname` = '{name}'; \
 			")
 			self.pLogger.debug(f"Updated global variable '{name}' to '{newValue}'!")
 			return True

@@ -31,7 +31,8 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 
 		try:
-			rows = self.pDbConnector.fetch(f"SELECT `typ`, `value` \
+			rows = self.pDbConnector.fetch(f" \
+				SELECT `typ`, `value` \
 				FROM `local_vars` \
 				WHERE `varname` = '{name}' AND `channelname` = '{channel}' \
 				LIMIT 1; \
@@ -61,11 +62,9 @@ class LocalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pDbConnector.execute(f"INSERT IGNORE INTO `local_vars` SET \
-				`varname` = '{name}', \
-				`channelname` = '{channel}', \
-				`typ` = '{valueTypeString}', \
-				`value` = '{value}';\
+			self.pDbConnector.execute(f" \
+				INSERT IGNORE INTO `local_vars` (`varname`, `channelname`, `typ`, `value`) \
+				VALUES ('{name}', '{channel}', '{valueTypeString}', '{value}'); \
 			")
 			return True
 		except:
@@ -80,10 +79,10 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 		
 		try:
-			self.pDbConnector.execute(f"UPDATE `local_vars` \
+			self.pDbConnector.execute(f" \
+				UPDATE `local_vars` \
 				SET `value` = '{newValue}' \
-				WHERE `varname` = '{name}' AND `channelname` = '{channel}' \
-				LIMIT 1;\
+				WHERE `varname` = '{name}' AND `channelname` = '{channel}';\
 			")
 			self.pLogger.debug(f"Updated local variable '{name}' for channel '{channel}' to '{newValue}'!")
 			return True

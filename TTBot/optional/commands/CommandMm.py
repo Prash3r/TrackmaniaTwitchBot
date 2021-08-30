@@ -26,6 +26,9 @@ class CommandMm(Command):
     async def execute(self, pMessage: Message, args: list) -> str:
         messageAuthorName = pMessage.getAuthor().getName()
 
+        if not args:
+            return f"@{messageAuthorName} Missing a player name (or part of a players name)!"
+
         playerNamePart = args[0]
         cachedData = self.pMatchmakingCache.get(playerNamePart)
         

@@ -4,7 +4,7 @@ from unittest import mock
 
 # local
 from TTBot.optional.commands.CommandList import CommandList
-from TTBot.optional.commands.CommandRoll import CommandRoll
+from TTBot.module.roll.CommandRoll import CommandRoll
 from TTBot.optional.commands.CommandScore import CommandScore
 from TTBot.optional.evaluators.EvaluatorList import EvaluatorList
 from TTBot.optional.evaluators.EvaluatorOoga import EvaluatorOoga

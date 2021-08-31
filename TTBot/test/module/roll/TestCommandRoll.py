@@ -7,7 +7,7 @@ from TTBot.data.Message import Message
 from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Randomizer import Randomizer
-from TTBot.optional.commands.CommandRoll import CommandRoll
+from TTBot.module.roll.CommandRoll import CommandRoll
 
 class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
 	async def test_getCommandString(self):

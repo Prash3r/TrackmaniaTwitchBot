@@ -4,7 +4,7 @@ from unittest import mock
 
 # local
 from TTBot.logic.InputSanitizer import InputSanitizer
-from TTBot.optional.commands.CommandKem import CommandKem
+from TTBot.module.kem.CommandKem import CommandKem
 
 class TestCommandKem(unittest.IsolatedAsyncioTestCase):
 	async def test_getCommandString(self):

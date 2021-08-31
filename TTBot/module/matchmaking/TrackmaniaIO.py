@@ -5,7 +5,7 @@ import requests
 import minidi
 
 # local
-from .Environment import Environment
+from TTBot.logic.Environment import Environment
 from .MatchmakingDataFactory import MatchmakingDataFactory
 
 class TrackmaniaIO(minidi.Injectable):

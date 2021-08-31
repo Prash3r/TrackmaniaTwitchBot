@@ -6,7 +6,7 @@ from unittest import mock
 from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.optional.commands.Command import Command
 from TTBot.optional.commands.CommandList import CommandList
-from TTBot.optional.commands.CommandMm import CommandMm
+from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.optional.evaluators.Evaluator import Evaluator
 from TTBot.optional.evaluators.EvaluatorList import EvaluatorList
 from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing

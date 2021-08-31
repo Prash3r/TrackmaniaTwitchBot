@@ -3,7 +3,7 @@ import datetime
 import unittest
 
 # local
-from TTBot.data.MatchmakingData import MatchmakingData
+from TTBot.module.matchmaking.MatchmakingData import MatchmakingData
 
 class TestMatchmakingData(unittest.TestCase):
 	def test_player(self):

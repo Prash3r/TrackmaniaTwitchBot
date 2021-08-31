@@ -3,7 +3,7 @@ import datetime
 import unittest
 
 # local
-from TTBot.logic.MatchmakingDataFactory import MatchmakingDataFactory
+from TTBot.module.matchmaking.MatchmakingDataFactory import MatchmakingDataFactory
 
 class TestMatchmakingDataFactory(unittest.TestCase):
 	def test_createFromCacheQuery(self):

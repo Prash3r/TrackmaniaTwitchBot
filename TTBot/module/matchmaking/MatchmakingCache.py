@@ -2,9 +2,9 @@
 import minidi
 
 # local
-from TTBot.data.MatchmakingData import MatchmakingData
-from .DateTimeChecker import DateTimeChecker
-from .DbConnector import DbConnector
+from TTBot.logic.DateTimeChecker import DateTimeChecker
+from TTBot.logic.DbConnector import DbConnector
+from .MatchmakingData import MatchmakingData
 from .MatchmakingDataFactory import MatchmakingDataFactory
 
 class MatchmakingCache(minidi.Injectable):

@@ -5,8 +5,8 @@ from unittest import mock
 
 # local
 from TTBot.logic.DateTimeChecker import DateTimeChecker
-from TTBot.logic.MatchmakingCache import MatchmakingCache
-from TTBot.logic.MatchmakingDataFactory import MatchmakingDataFactory
+from TTBot.module.matchmaking.MatchmakingCache import MatchmakingCache
+from TTBot.module.matchmaking.MatchmakingDataFactory import MatchmakingDataFactory
 
 class TestMatchmakingCache(unittest.TestCase):
 	def test_get(self):

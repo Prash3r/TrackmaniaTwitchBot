@@ -2,7 +2,7 @@
 import minidi
 
 # local
-from TTBot.data.MatchmakingData import MatchmakingData
+from TTBot.module.matchmaking.MatchmakingData import MatchmakingData
 
 class MatchmakingDataFactory(minidi.Injectable):
 	def createFromCacheQuery(self, cacheData: list) -> MatchmakingData:

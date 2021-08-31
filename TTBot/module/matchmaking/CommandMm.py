@@ -1,9 +1,9 @@
 # local
-from .Command import Command
-from TTBot.data.MatchmakingData import MatchmakingData
+from TTBot.optional.commands.Command import Command
+from .MatchmakingData import MatchmakingData
 from TTBot.data.Message import Message
-from TTBot.logic.MatchmakingCache import MatchmakingCache
-from TTBot.logic.TrackmaniaIO import TrackmaniaIO
+from .MatchmakingCache import MatchmakingCache
+from .TrackmaniaIO import TrackmaniaIO
 
 class CommandMm(Command):
     pMatchmakingCache: MatchmakingCache

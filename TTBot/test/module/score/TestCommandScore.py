@@ -6,7 +6,7 @@ from unittest import mock
 from TTBot.data.Message import Message
 from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.Randomizer import Randomizer
-from TTBot.optional.commands.CommandScore import CommandScore
+from TTBot.module.score.CommandScore import CommandScore
 
 class TestCommandScore(unittest.IsolatedAsyncioTestCase):
 	async def test_getCommandString(self):

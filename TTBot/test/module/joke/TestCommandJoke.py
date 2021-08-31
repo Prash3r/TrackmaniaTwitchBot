@@ -7,8 +7,7 @@ from TTBot.data.Message import Message
 from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.Randomizer import Randomizer
-from TTBot.logic.MessageEvaluator import MessageEvaluator
-from TTBot.optional.commands.CommandJoke import CommandJoke
+from TTBot.module.joke.CommandJoke import CommandJoke
 
 class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
 	async def test_getCommandString(self):

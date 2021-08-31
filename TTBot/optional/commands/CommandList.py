@@ -2,7 +2,7 @@
 import minidi
 
 # local
-from .CommandJoke import CommandJoke
+from TTBot.module.joke.CommandJoke import CommandJoke
 from TTBot.module.kem.CommandKem import CommandKem
 from TTBot.module.matchmaking.CommandMm import CommandMm
 from .CommandRoll import CommandRoll

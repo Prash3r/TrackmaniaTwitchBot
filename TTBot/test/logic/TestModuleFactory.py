@@ -9,7 +9,7 @@ from TTBot.optional.commands.CommandList import CommandList
 from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.optional.evaluators.Evaluator import Evaluator
 from TTBot.optional.evaluators.EvaluatorList import EvaluatorList
-from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing
+from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 from TTBot.optional.Module import Module
 
 class TestModuleFactory(unittest.TestCase):

@@ -4,7 +4,7 @@ import minidi
 # local
 from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
 from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
-from .EvaluatorPing import EvaluatorPing
+from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 
 class EvaluatorList(minidi.Injectable):
 	def getAllEvaluatorClasses(self) -> list:

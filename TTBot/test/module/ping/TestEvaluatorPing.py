@@ -2,7 +2,7 @@
 import unittest
 
 # local
-from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing
+from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 
 class TestEvaluatorPing(unittest.IsolatedAsyncioTestCase):
 	async def test_getMessageRegex(self):

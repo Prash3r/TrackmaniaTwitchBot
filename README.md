@@ -10,22 +10,23 @@ You came here for one of 2 reasons:
 You came to the right place. The current version is hosted and will be pulled regurarily from this repository. There is no need to host a copy or register your own bot - although you are free to do that. 
 
 ## I want this bot in my channel
-go to the bots chat [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot) and type `!invite`
+Go to the bots chat [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot) and type `!invite`
 
-the bot will now join your channel (obviously only possible for the streamer himself). If you want the bot to leave type !uninvite either in the bots channel or in your own. Be mindful, this deletes all of your configuration.
+The bot will now join your channel (obviously only possible for the streamer himself). If you want the bot to leave type `!uninvite` either in the bots channel or in your own. Be mindful, this deletes all of your configuration.
+
 ## I need help configuring the bot
-the basic commands `!uninvite`, `!help` and `!module` should always work and are only available for the streamer.
+The basic commands `!uninvite`, `!help` and `!module` should always work and are only available for the streamer.
 
 If you want to add an existing module you can add it via:
 
     !module add modulename
 
-the functionality of modulname would be available for everyone in your channel. If you only want it to be invokeable by a subset of your users you can add an accesslevel integer as 3rd argument:
+The functionality of the module would be available for everyone in your channel. If you only want it to be invokeable by a subset of your users you can add an accesslevel integer as 3rd argument:
 
     !module add modulename 5
-acesslevel 5 would mean the commands is only invokeable by subscribers.
 
-currently implemented access levels:
+Accesslevel 5 would mean the commands is only invokeable by subscribers.
+Currently implemented access levels:
 
  - **100** owner of the channel
  - **10** moderators
@@ -33,16 +34,10 @@ currently implemented access levels:
  - **1** everyone
 
 # Modules: commands and evaluators
-All modules are either a command or an evaluator and they are located here:
-
- - [/TTBot/optional/commands](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/commands) if they are commands (message starting with !)
- - [/TTBot/optional/evaluators](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators) if they are evaluators (all messages need to be analyzed)
+Modules can consist of commands and/or evaluators. What commands and evaluators are exactly, and which are available, you can read up [here](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/module)
 
 ## I want to implement additional functionality
-Feel free to create pull requests. This is an early stage of development so if you want to implement general functionality you maybe should talk to me first - chances are that someone is already doing it. If you want to implement a command or an evaluator you should look at an existing one first.
-
-
-**If you have no means of testing just commit your newmodulename.py into evaluators or commands and i will test and integrate them.**
+Feel free to create pull requests. This is an early stage of development so if you want to implement general functionality you maybe should talk to us first - chances are that someone is already doing it. If you want to implement a command or an evaluator you should look at an existing one first.
 
 ### Some Tips and examples
 
@@ -53,11 +48,6 @@ Feel free to create pull requests. This is an early stage of development so if y
 
  1. dont commit sensitive data
  2. preferrably rebase before pull request
-
-### Roadmap
-
- 1. local module testing
- 2. alternative SQLite interface also for local testing (for now request access to the dev database and dev twitch bot user credentials)
 
 ### Deployment example
 #### run.sh unchanged 

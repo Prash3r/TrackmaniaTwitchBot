@@ -27,14 +27,6 @@ class TrackmaniaTwitchBot(commands.Bot):
         )
         
         pLogger: Logger = minidi.get(Logger)
-        pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
-
-        moduleInitSuccess = pModuleCallbackRunner.onBotStartup()
-        if not moduleInitSuccess:
-            pLogger.error("Module initialization failed!")
-            os._exit(1)
-        # if not moduleInitSuccess
-        
         pLogger.info("Twitchio Bot successfully started!")
     # def __init__(self)
 
@@ -54,6 +46,13 @@ class TrackmaniaTwitchBot(commands.Bot):
         except:
             pLogger.error("Could not join twitch channels!")
             pLogger.error(f"channelList: {channelList}")
+            os._exit(1)
+
+
+        pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
+        moduleInitSuccess = await pModuleCallbackRunner.onBotStartup()
+        if not moduleInitSuccess:
+            pLogger.error("Module initialization failed!")
             os._exit(1)
     # async def event_ready(self)
 

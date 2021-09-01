@@ -9,7 +9,7 @@ class Module(minidi.Injectable):
 	def getModuleId(self) -> str:
 		pass
 
-	def onBotStartup(self) -> bool:
+	async def onBotStartup(self) -> bool:
 		return True
 
 	def onModuleEnable(self):

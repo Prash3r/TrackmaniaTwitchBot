@@ -12,7 +12,7 @@ class FalseModule(Module):
 	def getModuleId(self) -> str:
 		return 'false'
 	
-	def onBotStartup(self) -> bool:
+	async def onBotStartup(self) -> bool:
 		return False
 # class FalseModule(Module)
 
@@ -25,12 +25,12 @@ class TrueModule(Module):
 	def getModuleId(self) -> str:
 		return 'true'
 	
-	def onBotStartup(self) -> bool:
+	async def onBotStartup(self) -> bool:
 		return True
 # class TrueModule(Module)
 
-class TestModuleCallbackRunner(unittest.TestCase):
-	def test_onBotStartup_Default(self):
+class TestModuleCallbackRunner(unittest.IsolatedAsyncioTestCase):
+	async def test_onBotStartup_Default(self):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
@@ -40,13 +40,13 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
 		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup()
 		self.assertTrue(success)
 
 		pModuleList.getModuleClasses.assert_called_once()
-	# def test_onBotStartup_Default(self)
+	# async def test_onBotStartup_Default(self)
 
-	def test_onBotStartup_False(self):
+	async def test_onBotStartup_False(self):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
@@ -56,13 +56,13 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
 		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup()
 		self.assertFalse(success)
 
 		pModuleList.getModuleClasses.assert_called_once()
-	# def test_onBotStartup_False(self)
+	# async def test_onBotStartup_False(self)
 
-	def test_onBotStartup_True(self):
+	async def test_onBotStartup_True(self):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
@@ -72,13 +72,13 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
 		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup()
 		self.assertTrue(success)
 
 		pModuleList.getModuleClasses.assert_called_once()
-	# def test_onBotStartup_True(self)
+	# async def test_onBotStartup_True(self)
 
-	def test_onModuleEnable(self):
+	async def test_onModuleEnable(self):
 		pFalseModule = FalseModule()
 		pFalseModule.onModuleEnable = mock.Mock()
 
@@ -104,9 +104,9 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pTrueModule.onModuleEnable.assert_not_called()
 		pModuleFactory.createModule.assert_called()
 		pModuleList.getModuleClasses.assert_called_once()
-	# def test_onModuleEnable(self)
+	# async def test_onModuleEnable(self)
 
-	def test_onModuleDisable(self):
+	async def test_onModuleDisable(self):
 		pFalseModule = FalseModule()
 		pFalseModule.onModuleDisable = mock.Mock()
 
@@ -132,5 +132,5 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pTrueModule.onModuleDisable.assert_not_called()
 		pModuleFactory.createModule.assert_called()
 		pModuleList.getModuleClasses.assert_called_once()
-	# def test_onModuleDisable(self)
+	# async def test_onModuleDisable(self)
 # class TestModuleCallbackRunner(unittest.TestCase)

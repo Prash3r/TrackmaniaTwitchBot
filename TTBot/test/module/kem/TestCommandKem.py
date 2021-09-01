@@ -7,10 +7,10 @@ from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.module.kem.CommandKem import CommandKem
 
 class TestCommandKem(unittest.IsolatedAsyncioTestCase):
-	async def test_getCommandString(self):
+	async def test_getCommandTrigger(self):
 		pCommandKem = CommandKem()
-		self.assertEqual(pCommandKem.getCommandString(), 'kem')
-	# async def test_getCommandString(self)
+		self.assertEqual(pCommandKem.getCommandTrigger(), 'kem')
+	# async def test_getCommandTrigger(self)
 
 	async def test_getModuleId(self):
 		pCommandKem = CommandKem()

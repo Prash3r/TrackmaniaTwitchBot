@@ -6,7 +6,7 @@ from TTBot.logic.ModuleManager import ModuleManager
 class CommandCoreUninvite(CommandCore):
     pModuleManager: ModuleManager
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'uninvite'
     
     async def execute(self, pMessage: Message, _) -> str:

@@ -10,10 +10,10 @@ from TTBot.logic.Randomizer import Randomizer
 from TTBot.module.roll.CommandRoll import CommandRoll
 
 class TestCommandRoll(unittest.IsolatedAsyncioTestCase):
-	async def test_getCommandString(self):
+	async def test_getCommandTrigger(self):
 		pCommandRoll = CommandRoll()
-		self.assertEqual(pCommandRoll.getCommandString(), 'roll')
-	# async def test_getCommandString(self)
+		self.assertEqual(pCommandRoll.getCommandTrigger(), 'roll')
+	# async def test_getCommandTrigger(self)
 
 	async def test_getModuleId(self):
 		pCommandRoll = CommandRoll()

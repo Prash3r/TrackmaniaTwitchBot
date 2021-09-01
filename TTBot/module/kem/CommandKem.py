@@ -6,7 +6,7 @@ from TTBot.data.Message import Message
 class CommandKem(Command):
     pInputSanitizer: InputSanitizer
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'kem'
     
     def getModuleId(self) -> str:

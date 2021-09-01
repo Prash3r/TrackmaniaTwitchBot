@@ -22,7 +22,10 @@ class CommandRunner(minidi.Injectable):
 	pUserRights: UserRights
 
 	async def _checkExecutionSingle(self, pCommand: Command, pMessage: Message, args: list):
-		if pCommand.getCommandString() != args[0]:
+		commandTriggers = pCommand.getCommandTrigger()
+		commandTriggers = [commandTriggers] if isinstance(commandTriggers, str) else commandTriggers
+		
+		if args[0] not in commandTriggers:
 			return
 
 		if self.pUserRights.allowModuleExecution(pCommand, pMessage):
@@ -35,7 +38,7 @@ class CommandRunner(minidi.Injectable):
 			pChannel = pMessage.getChannel()
 			await pChannel.sendMessage(result)
 			messageAuthorName = pMessage.getAuthor().getName()
-			self.pLogger.info(f"Command '{pCommand.getCommandString()}' triggered by {messageAuthorName}")
+			self.pLogger.info(f"Command '{pCommand.getCommandTrigger()}' triggered by {messageAuthorName}")
 		except Exception as e:
 			self.pLogger.exception(e)
 	# async def _executeSingle(self, pCommand: Command, pMessage: Message, args: list)

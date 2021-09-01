@@ -8,7 +8,7 @@ class CommandRoll(Command):
     pInputSanitizer: InputSanitizer
     pRandomizer: Randomizer
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'roll'
     
     def getModuleId(self) -> str:

@@ -12,8 +12,9 @@ class TestModuleList(unittest.TestCase):
 		pModuleList = ModuleList()
 		commandClasses = pModuleList.getCommandClasses()
 		for commandClass in commandClasses:
-			pCommand = commandClass()
+			pCommand: Command = commandClass()
 			self.assertIsInstance(pCommand, Command)
+			self.assertIsInstance(pCommand.getCommandTrigger(), (str, list))
 		# for commandClass in commandClasses
 	# def test_getCommandClasses(self)
 
@@ -22,8 +23,9 @@ class TestModuleList(unittest.TestCase):
 		evaluatorClasses = pModuleList.getEvaluatorClasses()
 
 		for evaluatorClass in evaluatorClasses:
-			pEvaluator = evaluatorClass()
+			pEvaluator: Evaluator = evaluatorClass()
 			self.assertIsInstance(pEvaluator, Evaluator)
+			self.assertIsInstance(pEvaluator.getMessageRegex(), str)
 		# for evaluatorClass in evaluatorClasses
 	# def test_getEvaluatorClasses(self)
 
@@ -32,8 +34,9 @@ class TestModuleList(unittest.TestCase):
 		moduleClasses = pModuleList.getEvaluatorClasses()
 
 		for moduleClass in moduleClasses:
-			pModule = moduleClass()
+			pModule: Module = moduleClass()
 			self.assertIsInstance(pModule, Module)
+			self.assertIsInstance(pModule.getModuleId(), str)
 		# for moduleClass in moduleClasses
 	# def test_getModuleClasses(self)
 

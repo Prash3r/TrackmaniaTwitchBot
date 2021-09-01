@@ -6,7 +6,7 @@ from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
 
 class CommandCoreUpdate(CommandCore):
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'update'
     
     async def execute(self, pMessage: Message, _) -> str:

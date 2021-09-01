@@ -13,7 +13,7 @@ class CommandCoreHelp(CommandCore):
         'rem': "Use the command '!module rem' to disable the module on your channel!"
     }
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'help'
     
     async def execute(self, pMessage: Message, args: list) -> str:

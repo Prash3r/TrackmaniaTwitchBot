@@ -6,7 +6,7 @@ from TTBot.logic.Randomizer import Randomizer
 class CommandScore(Command):
     pRandomizer: Randomizer
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'score'
     
     def getModuleId(self) -> str:

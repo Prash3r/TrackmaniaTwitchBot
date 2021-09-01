@@ -10,10 +10,10 @@ from TTBot.logic.Randomizer import Randomizer
 from TTBot.module.joke.CommandJoke import CommandJoke
 
 class TestCommandJoke(unittest.IsolatedAsyncioTestCase):
-	async def test_getCommandString(self):
+	async def test_getCommandTrigger(self):
 		pCommandJoke = CommandJoke()
-		self.assertEqual(pCommandJoke.getCommandString(), 'joke')
-	# async def test_getCommandString(self)
+		self.assertEqual(pCommandJoke.getCommandTrigger(), 'joke')
+	# async def test_getCommandTrigger(self)
 
 	async def test_getModuleId(self):
 		pCommandJoke = CommandJoke()

@@ -7,7 +7,7 @@ from TTBot.module.Module import Module
 
 class Command(Module):
 	@abstractmethod
-	def getCommandString(self) -> str:
+	def getCommandTrigger(self):
 		pass
 
 	@abstractmethod

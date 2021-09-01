@@ -8,7 +8,7 @@ class CommandJoke(Command):
     pGlobalVariables: GlobalVariables
     pRandomizer: Randomizer
     
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'joke'
     
     def getModuleId(self) -> str:

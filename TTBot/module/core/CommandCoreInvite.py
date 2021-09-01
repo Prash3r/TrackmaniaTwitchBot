@@ -8,7 +8,7 @@ class CommandCoreInvite(CommandCore):
     pModuleManager: ModuleManager
     pTwitchBotWrapper: TwitchBotWrapper
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'invite'
     
     async def execute(self, pMessage: Message, _) -> str:

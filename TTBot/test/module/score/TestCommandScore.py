@@ -9,10 +9,10 @@ from TTBot.logic.Randomizer import Randomizer
 from TTBot.module.score.CommandScore import CommandScore
 
 class TestCommandScore(unittest.IsolatedAsyncioTestCase):
-	async def test_getCommandString(self):
+	async def test_getCommandTrigger(self):
 		pCommandScore = CommandScore()
-		self.assertEqual(pCommandScore.getCommandString(), 'score')
-	# async def test_getCommandString(self)
+		self.assertEqual(pCommandScore.getCommandTrigger(), 'score')
+	# async def test_getCommandTrigger(self)
 
 	async def test_getModuleId(self):
 		pCommandScore = CommandScore()

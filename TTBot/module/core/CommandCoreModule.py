@@ -8,7 +8,7 @@ class CommandCoreModule(CommandCore):
     pInputSanitizer: InputSanitizer
     pModuleManager: ModuleManager
 
-    def getCommandString(self) -> str:
+    def getCommandTrigger(self):
         return 'module'
     
     def _activateModule(self, messageAuthorName: str, args: list) -> str:

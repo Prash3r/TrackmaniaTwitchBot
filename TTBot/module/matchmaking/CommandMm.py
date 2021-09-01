@@ -9,8 +9,8 @@ class CommandMm(Command):
     pMatchmakingCache: MatchmakingCache
     pTrackmaniaIO: TrackmaniaIO
     
-    def getCommandString(self) -> str:
-        return 'mm'
+    def getCommandTrigger(self):
+        return ['matchmaking', 'mm']
     
     def getModuleId(self) -> str:
         return 'mm'

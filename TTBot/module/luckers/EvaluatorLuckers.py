@@ -1,7 +1,7 @@
 # local
-from TTBot.module.Evaluator import Evaluator
 from TTBot.data.Message import Message
 from TTBot.logic.GlobalVariables import GlobalVariables
+from TTBot.module.Evaluator import Evaluator
 
 class EvaluatorLuckers(Evaluator):
     pGlobalVariables: GlobalVariables

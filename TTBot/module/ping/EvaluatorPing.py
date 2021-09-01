@@ -1,6 +1,6 @@
 # local
-from TTBot.module.Evaluator import Evaluator
 from TTBot.data.Message import Message
+from TTBot.module.Evaluator import Evaluator
 
 class EvaluatorPing(Evaluator):
     def getMessageRegex(self) -> str:

@@ -2,15 +2,15 @@
 import minidi
 
 # local
-from TTBot.module.Command import Command
-from TTBot.module.CommandCoreList import CommandCoreList
-from TTBot.module.ModuleList import ModuleList
 from TTBot.data.Message import Message
 from TTBot.logic.Environment import Environment
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.Logger import Logger
 from TTBot.logic.ModuleFactory import ModuleFactory
 from TTBot.logic.UserRights import UserRights
+from TTBot.module.Command import Command
+from TTBot.module.CommandCoreList import CommandCoreList
+from TTBot.module.ModuleList import ModuleList
 
 class CommandRunner(minidi.Injectable):
 	pCommandCoreList: CommandCoreList

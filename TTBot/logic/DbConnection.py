@@ -2,8 +2,8 @@
 import minidi
 
 # local
-from .interface.DbQueryDialectConverter import DbQueryDialectConverter
-from .Logger import Logger
+from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverter
+from TTBot.logic.Logger import Logger
 
 _pDbConnection = None
 

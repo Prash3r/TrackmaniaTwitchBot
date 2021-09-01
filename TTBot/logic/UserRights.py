@@ -2,10 +2,10 @@
 import minidi
 
 # local
-from .Environment import Environment
-from .MessageEvaluator import MessageEvaluator
-from .ModuleManager import ModuleManager
 from TTBot.data.Message import Message
+from TTBot.logic.Environment import Environment
+from TTBot.logic.MessageEvaluator import MessageEvaluator
+from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.module.core.CommandCore import CommandCore
 from TTBot.module.Module import Module
 

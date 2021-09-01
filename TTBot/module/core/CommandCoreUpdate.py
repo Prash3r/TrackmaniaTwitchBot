@@ -2,8 +2,8 @@
 import sys
 
 # local
-from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
+from TTBot.module.core.CommandCore import CommandCore
 
 class CommandCoreUpdate(CommandCore):
     def getCommandTrigger(self):

@@ -1,7 +1,7 @@
 # local
-from TTBot.module.Command import Command
 from TTBot.data.Message import Message
 from TTBot.logic.Randomizer import Randomizer
+from TTBot.module.Command import Command
 
 class CommandScore(Command):
     pRandomizer: Randomizer

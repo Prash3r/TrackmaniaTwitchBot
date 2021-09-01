@@ -2,7 +2,7 @@
 import minidi
 
 # local
-from .DbConnection import DbConnection
+from TTBot.logic.DbConnection import DbConnection
 
 class DbConnector(minidi.Injectable):
 	pDbConnection: DbConnection

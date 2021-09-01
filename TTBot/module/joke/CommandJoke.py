@@ -1,8 +1,8 @@
 # local
-from TTBot.module.Command import Command
 from TTBot.data.Message import Message
 from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.Randomizer import Randomizer
+from TTBot.module.Command import Command
 
 class CommandJoke(Command):
     pGlobalVariables: GlobalVariables

@@ -1,6 +1,6 @@
 # local
-from .MessageAuthor import MessageAuthor
-from .MessageChannel import MessageChannel
+from TTBot.data.MessageAuthor import MessageAuthor
+from TTBot.data.MessageChannel import MessageChannel
 
 class Message:
 	def __init__(self, **kwargs):

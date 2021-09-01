@@ -1,8 +1,8 @@
 # local
-from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
 from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
+from TTBot.module.core.CommandCore import CommandCore
 
 class CommandCoreInvite(CommandCore):
     pModuleManager: ModuleManager

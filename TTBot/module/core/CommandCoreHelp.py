@@ -1,6 +1,6 @@
 # local
-from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
+from TTBot.module.core.CommandCore import CommandCore
 
 class CommandCoreHelp(CommandCore):
     DEFAULT_HELP_MESSAGE = "Use '!help invite/uninvite/accesslevel/add/list/rem' for detailed information about this bots core commands!"

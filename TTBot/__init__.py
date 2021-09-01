@@ -7,9 +7,9 @@ from twitchio.ext import commands
 
 # local
 from TTBot.data.Message import Message
+from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
-from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
 from TTBot.logic.ModuleManager import ModuleManager

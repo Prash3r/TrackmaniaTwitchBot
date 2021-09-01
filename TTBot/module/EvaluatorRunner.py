@@ -5,12 +5,12 @@ import re
 import minidi
 
 # local
-from .Evaluator import Evaluator
-from TTBot.logic.Logger import Logger
 from TTBot.data.Message import Message
+from TTBot.logic.Logger import Logger
 from TTBot.logic.ModuleFactory import ModuleFactory
-from TTBot.module.ModuleList import ModuleList
 from TTBot.logic.UserRights import UserRights
+from TTBot.module.Evaluator import Evaluator
+from TTBot.module.ModuleList import ModuleList
 
 class EvaluatorRunner(minidi.Injectable):
 	pLogger: Logger

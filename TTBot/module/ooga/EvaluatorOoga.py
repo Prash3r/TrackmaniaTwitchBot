@@ -1,6 +1,6 @@
 # local
-from TTBot.module.Evaluator import Evaluator
 from TTBot.data.Message import Message
+from TTBot.module.Evaluator import Evaluator
 
 class EvaluatorOoga(Evaluator):
     def getMessageRegex(self) -> str:

@@ -2,9 +2,9 @@
 import minidi
 
 # local
-from .DbConnector import DbConnector
-from .InputSanitizer import InputSanitizer
-from .Logger import Logger
+from TTBot.logic.DbConnector import DbConnector
+from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.logic.Logger import Logger
 
 class GlobalVariables(minidi.Injectable):
 	pDbConnector: DbConnector

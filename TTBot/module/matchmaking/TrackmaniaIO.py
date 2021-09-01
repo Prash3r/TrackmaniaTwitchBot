@@ -6,7 +6,7 @@ import minidi
 
 # local
 from TTBot.logic.Environment import Environment
-from .MatchmakingDataFactory import MatchmakingDataFactory
+from TTBot.module.matchmaking.MatchmakingDataFactory import MatchmakingDataFactory
 
 class TrackmaniaIO(minidi.Injectable):
 	pEnvironment: Environment

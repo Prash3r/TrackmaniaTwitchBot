@@ -2,11 +2,11 @@
 import minidi
 
 # local
-from .CommandCoreHelp import CommandCoreHelp
-from .CommandCoreInvite import CommandCoreInvite
-from .CommandCoreModule import CommandCoreModule
-from .CommandCoreUninvite import CommandCoreUninvite
-from .CommandCoreUpdate import CommandCoreUpdate
+from TTBot.module.core.CommandCoreHelp import CommandCoreHelp
+from TTBot.module.core.CommandCoreInvite import CommandCoreInvite
+from TTBot.module.core.CommandCoreModule import CommandCoreModule
+from TTBot.module.core.CommandCoreUninvite import CommandCoreUninvite
+from TTBot.module.core.CommandCoreUpdate import CommandCoreUpdate
 
 class CommandCoreList(minidi.Injectable):
 	def getAllCommandCoreClasses(self) -> list:

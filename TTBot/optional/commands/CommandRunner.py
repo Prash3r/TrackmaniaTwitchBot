@@ -3,7 +3,7 @@ import minidi
 
 # local
 from .Command import Command
-from .core.CommandCoreList import CommandCoreList
+from TTBot.module.core.CommandCoreList import CommandCoreList
 from .CommandList import CommandList
 from TTBot.data.Message import Message
 from TTBot.logic.Environment import Environment

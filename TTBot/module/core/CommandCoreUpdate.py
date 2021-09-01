@@ -2,7 +2,7 @@
 import sys
 
 # local
-from .CommandCore import CommandCore
+from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
 
 class CommandCoreUpdate(CommandCore):

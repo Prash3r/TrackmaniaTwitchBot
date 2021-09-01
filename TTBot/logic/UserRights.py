@@ -6,7 +6,7 @@ from .Environment import Environment
 from .MessageEvaluator import MessageEvaluator
 from .ModuleManager import ModuleManager
 from TTBot.data.Message import Message
-from TTBot.optional.commands.core.CommandCore import CommandCore
+from TTBot.module.core.CommandCore import CommandCore
 from TTBot.optional.Module import Module
 
 class UserRights(minidi.Injectable):

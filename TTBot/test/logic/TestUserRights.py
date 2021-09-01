@@ -9,7 +9,7 @@ from TTBot.logic.Environment import Environment
 from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.UserRights import UserRights
-from TTBot.optional.commands.core.CommandCoreInvite import CommandCoreInvite
+from TTBot.module.core.CommandCoreInvite import CommandCoreInvite
 
 class TestUserRights(unittest.TestCase):
 	def setUpEnvironment(self, botName: str) -> Environment:

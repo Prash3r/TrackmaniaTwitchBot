@@ -1,5 +1,5 @@
 # local
-from .CommandCore import CommandCore
+from TTBot.module.core.CommandCore import CommandCore
 from TTBot.data.Message import Message
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.ModuleManager import ModuleManager

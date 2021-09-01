@@ -13,29 +13,29 @@ class MatchmakingCache(minidi.Injectable):
 	pMatchmakingDataFactory: MatchmakingDataFactory
 
 	def afterInit(self):
-		query = "CREATE TABLE IF NOT EXISTS `mmranking` (\
-			`ranks_rank` INT,\
-			`ranks_score` INT,\
-			`ranks_division_position` INT,\
-			`ranks_division_rule` VARCHAR(12) CHARACTER SET utf8,\
-			`ranks_division_minpoints` INT,\
-			`ranks_division_maxpoints` INT,\
-			`ranks_displayname` VARCHAR(50) CHARACTER SET utf8,\
-			`ranks_accountid` VARCHAR(36) CHARACTER SET utf8,\
-			`ranks_zone_name` VARCHAR(28) CHARACTER SET utf8,\
-			`ranks_zone_flag` VARCHAR(28) CHARACTER SET utf8,\
-			`ranks_zone_parent_name` VARCHAR(23) CHARACTER SET utf8,\
-			`ranks_zone_parent_flag` VARCHAR(23) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_name` VARCHAR(13) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_flag` VARCHAR(8) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_parent_name` VARCHAR(6) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_parent_flag` VARCHAR(6) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_parent_parent_name` VARCHAR(5) CHARACTER SET utf8,\
-			`ranks_zone_parent_parent_parent_parent_flag` VARCHAR(3) CHARACTER SET utf8,\
-			`page` INT,\
-			`note` INT,\
-			`ts` TIMESTAMP,\
-			PRIMARY KEY USING BTREE (`ranks_accountid`)\
+		query = "CREATE TABLE IF NOT EXISTS `mmranking` ( \
+			`ranks_rank` INT, \
+			`ranks_score` INT, \
+			`ranks_division_position` INT, \
+			`ranks_division_rule` VARCHAR(12) CHARACTER SET utf8, \
+			`ranks_division_minpoints` INT, \
+			`ranks_division_maxpoints` INT, \
+			`ranks_displayname` VARCHAR(50) CHARACTER SET utf8, \
+			`ranks_accountid` VARCHAR(36) CHARACTER SET utf8, \
+			`ranks_zone_name` VARCHAR(28) CHARACTER SET utf8, \
+			`ranks_zone_flag` VARCHAR(28) CHARACTER SET utf8, \
+			`ranks_zone_parent_name` VARCHAR(23) CHARACTER SET utf8, \
+			`ranks_zone_parent_flag` VARCHAR(23) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_name` VARCHAR(13) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_flag` VARCHAR(8) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_parent_name` VARCHAR(6) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_parent_flag` VARCHAR(6) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_parent_parent_name` VARCHAR(5) CHARACTER SET utf8, \
+			`ranks_zone_parent_parent_parent_parent_flag` VARCHAR(3) CHARACTER SET utf8, \
+			`page` INT, \
+			`note` INT, \
+			`ts` TIMESTAMP, \
+			PRIMARY KEY USING BTREE (`ranks_accountid`) \
 		);"
 		
 		self.pDbConnector.execute(query)
@@ -47,7 +47,10 @@ class MatchmakingCache(minidi.Injectable):
 		- if player is rank >= 69 -> use 'rank' minutes old cache data
 		- if cache data is >= 12 hours old -> don't use cache data"""
 
-		rows = self.pDbConnector.fetch(f"SELECT ranks_rank, ranks_displayname, ts, ranks_score FROM mmranking WHERE ranks_displayname = '{playerLoginPart}';")
+		query = "SELECT ranks_rank, ranks_displayname, ts, ranks_score \
+			FROM mmranking \
+			WHERE ranks_displayname = ?;"
+		rows = self.pDbConnector.fetch(query, (playerLoginPart))
 
 		if not rows:
 			return False
@@ -71,9 +74,9 @@ class MatchmakingCache(minidi.Injectable):
 	# def get(self, playerLoginPart: str) -> list
 
 	def write(self, pMatchmakingData: MatchmakingData) -> bool:
-		rowsAffected = self.pDbConnector.execute(f"REPLACE INTO mmranking (ranks_rank, ranks_score, ranks_displayname, ranks_accountid) \
-		VALUES ('{pMatchmakingData.getRank()}', '{pMatchmakingData.getScore()}', '{pMatchmakingData.getPlayer()}', '{pMatchmakingData.getPlayerAccountId()}');")
-
+		query = f"REPLACE INTO mmranking (ranks_rank, ranks_score, ranks_displayname, ranks_accountid) VALUES (?, ?, ?, ?);"
+		inputs = [pMatchmakingData.getRank(), pMatchmakingData.getScore(), pMatchmakingData.getPlayer(), pMatchmakingData.getPlayerAccountId()]
+		rowsAffected = self.pDbConnector.execute(query, inputs)
 		return rowsAffected == 1
 	# def write(self, pMatchmakingData: MatchmakingData) -> bool
 # class MatchmakingCache(minidi.Injectable)

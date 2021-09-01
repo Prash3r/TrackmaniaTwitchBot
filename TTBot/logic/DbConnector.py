@@ -7,15 +7,15 @@ from TTBot.logic.DbConnection import DbConnection
 class DbConnector(minidi.Injectable):
 	pDbConnection: DbConnection
 
-	def execute(self, query: str) -> int:
-		pQueryResult = self.pDbConnection.query(query)
+	def execute(self, query: str, inputs: list = []) -> int:
+		pQueryResult = self.pDbConnection.query(query, inputs)
 		return pQueryResult.rowcount
 	# def execute(self, query: str) -> int
 
-	def fetch(self, query: str) -> list:
+	def fetch(self, query: str, inputs: list = []) -> list:
 		outputRows = []
 
-		pQueryResult = self.pDbConnection.query(query)
+		pQueryResult = self.pDbConnection.query(query, inputs)
 		columns = [desc[0] for desc in pQueryResult.description]
 		rows = pQueryResult.fetchall()
 
@@ -31,7 +31,9 @@ class DbConnector(minidi.Injectable):
 	# def fetch(self, query: str) -> list
 
 	def getColumns(self, table: str) -> list:
-		pQueryResult = self.pDbConnection.query(f"SELECT * FROM `{table}` WHERE 0=1;")
+		# cannot use ? placeholder, but this is in control of the code -> no security risk
+		query = f"SELECT * FROM `{table}` WHERE 0=1;"
+		pQueryResult = self.pDbConnection.query(query)
 		return [desc[0] for desc in pQueryResult.description]
 	# def getColumns(self, table: str) -> list
 # class DbConnector(minidi.Injectable)

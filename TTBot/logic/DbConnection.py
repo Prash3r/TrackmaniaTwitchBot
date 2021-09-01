@@ -11,15 +11,16 @@ class DbConnection(minidi.Injectable):
 	pLogger: Logger
 	pDbQueryDialectConverter: DbQueryDialectConverter
 
-	def query(self, query: str):
+	def query(self, query: str, inputs: list = []):
 		query = self.pDbQueryDialectConverter.convert(query)
 
 		try:
 			cursor = _pDbConnection.cursor()
-			cursor.execute(query)
+			cursor.execute(query, inputs)
 		except Exception as pException:
 			self.pLogger.info(f"Error executing query: {pException}")
 			self.pLogger.debug(query)
+			self.pLogger.debug(inputs)
 		
 		return cursor
 	# def query(self, query: str)

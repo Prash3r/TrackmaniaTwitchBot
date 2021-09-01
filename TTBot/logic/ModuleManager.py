@@ -29,18 +29,15 @@ class ModuleManager(minidi.Injectable):
 	# def afterInit(self)
 
 	def _createColumn(self, moduleId: str):
-		query = f"ALTER TABLE `modules` \
-			ADD COLUMN `{moduleId}` INT NOT NULL DEFAULT 0;"
-		
+		# cannot use ? placeholder, but this is in control of the code -> no security risk
+		query = f"ALTER TABLE `modules` ADD COLUMN `{moduleId}` INT NOT NULL DEFAULT 0;"
 		self.pDbConnector.execute(query)
 	# def _createColumn(self, moduleId: str)
 
 	def _setModule(self, channelName: str, moduleId: str, minimumUserLevel: int) -> bool:
-		query = f"UPDATE `modules`\
-			SET `{moduleId}` = {minimumUserLevel}\
-			WHERE `channel` = '{channelName}';"
-
-		rowcount = self.pDbConnector.execute(query)
+		# cannot use ? placeholder, but this is in control of the code -> no security risk
+		query = f"UPDATE `modules` SET `{moduleId}` = ? WHERE `channel` = ?;"
+		rowcount = self.pDbConnector.execute(query, [minimumUserLevel, channelName])
 		self.pModuleCallbackRunner.onModuleEnable(moduleId)
 		return rowcount == 1
 	# def _setModule(self, channelName: str, moduleId: str, minimumUserLevel: int) -> bool
@@ -49,18 +46,23 @@ class ModuleManager(minidi.Injectable):
 		return self._setModule(channelName, moduleId, minimumUserLevel)
 
 	def addChannel(self, channelName: str):
-		self.pDbConnector.execute(f"INSERT IGNORE INTO `modules` (`channel`) VALUES ('{channelName}');")
+		query = "INSERT IGNORE INTO `modules` (`channel`) VALUES (?);"
+		self.pDbConnector.execute(query, [channelName])
+	# def addChannel(self, channelName: str)
 
 	def deactivateModule(self, channelName: str, moduleId: str) -> bool:
 		return self._setModule(channelName, moduleId, 0)
 
 	def getChannels(self) -> list:
-		rows = self.pDbConnector.fetch("SELECT `channel` FROM `modules`;")
+		query = "SELECT `channel` FROM `modules`;"
+		rows = self.pDbConnector.fetch(query)
 		return [row['channel'] for row in rows]
 	# def getChannels(self) -> list
 	
 	def getMinimumAccessLevel(self, channelName: str, moduleId: str) -> int:
-		rows = self.pDbConnector.fetch(f"SELECT `{moduleId}` FROM `modules` WHERE `channel` = '{channelName}' LIMIT 1;")
+		# cannot use ? placeholder, but this is in control of the code -> no security risk
+		query = f"SELECT `{moduleId}` FROM `modules` WHERE `channel` = ?;"
+		rows = self.pDbConnector.fetch(query, [channelName])
 		return rows[0][moduleId]
 	# def getMinimumAccessLevel(self, channelName: str, moduleId: str) -> int
 	
@@ -72,11 +74,8 @@ class ModuleManager(minidi.Injectable):
 	# def listModules(self) -> list
 
 	def listModulesForChannel(self, channelName: str) -> dict:
-		query = f"SELECT * \
-			FROM `modules` \
-			WHERE `channel` = '{channelName}' \
-			LIMIT 1;"
-		rows = self.pDbConnector.fetch(query)
+		query = "SELECT * FROM `modules` WHERE `channel` = ?"
+		rows = self.pDbConnector.fetch(query, [channelName])
 
 		if not rows:
 			return {}
@@ -88,5 +87,6 @@ class ModuleManager(minidi.Injectable):
 	# def listModulesForChannel(self, channelName: str) -> dict
 
 	def removeChannel(self, channelName: str):
-		self.pDbConnector.execute(f"DELETE FROM `modules` WHERE `channel` = '{channelName}';")
+		query = "DELETE FROM `modules` WHERE `channel` = ?;"
+		self.pDbConnector.execute(query, [channelName])
 # class ModuleManager(minidi.Injectable)

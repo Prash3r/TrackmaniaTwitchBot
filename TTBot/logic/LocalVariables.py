@@ -31,12 +31,8 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 
 		try:
-			rows = self.pDbConnector.fetch(f" \
-				SELECT `typ`, `value` \
-				FROM `local_vars` \
-				WHERE `varname` = '{name}' AND `channelname` = '{channel}' \
-				LIMIT 1; \
-			")
+			query = "SELECT `typ`, `value` FROM `local_vars` WHERE `varname` = ? AND `channelname` = ?;"
+			rows = self.pDbConnector.fetch(query, [name, channel])
 		except:
 			self.pLogger.error(f"Retrieving local variable '{name}' for channel '{channel}' failed - error in query!")
 			return defaultValue
@@ -62,10 +58,8 @@ class LocalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pDbConnector.execute(f" \
-				INSERT IGNORE INTO `local_vars` (`varname`, `channelname`, `typ`, `value`) \
-				VALUES ('{name}', '{channel}', '{valueTypeString}', '{value}'); \
-			")
+			query = "INSERT IGNORE INTO `local_vars` (`varname`, `channelname`, `typ`, `value`) VALUES (?, ?, ?, ?);"
+			self.pDbConnector.execute(query, [name, channel, valueTypeString, value])
 			return True
 		except:
 			self.pLogger.error(f"Could not insert local variable '{name}' for channel '{channel}'!")
@@ -79,11 +73,8 @@ class LocalVariables(minidi.Injectable):
 		channel = channel.replace(' ', '')
 		
 		try:
-			self.pDbConnector.execute(f" \
-				UPDATE `local_vars` \
-				SET `value` = '{newValue}' \
-				WHERE `varname` = '{name}' AND `channelname` = '{channel}';\
-			")
+			query = "UPDATE `local_vars` SET `value` = ? WHERE `varname` = ? AND `channelname` = ?;"
+			self.pDbConnector.execute(query, [newValue, name, channel])
 			self.pLogger.debug(f"Updated local variable '{name}' for channel '{channel}' to '{newValue}'!")
 			return True
 		except:

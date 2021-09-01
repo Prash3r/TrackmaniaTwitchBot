@@ -28,12 +28,8 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 
 		try:
-			rows = self.pDbConnector.fetch(f" \
-				SELECT `typ`, `value` \
-				FROM `global_vars` \
-				WHERE `varname` = '{name}' \
-				LIMIT 1; \
-			")
+			query = "SELECT `typ`, `value` FROM `global_vars` WHERE `varname` = ?;"
+			rows = self.pDbConnector.fetch(query, [name])
 		except:
 			self.pLogger.error(f"Retrieving global variable '{name}' failed - error in query!")
 			return defaultValue
@@ -59,10 +55,8 @@ class GlobalVariables(minidi.Injectable):
 		valueTypeString = type(value).__name__
 		
 		try:
-			self.pDbConnector.execute(f" \
-				INSERT IGNORE INTO `global_vars` (`varname`, `typ`, `value`) \
-				VALUES ('{name}', '{valueTypeString}', '{value}'); \
-			")
+			query = "INSERT IGNORE INTO `global_vars` (`varname`, `typ`, `value`) VALUES (?, ?, ?);"
+			self.pDbConnector.execute(query, [name, valueTypeString, value])
 			return True
 		except:
 			self.pLogger.error(f"Could not insert global variable '{name}'!")
@@ -74,11 +68,8 @@ class GlobalVariables(minidi.Injectable):
 		name = name.replace(' ', '')
 		
 		try:
-			self.pDbConnector.execute(f" \
-				UPDATE `global_vars` \
-				SET `value` = '{newValue}' \
-				WHERE `varname` = '{name}'; \
-			")
+			query = "UPDATE `global_vars` SET `value` = ? WHERE `varname` = ?;"
+			self.pDbConnector.execute(query, [newValue, name])
 			self.pLogger.debug(f"Updated global variable '{name}' to '{newValue}'!")
 			return True
 		except:

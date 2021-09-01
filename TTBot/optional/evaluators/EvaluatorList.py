@@ -2,7 +2,7 @@
 import minidi
 
 # local
-from .EvaluatorLuckers import EvaluatorLuckers
+from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
 from .EvaluatorOoga import EvaluatorOoga
 from .EvaluatorPing import EvaluatorPing
 

@@ -1,5 +1,5 @@
 # local
-from .Evaluator import Evaluator
+from TTBot.optional.evaluators.Evaluator import Evaluator
 from TTBot.data.Message import Message
 from TTBot.logic.GlobalVariables import GlobalVariables
 

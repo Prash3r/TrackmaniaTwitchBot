@@ -6,7 +6,7 @@ from unittest import mock
 from TTBot.data.Message import Message
 from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.logic.GlobalVariables import GlobalVariables
-from TTBot.optional.evaluators.EvaluatorLuckers import EvaluatorLuckers
+from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
 
 class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 	async def test_getMessageRegex(self):

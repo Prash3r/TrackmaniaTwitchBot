@@ -10,6 +10,7 @@
 # load_dotenv()
 
 # pylib
+from TTBot.logic.interface.MessageConverter import MessageConverter
 import asyncio
 import logging
 import os
@@ -28,20 +29,20 @@ from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.optional.commands.CommandRunner import CommandRunner
 from TTBot.optional.evaluators.EvaluatorRunner import EvaluatorRunner
 
-def initDatabase():
-	minidi.set(DbQueryDialectConverter, minidi.get(SqliteQueryDialectConverter))
 
+class TwitchBotMock:
+	async def join_channels(self, _: list):
+		pass
+# class TwitchBotMock
+
+
+def initDatabase():
 	pSqliteDbConnection = sqlite3.connect('test.sqlite', isolation_level=None)
 	pDbConnection: DbConnection = minidi.get(DbConnection)
 	pDbConnection.set(pSqliteDbConnection)
 
 	pDbConnection.query("PRAGMA encoding = 'UTF-8';")
 # def initDatabase()
-
-def initEnvironment():
-	os.environ['TWITCH_BOT_USERNAME'] = 'terminal'
-	os.environ['TWITCH_CMD_PREFIX'] = '!'
-# def initEnvironment()
     
 def initLogger():
 	pLogger: Logger = minidi.get(Logger)
@@ -53,26 +54,26 @@ def initLogger():
 	pLogger.addHandler(pStreamHandler)
 # def initLogger()
 
-class TwitchBotMock:
-	async def join_channels(self, _: list):
-		pass
-# class TwitchBotMock
+def initRuntimeEnvironment():
+	os.environ['TWITCH_BOT_USERNAME'] = 'terminal'
+	os.environ['TWITCH_CMD_PREFIX'] = '!'
 
-def initTwitchBotMock():
+	minidi.set(DbQueryDialectConverter, minidi.get(SqliteQueryDialectConverter))
+	minidi.set(MessageConverter, minidi.get(TerminalMessageConverter))
+
 	pTwitchBotMock = TwitchBotMock()
 	pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)
 	pTwitchBotWrapper.set(pTwitchBotMock)
-# def initTwitchBotMock()
+# def initRuntimeEnvironment()
 
 if __name__ == '__main__':
-	initEnvironment()
+	initRuntimeEnvironment()
 	initLogger()
 	initDatabase()
-	initTwitchBotMock()
 
 	pCommandRunner: CommandRunner = minidi.get(CommandRunner)
 	pEvaluatorRunner: EvaluatorRunner = minidi.get(EvaluatorRunner)
-	pMessageConverter: TerminalMessageConverter = minidi.get(TerminalMessageConverter)
+	pMessageConverter: MessageConverter = minidi.get(MessageConverter)
 
 	while True:
 		chatMessage = input('> ')

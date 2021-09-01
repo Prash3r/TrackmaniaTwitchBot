@@ -40,7 +40,6 @@ def initDatabase():
 	pDb.autocommit = True
 	pDb.auto_reconnect = True
 
-	minidi.set(DbQueryDialectConverter, minidi.get(MariaDbQueryDialectConverter))
 	pDbConnection: DbConnection = minidi.get(DbConnection)
 	pDbConnection.set(pDb)
 # def initDatabase()
@@ -56,15 +55,15 @@ def initLogger():
 	pLogger.addHandler(pStreamHandler)
 # def initLogger()
 
-def initLogic():
+def initRuntimeEnvironment():
 	minidi.set(DbQueryDialectConverter, minidi.get(MariaDbQueryDialectConverter))
 	minidi.set(MessageConverter, minidi.get(TwitchMessageConverter))
-# def initLogic()
+# def initRuntimeEnvironment()
 
 if __name__ == '__main__':
+	initRuntimeEnvironment()
 	initLogger()
 	initDatabase()
-	initLogic()
 
 	pTwitchBot = TrackmaniaTwitchBot()
 

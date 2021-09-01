@@ -7,7 +7,7 @@ class CommandCoreHelp(CommandCore):
     HELP_MESSAGES = {
         'invite': "Use the command '!invite' to invite this bot to your channel!",
         'uninvite': "Use the command '!uninvite' to make the bot leave your channel!",
-        'accesslevel': "Use the command '!module add modulename 10' to enable a module on your channel with a minimum access level required!",
+        'accesslevel': "Use the command '!module add modulename 10' to enable a module on your channel that can only be used by mods! (100=owner,10=moderators,5=subscribers,1=everyone)",
         'add': "Use the command '!module add modulename' to enable a module on your channel for everyone!",
         'list': "Use the command '!module list' to view the enabled modules on your channel!",
         'rem': "Use the command '!module rem' to disable the module on your channel!"

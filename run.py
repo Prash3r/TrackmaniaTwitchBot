@@ -40,6 +40,7 @@ def initDatabase():
 	pDb.autocommit = True
 	pDb.auto_reconnect = True
 
+	minidi.set(DbQueryDialectConverter, minidi.get(MariaDbQueryDialectConverter))
 	pDbConnection: DbConnection = minidi.get(DbConnection)
 	pDbConnection.set(pDb)
 # def initDatabase()

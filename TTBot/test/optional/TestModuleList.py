@@ -7,7 +7,7 @@ from TTBot.optional.commands.CommandList import CommandList
 from TTBot.module.roll.CommandRoll import CommandRoll
 from TTBot.module.score.CommandScore import CommandScore
 from TTBot.optional.evaluators.EvaluatorList import EvaluatorList
-from TTBot.optional.evaluators.EvaluatorOoga import EvaluatorOoga
+from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
 from TTBot.optional.evaluators.EvaluatorPing import EvaluatorPing
 from TTBot.optional.ModuleList import ModuleList
 

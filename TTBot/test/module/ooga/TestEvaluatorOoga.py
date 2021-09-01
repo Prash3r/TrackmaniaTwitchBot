@@ -2,7 +2,7 @@
 import unittest
 
 # local
-from TTBot.optional.evaluators.EvaluatorOoga import EvaluatorOoga
+from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
 
 class TestEvaluatorOoga(unittest.IsolatedAsyncioTestCase):
 	async def test_getMessageRegex(self):

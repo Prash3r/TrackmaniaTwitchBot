@@ -2,8 +2,8 @@
 from abc import abstractmethod
 
 # local
-from ..Module import Module
 from TTBot.data.Message import Message
+from TTBot.module.Module import Module
 
 class Evaluator(Module):
 	@abstractmethod

@@ -1,5 +1,5 @@
 # local
-from TTBot.optional.commands.Command import Command
+from TTBot.module.Command import Command
 
 class CommandCore(Command):
     def getModuleId(self) -> str:

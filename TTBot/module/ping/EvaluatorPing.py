@@ -1,5 +1,5 @@
 # local
-from TTBot.optional.evaluators.Evaluator import Evaluator
+from TTBot.module.Evaluator import Evaluator
 from TTBot.data.Message import Message
 
 class EvaluatorPing(Evaluator):

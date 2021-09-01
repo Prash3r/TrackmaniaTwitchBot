@@ -1,7 +1,7 @@
 # local
-from TTBot.optional.commands.Command import Command
-from TTBot.data.Message import Message
+from TTBot.module.Command import Command
 from TTBot.logic.InputSanitizer import InputSanitizer
+from TTBot.data.Message import Message
 
 class CommandKem(Command):
     pInputSanitizer: InputSanitizer

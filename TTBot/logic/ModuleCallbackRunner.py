@@ -2,15 +2,15 @@
 import minidi
 
 # local
-from .ModuleFactory import ModuleFactory
-from TTBot.optional.ModuleList import ModuleList
+from TTBot.logic.ModuleFactory import ModuleFactory
+from TTBot.module.ModuleList import ModuleList
 
 class ModuleCallbackRunner(minidi.Injectable):
 	pModuleFactory: ModuleFactory
 	pModuleList: ModuleList
 
 	def onBotStartup(self) -> bool:
-		moduleClasses = self.pModuleList.getAllModuleClasses()
+		moduleClasses = self.pModuleList.getModuleClasses()
 
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)
@@ -23,7 +23,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 	# def onBotStartup(self)
 
 	def onModuleEnable(self, moduleName: str):
-		moduleClasses = self.pModuleList.getAllModuleClasses()
+		moduleClasses = self.pModuleList.getModuleClasses()
 
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)
@@ -33,7 +33,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 	# def onModuleEnable(self, moduleName: str)
 
 	def onModuleDisable(self, moduleName: str):
-		moduleClasses = self.pModuleList.getAllModuleClasses()
+		moduleClasses = self.pModuleList.getModuleClasses()
 
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)

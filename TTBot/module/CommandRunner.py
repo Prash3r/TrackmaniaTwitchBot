@@ -2,9 +2,9 @@
 import minidi
 
 # local
-from .Command import Command
-from TTBot.module.core.CommandCoreList import CommandCoreList
-from .CommandList import CommandList
+from TTBot.module.Command import Command
+from TTBot.module.CommandCoreList import CommandCoreList
+from TTBot.module.ModuleList import ModuleList
 from TTBot.data.Message import Message
 from TTBot.logic.Environment import Environment
 from TTBot.logic.InputSanitizer import InputSanitizer
@@ -14,11 +14,11 @@ from TTBot.logic.UserRights import UserRights
 
 class CommandRunner(minidi.Injectable):
 	pCommandCoreList: CommandCoreList
-	pCommandList: CommandList
 	pEnvironment: Environment
 	pInputSanitizer: InputSanitizer
 	pLogger: Logger
 	pModuleFactory: ModuleFactory
+	pModuleList: ModuleList
 	pUserRights: UserRights
 
 	async def _checkExecutionSingle(self, pCommand: Command, pMessage: Message, args: list):
@@ -58,7 +58,7 @@ class CommandRunner(minidi.Injectable):
 		if args is False:
 			return False
 
-		commandClasses = self.pCommandCoreList.getAllCommandCoreClasses() + self.pCommandList.getAllCommandClasses()
+		commandClasses = self.pCommandCoreList.getCommandCoreClasses() + self.pModuleList.getCommandClasses()
 
 		for commandClass in commandClasses:
 			pCommandClassInstance = self.pModuleFactory.createCommand(commandClass)

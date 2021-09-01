@@ -1,5 +1,5 @@
 # local
-from TTBot.optional.commands.Command import Command
+from TTBot.module.Command import Command
 from TTBot.data.Message import Message
 from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.Randomizer import Randomizer

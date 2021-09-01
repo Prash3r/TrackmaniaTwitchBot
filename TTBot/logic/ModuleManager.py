@@ -2,9 +2,9 @@
 import minidi
 
 # local
-from .DbConnector import DbConnector
-from .ModuleCallbackRunner import ModuleCallbackRunner
-from TTBot.optional.ModuleList import ModuleList
+from TTBot.logic.DbConnector import DbConnector
+from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
+from TTBot.module.ModuleList import ModuleList
 
 class ModuleManager(minidi.Injectable):
 	pDbConnector: DbConnector
@@ -21,7 +21,7 @@ class ModuleManager(minidi.Injectable):
 
 		moduleList = self.listModules()
 
-		moduleIds = self.pModuleList.getAllModuleIds()
+		moduleIds = self.pModuleList.getModuleIds()
 		for moduleId in moduleIds:
 			if moduleId not in moduleList:
 				self._createColumn(moduleId)

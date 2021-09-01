@@ -3,7 +3,7 @@ from abc import abstractmethod
 
 # local
 from TTBot.data.Message import Message
-from ..Module import Module
+from TTBot.module.Module import Module
 
 class Command(Module):
 	@abstractmethod

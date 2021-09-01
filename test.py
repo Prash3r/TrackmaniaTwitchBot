@@ -26,8 +26,7 @@ from TTBot.logic.Logger import Logger
 from TTBot.logic.development.SqliteQueryDialectConverter import SqliteQueryDialectConverter
 from TTBot.logic.development.TerminalMessageConverter import TerminalMessageConverter
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
-from TTBot.optional.commands.CommandRunner import CommandRunner
-from TTBot.optional.evaluators.EvaluatorRunner import EvaluatorRunner
+from TTBot.module.ModuleRunner import ModuleRunner
 
 
 class TwitchBotMock:
@@ -71,8 +70,7 @@ if __name__ == '__main__':
 	initLogger()
 	initDatabase()
 
-	pCommandRunner: CommandRunner = minidi.get(CommandRunner)
-	pEvaluatorRunner: EvaluatorRunner = minidi.get(EvaluatorRunner)
+	pModuleRunner: ModuleRunner = minidi.get(ModuleRunner)
 	pMessageConverter: MessageConverter = minidi.get(MessageConverter)
 
 	while True:
@@ -81,11 +79,8 @@ if __name__ == '__main__':
 
 		try:
 			loop = asyncio.get_event_loop()
-			pCommandCoroutine = pCommandRunner.execute(pMessage)
-			pEvaluatorCoroutine = pEvaluatorRunner.execute(pMessage)
-
-			loop.run_until_complete(pCommandCoroutine)
-			loop.run_until_complete(pEvaluatorCoroutine)
+			pModuleCoroutine = pModuleRunner.execute(pMessage)
+			loop.run_until_complete(pModuleCoroutine)
 		except Exception as e:
 			print(e.__class__.__name__, '->', e)
 	# while True

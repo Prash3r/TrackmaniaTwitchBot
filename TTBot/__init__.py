@@ -6,26 +6,24 @@ import minidi
 from twitchio.ext import commands
 
 # local
-from .data.Message import Message
-from .logic.Environment import Environment
-from .logic.Logger import Logger
-from .logic.interface.MessageConverter import MessageConverter
-from .logic.MessageEvaluator import MessageEvaluator
-from .logic.ModuleCallbackRunner import ModuleCallbackRunner
-from .logic.ModuleManager import ModuleManager
-from .optional.commands.CommandRunner import CommandRunner
-from .optional.evaluators.EvaluatorRunner import EvaluatorRunner
+from TTBot.data.Message import Message
+from TTBot.logic.Environment import Environment
+from TTBot.logic.Logger import Logger
+from TTBot.logic.interface.MessageConverter import MessageConverter
+from TTBot.logic.MessageEvaluator import MessageEvaluator
+from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
+from TTBot.logic.ModuleManager import ModuleManager
+from TTBot.module.ModuleRunner import ModuleRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
     def __init__(self, **kwargs):
-        self.pCommandRunner        = kwargs.get('CommandRunner'       , minidi.get(CommandRunner))
         self.pEnvironment          = kwargs.get('Environment'         , minidi.get(Environment))
-        self.pEvaluatorRunner      = kwargs.get('EvaluatorRunner'     , minidi.get(EvaluatorRunner))
         self.pLogger               = kwargs.get('Logger'              , minidi.get(Logger))
         self.pMessageConverter     = kwargs.get('MessageConverter'    , minidi.get(MessageConverter))
         self.pMessageEvaluator     = kwargs.get('MessageEvaluator'    , minidi.get(MessageEvaluator))
         self.pModuleCallbackRunner = kwargs.get('ModuleCallbackRunner', minidi.get(ModuleCallbackRunner))
         self.pModuleManager        = kwargs.get('ModuleManager'       , minidi.get(ModuleManager))
+        self.pModuleRunner         = kwargs.get('ModuleRunner'        , minidi.get(ModuleRunner))
 
         super().__init__(
             token=self.pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
@@ -96,7 +94,6 @@ class TrackmaniaTwitchBot(commands.Bot):
         message = pMessage.getContent()
         self.pLogger.debug(f"{messageAuthorName}\t:{message}")
 
-        await self.pCommandRunner.execute(pMessage)
-        await self.pEvaluatorRunner.execute(pMessage)
+        await self.pModuleRunner.execute(pMessage)
     # async def handle(self, pMessage: Message)
 # class TrackmaniaTwitchBot(commands.Bot)

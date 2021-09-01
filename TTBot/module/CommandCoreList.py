@@ -9,7 +9,7 @@ from TTBot.module.core.CommandCoreUninvite import CommandCoreUninvite
 from TTBot.module.core.CommandCoreUpdate import CommandCoreUpdate
 
 class CommandCoreList(minidi.Injectable):
-	def getAllCommandCoreClasses(self) -> list:
+	def getCommandCoreClasses(self) -> list:
 		return [
 			CommandCoreHelp,
 			CommandCoreInvite,
@@ -17,5 +17,5 @@ class CommandCoreList(minidi.Injectable):
 			CommandCoreUninvite,
 			CommandCoreUpdate
 		]
-	# def getAllCommandCoreClasses(self) -> list
+	# def getCommandCoreClasses(self) -> list
 # class CommandCoreList(minidi.Injectable)

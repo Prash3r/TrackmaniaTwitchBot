@@ -5,8 +5,8 @@ from unittest import mock
 # local
 from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
 from TTBot.logic.ModuleFactory import ModuleFactory
-from TTBot.optional.Module import Module
-from TTBot.optional.ModuleList import ModuleList
+from TTBot.module.Module import Module
+from TTBot.module.ModuleList import ModuleList
 
 class FalseModule(Module):
 	def getModuleId(self) -> str:
@@ -34,7 +34,7 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
-		pModuleList.getAllModuleClasses = mock.Mock(return_value=[])
+		pModuleList.getModuleClasses = mock.Mock(return_value=[])
 
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
@@ -43,14 +43,14 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		success = pModuleCallbackRunner.onBotStartup()
 		self.assertTrue(success)
 
-		pModuleList.getAllModuleClasses.assert_called_once()
+		pModuleList.getModuleClasses.assert_called_once()
 	# def test_onBotStartup_Default(self)
 
 	def test_onBotStartup_False(self):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
-		pModuleList.getAllModuleClasses = mock.Mock(return_value=[FalseModule])
+		pModuleList.getModuleClasses = mock.Mock(return_value=[FalseModule])
 
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
@@ -59,14 +59,14 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		success = pModuleCallbackRunner.onBotStartup()
 		self.assertFalse(success)
 
-		pModuleList.getAllModuleClasses.assert_called_once()
+		pModuleList.getModuleClasses.assert_called_once()
 	# def test_onBotStartup_False(self)
 
 	def test_onBotStartup_True(self):
 		pModuleFactory = ModuleFactory()
 
 		pModuleList = ModuleList()
-		pModuleList.getAllModuleClasses = mock.Mock(return_value=[TrueModule])
+		pModuleList.getModuleClasses = mock.Mock(return_value=[TrueModule])
 
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
@@ -75,7 +75,7 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		success = pModuleCallbackRunner.onBotStartup()
 		self.assertTrue(success)
 
-		pModuleList.getAllModuleClasses.assert_called_once()
+		pModuleList.getModuleClasses.assert_called_once()
 	# def test_onBotStartup_True(self)
 
 	def test_onModuleEnable(self):
@@ -92,7 +92,7 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleFactory.createModule = mock.Mock(side_effect=[pFalseModule, pMockModule, pTrueModule])
 
 		pModuleList = ModuleList()
-		pModuleList.getAllModuleClasses = mock.Mock(return_value=[FalseModule, MockModule, TrueModule])
+		pModuleList.getModuleClasses = mock.Mock(return_value=[FalseModule, MockModule, TrueModule])
 
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
@@ -103,7 +103,7 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pMockModule.onModuleEnable.assert_called_once()
 		pTrueModule.onModuleEnable.assert_not_called()
 		pModuleFactory.createModule.assert_called()
-		pModuleList.getAllModuleClasses.assert_called_once()
+		pModuleList.getModuleClasses.assert_called_once()
 	# def test_onModuleEnable(self)
 
 	def test_onModuleDisable(self):
@@ -120,7 +120,7 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pModuleFactory.createModule = mock.Mock(side_effect=[pFalseModule, pMockModule, pTrueModule])
 
 		pModuleList = ModuleList()
-		pModuleList.getAllModuleClasses = mock.Mock(return_value=[FalseModule, MockModule, TrueModule])
+		pModuleList.getModuleClasses = mock.Mock(return_value=[FalseModule, MockModule, TrueModule])
 
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
@@ -131,6 +131,6 @@ class TestModuleCallbackRunner(unittest.TestCase):
 		pMockModule.onModuleDisable.assert_called_once()
 		pTrueModule.onModuleDisable.assert_not_called()
 		pModuleFactory.createModule.assert_called()
-		pModuleList.getAllModuleClasses.assert_called_once()
+		pModuleList.getModuleClasses.assert_called_once()
 	# def test_onModuleDisable(self)
 # class TestModuleCallbackRunner(unittest.TestCase)

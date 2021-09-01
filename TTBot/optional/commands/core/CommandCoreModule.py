@@ -1,13 +1,12 @@
 # local
 from .CommandCore import CommandCore
+from TTBot.data.Message import Message
 from TTBot.logic.InputSanitizer import InputSanitizer
 from TTBot.logic.ModuleManager import ModuleManager
-from TTBot.logic.TwitchMessageEvaluator import TwitchMessageEvaluator
 
 class CommandCoreModule(CommandCore):
     pInputSanitizer: InputSanitizer
     pModuleManager: ModuleManager
-    pTwitchMessageEvaluator: TwitchMessageEvaluator
 
     def getCommandString(self) -> str:
         return 'module'
@@ -35,8 +34,8 @@ class CommandCoreModule(CommandCore):
             else f"Error deactivating module '{moduleName}!"
     # def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str
     
-    async def execute(self, pMessage, args: list) -> str:
-        messageAuthorName = self.pTwitchMessageEvaluator.getAuthorName(pMessage)
+    async def execute(self, pMessage: Message, args: list) -> str:
+        messageAuthorName = pMessage.getAuthor().getName()
         arg = args[0].lower() if len(args) > 0 else 'list'
 
         if arg == 'list':
@@ -47,7 +46,7 @@ class CommandCoreModule(CommandCore):
             return f"@{messageAuthorName} {self._deactivateModule(messageAuthorName, args[1])}"
         else:
             return "kem1W this one needs an argument"
-    # async def execute(self, pMessage, args: list) -> str
+    # async def execute(self, pMessage: Message, args: list) -> str
 
     def _getModulesList(self, messageAuthorName: str) -> str:
         modules = self.pModuleManager.listModulesForChannel(messageAuthorName)

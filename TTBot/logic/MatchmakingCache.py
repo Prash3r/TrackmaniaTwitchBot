@@ -4,12 +4,12 @@ import minidi
 # local
 from TTBot.data.MatchmakingData import MatchmakingData
 from .DateTimeChecker import DateTimeChecker
-from .MariaDbConnector import MariaDbConnector
+from .DbConnector import DbConnector
 from .MatchmakingDataFactory import MatchmakingDataFactory
 
 class MatchmakingCache(minidi.Injectable):
 	pDateTimeChecker: DateTimeChecker
-	pMariaDbConnector: MariaDbConnector
+	pDbConnector: DbConnector
 	pMatchmakingDataFactory: MatchmakingDataFactory
 
 	def afterInit(self):
@@ -35,10 +35,10 @@ class MatchmakingCache(minidi.Injectable):
 			`page` INT,\
 			`note` INT,\
 			`ts` TIMESTAMP,\
-			CONSTRAINT accountid PRIMARY KEY USING BTREE (`ranks_accountid`)\
+			PRIMARY KEY USING BTREE (`ranks_accountid`)\
 		);"
 		
-		self.pMariaDbConnector.query(query)
+		self.pDbConnector.execute(query)
 	# def afterInit(self)
 
 	def get(self, playerLoginPart: str) -> list:
@@ -47,7 +47,7 @@ class MatchmakingCache(minidi.Injectable):
 		- if player is rank >= 69 -> use 'rank' minutes old cache data
 		- if cache data is >= 12 hours old -> don't use cache data"""
 
-		rows = self.pMariaDbConnector.fetch(f"SELECT ranks_rank, ranks_displayname, ts, ranks_score FROM mmranking WHERE ranks_displayname = '{playerLoginPart}';")
+		rows = self.pDbConnector.fetch(f"SELECT ranks_rank, ranks_displayname, ts, ranks_score FROM mmranking WHERE ranks_displayname = '{playerLoginPart}';")
 
 		if not rows:
 			return False
@@ -71,7 +71,7 @@ class MatchmakingCache(minidi.Injectable):
 	# def get(self, playerLoginPart: str) -> list
 
 	def write(self, pMatchmakingData: MatchmakingData) -> bool:
-		rowsAffected = self.pMariaDbConnector.query(f"REPLACE INTO mmranking (ranks_rank, ranks_score, ranks_displayname, ranks_accountid) \
+		rowsAffected = self.pDbConnector.execute(f"REPLACE INTO mmranking (ranks_rank, ranks_score, ranks_displayname, ranks_accountid) \
 		VALUES ('{pMatchmakingData.getRank()}', '{pMatchmakingData.getScore()}', '{pMatchmakingData.getPlayer()}', '{pMatchmakingData.getPlayerAccountId()}');")
 
 		return rowsAffected == 1

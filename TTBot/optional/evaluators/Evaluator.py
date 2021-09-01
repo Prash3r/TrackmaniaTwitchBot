@@ -3,6 +3,7 @@ from abc import abstractmethod
 
 # local
 from ..Module import Module
+from TTBot.data.Message import Message
 
 class Evaluator(Module):
 	@abstractmethod
@@ -10,6 +11,6 @@ class Evaluator(Module):
 		pass
 
 	@abstractmethod
-	def execute(self, pMessage) -> str:
+	def execute(self, pMessage: Message) -> str:
 		pass
 # class Evaluator(Module)

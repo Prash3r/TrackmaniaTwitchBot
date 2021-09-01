@@ -9,17 +9,23 @@
 # from dotenv import load_dotenv
 # load_dotenv()
 
-# vendor
+# pylib
 import logging
+
+# vendor
 import mariadb
 import minidi
 
 # local
 from TTBot import TrackmaniaTwitchBot
+from TTBot.logic.DbConnection import DbConnection
+from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverter
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
-from TTBot.logic.MariaDbConnection import MariaDbConnection
+from TTBot.logic.production.MariaDbQueryDialectConverter import MariaDbQueryDialectConverter
+from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
+from TTBot.logic.production.TwitchMessageConverter import TwitchMessageConverter
 
 def initDatabase():
 	pEnvironment: Environment = minidi.get(Environment)
@@ -34,8 +40,8 @@ def initDatabase():
 	pDb.autocommit = True
 	pDb.auto_reconnect = True
 
-	pMariaDbConnection: MariaDbConnection = minidi.get(MariaDbConnection)
-	pMariaDbConnection.set(pDb)
+	pDbConnection: DbConnection = minidi.get(DbConnection)
+	pDbConnection.set(pDb)
 # def initDatabase()
     
 def initLogger():
@@ -49,9 +55,15 @@ def initLogger():
 	pLogger.addHandler(pStreamHandler)
 # def initLogger()
 
+def initLogic():
+	minidi.set(DbQueryDialectConverter, minidi.get(MariaDbQueryDialectConverter))
+	minidi.set(MessageConverter, minidi.get(TwitchMessageConverter))
+# def initLogic()
+
 if __name__ == '__main__':
 	initLogger()
 	initDatabase()
+	initLogic()
 
 	pTwitchBot = TrackmaniaTwitchBot()
 

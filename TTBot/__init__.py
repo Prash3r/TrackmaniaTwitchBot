@@ -16,62 +16,71 @@ from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.module.ModuleRunner import ModuleRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
-    def __init__(self, **kwargs):
-        self.pEnvironment          = kwargs.get('Environment'         , minidi.get(Environment))
-        self.pLogger               = kwargs.get('Logger'              , minidi.get(Logger))
-        self.pMessageConverter     = kwargs.get('MessageConverter'    , minidi.get(MessageConverter))
-        self.pMessageEvaluator     = kwargs.get('MessageEvaluator'    , minidi.get(MessageEvaluator))
-        self.pModuleCallbackRunner = kwargs.get('ModuleCallbackRunner', minidi.get(ModuleCallbackRunner))
-        self.pModuleManager        = kwargs.get('ModuleManager'       , minidi.get(ModuleManager))
-        self.pModuleRunner         = kwargs.get('ModuleRunner'        , minidi.get(ModuleRunner))
+    def __init__(self):
+        pEnvironment: Environment = minidi.get(Environment)
 
         super().__init__(
-            token=self.pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
-            client_id=self.pEnvironment.getVariable('TWITCH_CLIENT_ID'),
-            prefix=self.pEnvironment.getVariable('TWITCH_CMD_PREFIX')#,
+            token=pEnvironment.getVariable('TWITCH_ACCESS_TOKEN'),
+            client_id=pEnvironment.getVariable('TWITCH_CLIENT_ID'),
+            prefix=pEnvironment.getVariable('TWITCH_CMD_PREFIX')#,
             #initial_channels=['trackmania_bot'] # initial join doesnt currently work in twitchio
         )
         
-        moduleInitSuccess = self.pModuleCallbackRunner.onBotStartup()
+        pLogger: Logger = minidi.get(Logger)
+        pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
+
+        moduleInitSuccess = pModuleCallbackRunner.onBotStartup()
         if not moduleInitSuccess:
-            self.pLogger.error("Module initialization failed!")
+            pLogger.error("Module initialization failed!")
             os._exit(1)
+        # if not moduleInitSuccess
         
-        self.pLogger.info("Twitchio Bot successfully started!")
+        pLogger.info("Twitchio Bot successfully started!")
     # def __init__(self)
 
     async def event_ready(self):
         # We are logged in and ready to chat and use commands...
-        self.pLogger.info(f'Logged in as | {self.nick}')
+        pLogger: Logger = minidi.get(Logger)
+        pLogger.info(f'Logged in as | {self.nick}')
 
         channelList = self.getChannelList()
         if not channelList:
             raise RuntimeError("Could not boot TTBot, channel list is empty!")
             
-        self.pLogger.info(f"Joining channels: \t{', '.join(channelList)} ...")
+        pLogger.info(f"Joining channels: \t{', '.join(channelList)} ...")
 
         try:
             await self.join_channels(channelList)
         except:
-            self.pLogger.error("Could not join twitch channels!")
-            self.pLogger.error(f"channelList: {channelList}")
+            pLogger.error("Could not join twitch channels!")
+            pLogger.error(f"channelList: {channelList}")
             os._exit(1)
     # async def event_ready(self)
 
     def getChannelList(self) -> list:
+        pLogger: Logger = minidi.get(Logger)
+        pModuleManager: ModuleManager = minidi.get(ModuleManager)
+
         try:
-            return self.pModuleManager.getChannels()
+            return pModuleManager.getChannels()
         except:
-            self.pLogger.error("Could not extract channel list from DB!")
-            self.pLogger.warning(f"Trying to insert own channel into DB...")
-            twitchBotUsername = self.pEnvironment.getTwitchBotUsername()
-            self.pModuleManager.addChannel(twitchBotUsername)
+            pLogger.error("Could not extract channel list from DB!")
+            pLogger.warning("Trying to insert own channel into DB...")
+
+            pEnvironment: Environment = minidi.get(Environment)
+            twitchBotUsername = pEnvironment.getTwitchBotUsername()
+            pModuleManager.addChannel(twitchBotUsername)
+            
+            pLogger.info("Restart the bot to join its own channel!")
+
             os._exit(1)
     # def getChannelList(self) -> list
     
     async def event_message(self, pMessage):
+        pMessageConverter: MessageConverter = minidi.get(MessageConverter)
+
         try:
-            pMessage = self.pMessageConverter.convert(pMessage)
+            pMessage = pMessageConverter.convert(pMessage)
         except:
             return
         
@@ -80,9 +89,11 @@ class TrackmaniaTwitchBot(commands.Bot):
         if pMessage.getAuthor() is None:
             return
         
+        pEnvironment: Environment = minidi.get(Environment)
+        pLogger: Logger = minidi.get(Logger)
         # ignore thyself
-        if self.pEnvironment.getTwitchBotUsername() == pMessage.getAuthor().getName().lower():
-            self.pLogger.debug("Own message detected and ignored")
+        if pEnvironment.getTwitchBotUsername() == pMessage.getAuthor().getName().lower():
+            pLogger.debug("self message, ignoring")
             return
 
         # handle commands and evaluations
@@ -92,8 +103,11 @@ class TrackmaniaTwitchBot(commands.Bot):
     async def handleMessage(self, pMessage: Message):
         messageAuthorName = pMessage.getAuthor().getName()
         message = pMessage.getContent()
-        self.pLogger.debug(f"{messageAuthorName}\t:{message}")
 
-        await self.pModuleRunner.execute(pMessage)
+        pLogger: Logger = minidi.get(Logger)
+        pLogger.debug(f"{messageAuthorName}\t:{message}")
+
+        pModuleRunner: ModuleRunner = minidi.get(ModuleRunner)
+        await pModuleRunner.execute(pMessage)
     # async def handle(self, pMessage: Message)
 # class TrackmaniaTwitchBot(commands.Bot)

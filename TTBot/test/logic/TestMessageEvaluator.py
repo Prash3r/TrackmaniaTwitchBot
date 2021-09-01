@@ -5,15 +5,17 @@ import unittest
 from TTBot.data.Message import Message
 from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.data.MessageChannel import MessageChannel
+from TTBot.logic.Developers import Developers
 from TTBot.logic.MessageEvaluator import MessageEvaluator
 
 class TestMessageEvaluator(unittest.TestCase):
 	def test_getUserLevel_developer(self):
-		pAuthor = MessageAuthor(name='PRASH3R')
+		pAuthor = MessageAuthor(name='prash3r')
 		pChannel = MessageChannel(name='unittest')
 		pMessage = Message(author=pAuthor, channel=pChannel)
 
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 		self.assertEqual(pMessageEvaluator.getUserLevel(pMessage), 100)
 	# def test_getUserLevel_developer(self)
 
@@ -23,6 +25,7 @@ class TestMessageEvaluator(unittest.TestCase):
 		pMessage = Message(author=pAuthor, channel=pChannel)
 
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 		self.assertEqual(pMessageEvaluator.getUserLevel(pMessage), 10)
 	# def test_getUserLevel_moderator(self)
 
@@ -32,6 +35,7 @@ class TestMessageEvaluator(unittest.TestCase):
 		pMessage = Message(author=pAuthor, channel=pChannel)
 
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 		self.assertEqual(pMessageEvaluator.getUserLevel(pMessage), 100)
 	# def test_getUserLevel_owner(self)
 
@@ -41,6 +45,7 @@ class TestMessageEvaluator(unittest.TestCase):
 		pMessage = Message(author=pAuthor, channel=pChannel)
 
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 		self.assertEqual(pMessageEvaluator.getUserLevel(pMessage), 5)
 	# def test_getUserLevel_subscriber(self)
 
@@ -50,11 +55,13 @@ class TestMessageEvaluator(unittest.TestCase):
 		pMessage = Message(author=pAuthor, channel=pChannel)
 
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 		self.assertEqual(pMessageEvaluator.getUserLevel(pMessage), 1)
 	# def test_getUserLevel_viewer(self)
 
 	def test_isOwnerMessage(self):
 		pMessageEvaluator = MessageEvaluator()
+		pMessageEvaluator.pDevelopers = Developers()
 
 		pAuthor = MessageAuthor(name='UNITTEST')
 		pChannel = MessageChannel(name='unittest')

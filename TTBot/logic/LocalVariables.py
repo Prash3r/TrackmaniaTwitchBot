@@ -78,7 +78,7 @@ class LocalVariables(minidi.Injectable):
 			self.pLogger.debug(f"Updated local variable '{name}' for channel '{channel}' to '{newValue}'!")
 			return True
 		except:
-			self.pLogger.error(f"FAILED to update local variable '{name}' for channel '{channel}' to '{newValue}'!")
-			return False
+			self.pLogger.error(f"Could not update local variable '{name}' for channel '{channel}' to '{newValue}', trying to insert ...")
+			return self._insert(name, channel, newValue)
 	# def write(self, name: str, channel: str, newValue) -> bool
 # class LocalVariables(minidi.Injectable)

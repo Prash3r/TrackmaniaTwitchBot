@@ -73,7 +73,7 @@ class GlobalVariables(minidi.Injectable):
 			self.pLogger.debug(f"Updated global variable '{name}' to '{newValue}'!")
 			return True
 		except:
-			self.pLogger.error(f"FAILED to update global variable '{name}' to '{newValue}'!")
-			return False
+			self.pLogger.error(f"Could not update global variable '{name}' to '{newValue}' - trying to insert ...")
+			return self._insert(name, newValue)
 	# def write(self, name: str, newValue) -> bool
 # class GlobalVariables(minidi.Injectable)

@@ -7,7 +7,7 @@ class EvaluatorLuckers(Evaluator):
     pGlobalVariables: GlobalVariables
 
     def getMessageRegex(self) -> str:
-        return r'(luckers)\b'
+        return r'\b(luckers)\b'
     
     def getModuleId(self) -> str:
         return 'luckerscounter'

@@ -16,6 +16,7 @@ class TestEvaluatorLuckers(unittest.IsolatedAsyncioTestCase):
 		self.assertRegex('hey luckers', regex)
 		self.assertRegex('luckers, you KEKEGA', regex)
 		self.assertNotRegex('lucky', regex)
+		self.assertNotRegex('cluckers', regex)
 	# async def test_getMessageRegex(self)
 
 	async def test_execute(self):

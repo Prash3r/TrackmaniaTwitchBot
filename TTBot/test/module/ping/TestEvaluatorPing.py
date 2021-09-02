@@ -10,6 +10,7 @@ class TestEvaluatorPing(unittest.IsolatedAsyncioTestCase):
 		regex = pEvaluatorPing.getMessageRegex()
 		self.assertRegex('ping', regex)
 		self.assertRegex('hey ping ping', regex)
+		self.assertNotRegex('sping', regex)
 		self.assertNotRegex('pnig', regex)
 	# async def test_getMessageRegex(self)
 

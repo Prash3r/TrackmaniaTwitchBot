@@ -10,6 +10,7 @@ class TestEvaluatorOoga(unittest.IsolatedAsyncioTestCase):
 		regex = pEvaluatorOoga.getMessageRegex()
 		self.assertRegex('ooga', regex)
 		self.assertRegex('hey ooga booga', regex)
+		self.assertNotRegex('booga', regex)
 		self.assertNotRegex('ogoa', regex)
 	# async def test_getMessageRegex(self)
 

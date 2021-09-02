@@ -4,7 +4,7 @@ from TTBot.module.Evaluator import Evaluator
 
 class EvaluatorOoga(Evaluator):
     def getMessageRegex(self) -> str:
-        return r'(ooga)\b'
+        return r'\b(ooga)\b'
     
     def getModuleId(self) -> str:
         return 'ooga'

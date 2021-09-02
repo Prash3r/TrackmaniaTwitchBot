@@ -3,17 +3,21 @@ import minidi
 
 # local
 from TTBot.module.joke.CommandJoke import CommandJoke
+from TTBot.module.karma.CommandKarma import CommandKarma
 from TTBot.module.kem.CommandKem import CommandKem
 from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.module.roll.CommandRoll import CommandRoll
 from TTBot.module.score.CommandScore import CommandScore
 
+from TTBot.module.karma.EvaluatorKarmaMinusMinus import EvaluatorKarmaMinusMinus
+from TTBot.module.karma.EvaluatorKarmaPlusPlus import EvaluatorKarmaPlusPlus
 from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
 from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
 from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 
 COMMAND_LIST = [
 	CommandJoke,
+	CommandKarma,
 	CommandKem,
 	CommandMm,
 	CommandRoll,
@@ -21,13 +25,15 @@ COMMAND_LIST = [
 ]
 
 EVALUATOR_LIST = [
+	EvaluatorKarmaMinusMinus,
+	EvaluatorKarmaPlusPlus,
 	EvaluatorLuckers,
 	EvaluatorOoga,
 	EvaluatorPing
 ]
 
 MODULE_LIST = COMMAND_LIST + EVALUATOR_LIST
-MODULE_ID_LIST = [moduleClass().getModuleId() for moduleClass in MODULE_LIST]
+MODULE_ID_LIST = list(set([moduleClass().getModuleId() for moduleClass in MODULE_LIST]))
 
 class ModuleList(minidi.Injectable):
 	def getCommandClasses(self) -> list:

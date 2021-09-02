@@ -24,7 +24,7 @@ class CommandCoreUpdate(CommandCore):
             return
         
         pChannel = pMessage.getChannel()
-        pChannel.sendMessage("Rebooting ...")
+        await pChannel.sendMessage("Rebooting ...")
         self.pGlobalVariables.write('updateChannel', pChannel.getName())
 
         # ensure, that the message can be sent in time

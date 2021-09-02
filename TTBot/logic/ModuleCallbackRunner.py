@@ -9,9 +9,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 	pModuleFactory: ModuleFactory
 	pModuleList: ModuleList
 
-	async def onBotStartup(self) -> bool:
-		moduleClasses = self.pModuleList.getModuleClasses()
-
+	async def onBotStartup(self, moduleClasses: list) -> bool:
 		for moduleClass in moduleClasses:
 			pModuleClassInstance = self.pModuleFactory.createModule(moduleClass)
 			success = await pModuleClassInstance.onBotStartup()
@@ -20,7 +18,7 @@ class ModuleCallbackRunner(minidi.Injectable):
 		# for moduleClass in moduleClasses
 
 		return True
-	# async def onBotStartup(self)
+	# async def onBotStartup(self, moduleClasses: list)
 
 	def onModuleEnable(self, moduleName: str):
 		moduleClasses = self.pModuleList.getModuleClasses()

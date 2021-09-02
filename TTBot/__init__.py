@@ -3,6 +3,7 @@ import os
 
 # vendor
 import minidi
+import time
 from twitchio.ext import commands
 
 # local
@@ -10,9 +11,10 @@ from TTBot.data.Message import Message
 from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
-from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
 from TTBot.logic.ModuleManager import ModuleManager
+from TTBot.module.CommandCoreList import CommandCoreList
+from TTBot.module.ModuleList import ModuleList
 from TTBot.module.ModuleRunner import ModuleRunner
 
 class TrackmaniaTwitchBot(commands.Bot):
@@ -47,10 +49,16 @@ class TrackmaniaTwitchBot(commands.Bot):
             pLogger.error("Could not join twitch channels!")
             pLogger.error(f"channelList: {channelList}")
             os._exit(1)
+        
+        # ensure, that channels have been joined in time, so Modules can do anything they need to
+        time.sleep(2)
 
+        pCommandCoreList: CommandCoreList = minidi.get(CommandCoreList)
+        pModuleList: ModuleList = minidi.get(ModuleList)
+        moduleClasses = pCommandCoreList.getCommandCoreClasses() + pModuleList.getModuleClasses()
 
         pModuleCallbackRunner: ModuleCallbackRunner = minidi.get(ModuleCallbackRunner)
-        moduleInitSuccess = await pModuleCallbackRunner.onBotStartup()
+        moduleInitSuccess = await pModuleCallbackRunner.onBotStartup(moduleClasses)
         if not moduleInitSuccess:
             pLogger.error("Module initialization failed!")
             os._exit(1)

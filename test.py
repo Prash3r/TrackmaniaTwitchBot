@@ -10,7 +10,6 @@
 # load_dotenv()
 
 # pylib
-from TTBot.logic.interface.MessageConverter import MessageConverter
 import asyncio
 import logging
 import os
@@ -20,11 +19,12 @@ import sqlite3
 import minidi
 
 # local
-from TTBot.logic.DbConnection import DbConnection
-from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverter
-from TTBot.logic.Logger import Logger
 from TTBot.logic.development.SqliteQueryDialectConverter import SqliteQueryDialectConverter
 from TTBot.logic.development.TerminalMessageConverter import TerminalMessageConverter
+from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverter
+from TTBot.logic.interface.MessageConverter import MessageConverter
+from TTBot.logic.DbConnection import DbConnection
+from TTBot.logic.Logger import Logger
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.module.ModuleRunner import ModuleRunner
 

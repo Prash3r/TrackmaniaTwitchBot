@@ -4,12 +4,14 @@ import time
 
 # local
 from TTBot.data.Message import Message
+from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.module.core.CommandCore import CommandCore
 
 class CommandCoreUpdate(CommandCore):
+    pGlobalVariables: GlobalVariables
     pMessageEvaluator: MessageEvaluator
     pModuleManager: ModuleManager
     pTwitchBotWrapper: TwitchBotWrapper
@@ -23,6 +25,7 @@ class CommandCoreUpdate(CommandCore):
         
         pChannel = pMessage.getChannel()
         pChannel.sendMessage("Rebooting ...")
+        self.pGlobalVariables.write('updateChannel', pChannel.getName())
 
         # ensure, that the message can be sent in time
         time.sleep(2)
@@ -35,13 +38,15 @@ class CommandCoreUpdate(CommandCore):
     # async def execute(self, pMessage: Message, _) -> str
 
     async def onBotStartup(self) -> bool:
-        try:
-            pTwitchBot = self.pTwitchBotWrapper.get()
-            for pChannel in pTwitchBot.connected_channels:
-                await pChannel.send("Successfully updated!")
+        updateChannel = self.pGlobalVariables.get('updateChannel', '')        
+        # clear the database value, we don't need it anymore
+        self.pGlobalVariables.write('updateChannel', '')
+
+        pTwitchBot = self.pTwitchBotWrapper.get()
+        pChannel = pTwitchBot.get_channel(updateChannel)
+        if pChannel:
+            await pChannel.send("Successfully updated!")
         
-            return True
-        except:
-            return False
+        return True
     # async def onBotStartup(self) -> bool
 # class CommandCoreUpdate(CommandCore)

@@ -117,8 +117,8 @@ class TestLocalVariables(unittest.TestCase):
 		self.assertFalse(pLocalVariables.write('local%variable', 'channel%', 'Hello, World!'))
 
 		pLogger.debug.assert_not_called()
-		pLogger.error.assert_called_once_with("FAILED to update local variable 'localvariable' for channel 'channel' to 'Hello, World!'!")
-		pDbConnector.execute.assert_called_once()
+		pLogger.error.assert_called()
+		pDbConnector.execute.assert_called()
 	# def test_write_False(self)
 
 	def test_write_True(self):

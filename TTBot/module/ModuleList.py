@@ -9,8 +9,7 @@ from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.module.roll.CommandRoll import CommandRoll
 from TTBot.module.score.CommandScore import CommandScore
 
-from TTBot.module.karma.EvaluatorKarmaMinusMinus import EvaluatorKarmaMinusMinus
-from TTBot.module.karma.EvaluatorKarmaPlusPlus import EvaluatorKarmaPlusPlus
+from TTBot.module.karma.EvaluatorKarma import EvaluatorKarma
 from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
 from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
 from TTBot.module.ping.EvaluatorPing import EvaluatorPing
@@ -25,8 +24,7 @@ COMMAND_LIST = [
 ]
 
 EVALUATOR_LIST = [
-	EvaluatorKarmaMinusMinus,
-	EvaluatorKarmaPlusPlus,
+	EvaluatorKarma,
 	EvaluatorLuckers,
 	EvaluatorOoga,
 	EvaluatorPing

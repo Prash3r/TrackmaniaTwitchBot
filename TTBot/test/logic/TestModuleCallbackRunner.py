@@ -33,49 +33,31 @@ class TestModuleCallbackRunner(unittest.IsolatedAsyncioTestCase):
 	async def test_onBotStartup_Default(self):
 		pModuleFactory = ModuleFactory()
 
-		pModuleList = ModuleList()
-		pModuleList.getModuleClasses = mock.Mock(return_value=[])
-
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
-		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = await pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup([])
 		self.assertTrue(success)
-
-		pModuleList.getModuleClasses.assert_called_once()
 	# async def test_onBotStartup_Default(self)
 
 	async def test_onBotStartup_False(self):
 		pModuleFactory = ModuleFactory()
 
-		pModuleList = ModuleList()
-		pModuleList.getModuleClasses = mock.Mock(return_value=[FalseModule])
-
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
-		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = await pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup([FalseModule])
 		self.assertFalse(success)
-
-		pModuleList.getModuleClasses.assert_called_once()
 	# async def test_onBotStartup_False(self)
 
 	async def test_onBotStartup_True(self):
 		pModuleFactory = ModuleFactory()
 
-		pModuleList = ModuleList()
-		pModuleList.getModuleClasses = mock.Mock(return_value=[TrueModule])
-
 		pModuleCallbackRunner = ModuleCallbackRunner()
 		pModuleCallbackRunner.pModuleFactory = pModuleFactory
-		pModuleCallbackRunner.pModuleList = pModuleList
 
-		success = await pModuleCallbackRunner.onBotStartup()
+		success = await pModuleCallbackRunner.onBotStartup([TrueModule])
 		self.assertTrue(success)
-
-		pModuleList.getModuleClasses.assert_called_once()
 	# async def test_onBotStartup_True(self)
 
 	async def test_onModuleEnable(self):

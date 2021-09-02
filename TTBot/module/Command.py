@@ -11,6 +11,6 @@ class Command(Module):
 		pass
 
 	@abstractmethod
-	def execute(self, pMessage: Message, args: list) -> str:
+	async def execute(self, pMessage: Message, args: list) -> str:
 		pass
 # class Command(Module)

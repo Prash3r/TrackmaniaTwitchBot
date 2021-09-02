@@ -11,6 +11,6 @@ class Evaluator(Module):
 		pass
 
 	@abstractmethod
-	def execute(self, pMessage: Message) -> str:
+	async def execute(self, pMessage: Message) -> str:
 		pass
 # class Evaluator(Module)

@@ -44,8 +44,8 @@ class EvaluatorKarma(Evaluator):
 		channelName = pChannel.getName()
 
 		message = pMessage.getContent()
-		plusVotes = self._countPlusVotes(message)
-		minusVotes = self._countMinusVotes(message)
+		plusVotes = min(1, self._countPlusVotes(message))
+		minusVotes = min(1, self._countMinusVotes(message))
 
 		currentKarma = self.pLocalVariables.get('karma', channelName, 0)
 		newKarma = currentKarma + plusVotes - minusVotes

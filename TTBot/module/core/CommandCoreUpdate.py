@@ -20,7 +20,7 @@ class CommandCoreUpdate(CommandCore):
         return 'update'
     
     async def execute(self, pMessage: Message, _) -> str:
-        if not self.pMessageEvaluator.isMainDeveloperMessage(pMessage) and not self.pMessageEvaluator.isOwnerMessage(pMessage):
+        if not self.pMessageEvaluator.isMainDeveloperMessage(pMessage):
             return
         
         pChannel = pMessage.getChannel()

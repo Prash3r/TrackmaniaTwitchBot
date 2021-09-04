@@ -12,6 +12,7 @@
 # pylib
 import asyncio
 import logging
+from unittest import mock
 import os
 import sqlite3
 
@@ -25,6 +26,7 @@ from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverte
 from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.DbConnection import DbConnection
 from TTBot.logic.Logger import Logger
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.TwitchBotWrapper import TwitchBotWrapper
 from TTBot.module.ModuleRunner import ModuleRunner
 
@@ -59,6 +61,9 @@ def initRuntimeEnvironment():
 
 	minidi.set(DbQueryDialectConverter, minidi.get(SqliteQueryDialectConverter))
 	minidi.set(MessageConverter, minidi.get(TerminalMessageConverter))
+
+	pMessageEvaluator: MessageEvaluator = minidi.get(MessageEvaluator)
+	pMessageEvaluator.isMainDeveloperMessage = mock.Mock(return_value=True)
 
 	pTwitchBotMock = TwitchBotMock()
 	pTwitchBotWrapper: TwitchBotWrapper = minidi.get(TwitchBotWrapper)

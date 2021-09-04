@@ -19,13 +19,14 @@ class TestUserRights(unittest.TestCase):
 		return pEnvironment
 	# def setUpEnvironment(self, botName: str) -> Environment
 
-	def setUpMessageEvaluator(self, getUserLevel: int, isOwnerMessage: bool) -> MessageEvaluator:
+	def setUpMessageEvaluator(self, getUserLevel: int, isMainDevMessage: bool, isOwnerMessage: bool) -> MessageEvaluator:
 		pMessageEvaluator = MessageEvaluator()
 		pMessageEvaluator.getUserLevel = mock.Mock(return_value=getUserLevel)
+		pMessageEvaluator.isMainDeveloperMessage = mock.Mock(return_value=isMainDevMessage)
 		pMessageEvaluator.isOwnerMessage = mock.Mock(return_value=isOwnerMessage)
 
 		return pMessageEvaluator
-	# def setUpMessageEvaluator(self, getUserLevel: int, isOwnerMessage: bool) -> MessageEvaluator
+	# def setUpMessageEvaluator(self, getUserLevel: int, isMainDevMessage: bool, isOwnerMessage: bool) -> MessageEvaluator
 
 	def setUpModuleManager(self, minimumAccessLevel: int) -> ModuleManager:
 		pModuleManager = ModuleManager()
@@ -46,7 +47,7 @@ class TestUserRights(unittest.TestCase):
 
 	def test_allowModuleExecution_allow(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isOwnerMessage=False)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=False)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=5)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
@@ -57,6 +58,7 @@ class TestUserRights(unittest.TestCase):
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_called_once_with(pMessage)
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_called_once()
 		pModuleManager.getMinimumAccessLevel.assert_called_once_with('unittest', 'core')
@@ -64,7 +66,7 @@ class TestUserRights(unittest.TestCase):
 
 	def test_allowModuleExecution_botChannel(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isOwnerMessage=False)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=False)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=5)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
@@ -75,6 +77,7 @@ class TestUserRights(unittest.TestCase):
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_not_called()
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_not_called()
 		pModuleManager.getMinimumAccessLevel.assert_not_called()
@@ -82,7 +85,7 @@ class TestUserRights(unittest.TestCase):
 	
 	def test_allowModuleExecution_disabled(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isOwnerMessage=False)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=False)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=0)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
@@ -92,6 +95,7 @@ class TestUserRights(unittest.TestCase):
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_not_called()
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_called_once()
 		pModuleManager.getMinimumAccessLevel.assert_not_called()
@@ -99,7 +103,7 @@ class TestUserRights(unittest.TestCase):
 
 	def test_allowModuleExecution_disallow(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=1, isOwnerMessage=False)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=1, isMainDevMessage=False, isOwnerMessage=False)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=5)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
@@ -110,14 +114,15 @@ class TestUserRights(unittest.TestCase):
 
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_called_once_with(pMessage)
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_called_once()
 		pModuleManager.getMinimumAccessLevel.assert_called_once_with('unittest', 'core')
 	# def test_allowModuleExecution_disallow(self)
 
-	def test_allowModuleExecution_ownerMessage(self):
+	def test_allowModuleExecution_mainDevMessage(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isOwnerMessage=True)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=True, isOwnerMessage=False)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=5)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
@@ -128,6 +133,26 @@ class TestUserRights(unittest.TestCase):
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_not_called()
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
+		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
+		pModuleManager.getChannels.assert_not_called()
+		pModuleManager.getMinimumAccessLevel.assert_not_called()
+	# def test_allowModuleExecution_mainDevMessage(self)
+
+	def test_allowModuleExecution_ownerMessage(self):
+		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=True)
+		pModuleManager = self.setUpModuleManager(minimumAccessLevel=5)
+		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
+
+		pMessage = Message(channel=MessageChannel(name='unittest'))
+		pModule = CommandCoreInvite()
+		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
+		self.assertTrue(allowModuleExecution)
+		
+		pEnvironment.getTwitchBotUsername.assert_called_once()
+		pMessageEvaluator.getUserLevel.assert_not_called()
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_not_called()
 		pModuleManager.getMinimumAccessLevel.assert_not_called()

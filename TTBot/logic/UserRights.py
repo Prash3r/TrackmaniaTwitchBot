@@ -18,10 +18,12 @@ class UserRights(minidi.Injectable):
 		channelName = pMessage.getChannel().getName()
 
 		isCoreCommand = isinstance(pModule, CommandCore)
-		isOwnerMessage = self.pMessageEvaluator.isOwnerMessage(pMessage)
 		isBotChannel = self.pEnvironment.getTwitchBotUsername() == channelName
+		isMainDevMessage = self.pMessageEvaluator.isMainDeveloperMessage(pMessage)
+		isOwnerMessage = self.pMessageEvaluator.isOwnerMessage(pMessage)
+		allowCoreCommandExecution = isBotChannel or isMainDevMessage or isOwnerMessage
 
-		if isCoreCommand and (isOwnerMessage or isBotChannel):
+		if isCoreCommand and allowCoreCommandExecution:
 			return True
 		
 		if channelName not in self.pModuleManager.getChannels():

@@ -10,6 +10,7 @@ from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.logic.UserRights import UserRights
 from TTBot.module.core.CommandCoreInvite import CommandCoreInvite
+from TTBot.module.kem.CommandKem import CommandKem
 
 class TestUserRights(unittest.TestCase):
 	def setUpEnvironment(self, botName: str) -> Environment:
@@ -85,20 +86,21 @@ class TestUserRights(unittest.TestCase):
 	
 	def test_allowModuleExecution_disabled(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
-		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=False)
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=True, isOwnerMessage=True)
 		pModuleManager = self.setUpModuleManager(minimumAccessLevel=0)
 		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
 
-		pMessage = Message(channel=MessageChannel(name='notBotChannel'))
-		pModule = CommandCoreInvite()
-		self.assertRaises(RuntimeError, pUserRights.allowModuleExecution, pModule, pMessage)
+		pMessage = Message(channel=MessageChannel(name='unittest'))
+		pModule = CommandKem()
+		allowModuleExecution = pUserRights.allowModuleExecution(pModule, pMessage)
+		self.assertFalse(allowModuleExecution)
 		
 		pEnvironment.getTwitchBotUsername.assert_called_once()
 		pMessageEvaluator.getUserLevel.assert_not_called()
 		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
 		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
 		pModuleManager.getChannels.assert_called_once()
-		pModuleManager.getMinimumAccessLevel.assert_not_called()
+		pModuleManager.getMinimumAccessLevel.assert_called_once_with('unittest', 'kem')
 	# def test_allowModuleExecution_disabled(self)
 
 	def test_allowModuleExecution_disallow(self):
@@ -138,6 +140,24 @@ class TestUserRights(unittest.TestCase):
 		pModuleManager.getChannels.assert_not_called()
 		pModuleManager.getMinimumAccessLevel.assert_not_called()
 	# def test_allowModuleExecution_mainDevMessage(self)
+	
+	def test_allowModuleExecution_notJoined(self):
+		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')
+		pMessageEvaluator = self.setUpMessageEvaluator(getUserLevel=5, isMainDevMessage=False, isOwnerMessage=False)
+		pModuleManager = self.setUpModuleManager(minimumAccessLevel=0)
+		pUserRights = self.setUpUserRights(pEnvironment, pMessageEvaluator, pModuleManager)
+
+		pMessage = Message(channel=MessageChannel(name='notBotChannel'))
+		pModule = CommandCoreInvite()
+		self.assertRaises(RuntimeError, pUserRights.allowModuleExecution, pModule, pMessage)
+		
+		pEnvironment.getTwitchBotUsername.assert_called_once()
+		pMessageEvaluator.getUserLevel.assert_not_called()
+		pMessageEvaluator.isMainDeveloperMessage.assert_called_once_with(pMessage)
+		pMessageEvaluator.isOwnerMessage.assert_called_once_with(pMessage)
+		pModuleManager.getChannels.assert_called_once()
+		pModuleManager.getMinimumAccessLevel.assert_not_called()
+	# def test_allowModuleExecution_notJoined(self)
 
 	def test_allowModuleExecution_ownerMessage(self):
 		pEnvironment = self.setUpEnvironment(botName='trackmania_bot')

@@ -31,6 +31,9 @@ class UserRights(minidi.Injectable):
 		
 		moduleId = pModule.getModuleId()
 		minimumAccessLevel = self.pModuleManager.getMinimumAccessLevel(channelName, moduleId)
+		if minimumAccessLevel <= 0:
+			return False
+
 		return self.pMessageEvaluator.getUserLevel(pMessage) >= minimumAccessLevel
 	# def allowModuleExecution(self, pModule: Module, pMessage: Message) -> bool
 # class UserRights(minidi.Injectable)

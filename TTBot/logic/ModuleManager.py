@@ -63,7 +63,10 @@ class ModuleManager(minidi.Injectable):
 		# cannot use ? placeholder, but this is in control of the code -> no security risk
 		query = f"SELECT `{moduleId}` FROM `modules` WHERE `channel` = ?;"
 		rows = self.pDbConnector.fetch(query, [channelName])
-		return rows[0][moduleId]
+		if ((rows[0][moduleId] == 0) or (rows[0][moduleId] == "0"):
+			return 1000
+		else:
+			return rows[0][moduleId]
 	# def getMinimumAccessLevel(self, channelName: str, moduleId: str) -> int
 	
 	def listModules(self) -> list:

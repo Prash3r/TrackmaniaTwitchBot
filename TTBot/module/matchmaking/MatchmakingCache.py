@@ -50,7 +50,7 @@ class MatchmakingCache(minidi.Injectable):
 		query = "SELECT ranks_rank, ranks_displayname, ts, ranks_score \
 			FROM mmranking \
 			WHERE ranks_displayname = ?;"
-		rows = self.pDbConnector.fetch(query, (playerLoginPart))
+		rows = self.pDbConnector.fetch(query, [playerLoginPart])
 
 		if not rows:
 			return False

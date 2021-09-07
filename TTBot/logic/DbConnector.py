@@ -10,7 +10,7 @@ class DbConnector(minidi.Injectable):
 	def execute(self, query: str, inputs: list = []) -> int:
 		pQueryResult = self.pDbConnection.query(query, inputs)
 		return pQueryResult.rowcount
-	# def execute(self, query: str) -> int
+	# def execute(self, query: str, inputs: list = []) -> int
 
 	def fetch(self, query: str, inputs: list = []) -> list:
 		outputRows = []
@@ -28,7 +28,7 @@ class DbConnector(minidi.Injectable):
 		# for row in rows
 
 		return outputRows
-	# def fetch(self, query: str) -> list
+	# def fetch(self, query: str, inputs: list = []) -> list
 
 	def getColumns(self, table: str) -> list:
 		# cannot use ? placeholder, but this is in control of the code -> no security risk

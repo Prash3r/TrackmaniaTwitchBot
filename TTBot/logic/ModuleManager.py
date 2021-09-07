@@ -63,7 +63,7 @@ class ModuleManager(minidi.Injectable):
 		# cannot use ? placeholder, but this is in control of the code -> no security risk
 		query = f"SELECT `{moduleId}` FROM `modules` WHERE `channel` = ?;"
 		rows = self.pDbConnector.fetch(query, [channelName])
-		if ((rows[0][moduleId] == 0) or (rows[0][moduleId] == "0"):
+		if ((rows[0][moduleId] == 0) or (rows[0][moduleId] == "0")):
 			return 1000
 		else:
 			return rows[0][moduleId]

@@ -14,7 +14,7 @@ class CommandCoreModule(CommandCore):
     def _activateModule(self, messageAuthorName: str, args: list) -> str:
         moduleName = args[0]
         hasMinimumUserLevel = len(args) >= 2 and self.pInputSanitizer.isInteger(args[1])
-        minimumUserLevel = args[1] if hasMinimumUserLevel else 1
+        minimumUserLevel = int(args[1]) if hasMinimumUserLevel else 1
 
         if minimumUserLevel <= 0:
             return self._deactivateModule(messageAuthorName, moduleName)
@@ -23,7 +23,7 @@ class CommandCoreModule(CommandCore):
 
         return f"Module '{moduleName}' activated with access level {minimumUserLevel}!" \
             if success \
-            else f"Error activating module '{moduleName}!"
+            else f"Error activating module '{moduleName}'!"
     # def _activateModule(self, messageAuthorName: str, args: list) -> str
 
     def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str:
@@ -31,7 +31,7 @@ class CommandCoreModule(CommandCore):
 
         return f"Module '{moduleName}' deactivated!" \
             if success \
-            else f"Error deactivating module '{moduleName}!"
+            else f"Error deactivating module '{moduleName}'!"
     # def _deactivateModule(self, messageAuthorName: str, moduleName: str) -> str
     
     async def execute(self, pMessage: Message, args: list) -> str:

@@ -1,11 +1,10 @@
 # TTBot - Trackmania Twitch Bot
-
 This is the repository of the [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot). Its main capability right now is that it can look up matchmaking rankings via [trackmania.io](https://trackmania.io/#/players). Additionaly there are some commands and evaluators implemented that are channel specific.
 
-You came here for one of 2 reasons:
+You came here for one of 3 reasons:
  - i want this bot in my channel
- - i need help configuring the bot
- - i want to implement additional functionality
+ - i need help configuring the bot for my needs
+ - i want to implement additional functionality for other TM streamers
 
 You came to the right place. The current version is hosted and will be pulled regurarily from this repository. There is no need to host a copy or register your own bot - although you are free to do that. 
 
@@ -40,17 +39,14 @@ Modules can consist of commands and/or evaluators. What commands and evaluators 
 Feel free to create pull requests. This is an early stage of development so if you want to implement general functionality you maybe should talk to us first - chances are that someone is already doing it. If you want to implement a command or an evaluator you should look at an existing one first.
 
 ### Some Tips and examples
-
- - if you need a **persistent variable** look at the evaluator [luckerscounter](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/optional/evaluators/EvaluatorLuckers.py)
- - some useful functions can be found in [CommandJoke.py](https://github.com/Prash3r/TrackmaniaTwitchBot/blob/master/TTBot/optional/commands/CommandJoke.py)
+Our best implemented module is the [karma module](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/module/karma), which includes one Command !karma (where you can also set the streamers karma) and one evaluator.
 
 ### Guidelines
-
  1. dont commit sensitive data
  2. preferrably rebase before pull request
 
 ### Deployment example
-#### run.sh unchanged 
+#### run.sh unchanged
 If there was no change in run.sh a simple
     !update
 by an authorized user will be enough to make the server pull the current master branch and run it. The docker container is version independent now.

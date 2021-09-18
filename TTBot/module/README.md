@@ -11,7 +11,7 @@ lets the bot join your channel from now on
 lets the bot not join your channel anymore. (It still is in the channel with all modules deactivated until the next restart of the bot)
 
 ### module
-    !module <list/add/rem> <modulename>
+    !module <list/add/rem> <modulename> <accesslevel>
 lets you manage the activated modules in your channel
 
 ### help

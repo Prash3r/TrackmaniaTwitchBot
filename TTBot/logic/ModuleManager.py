@@ -38,12 +38,18 @@ class ModuleManager(minidi.Injectable):
 		# cannot use ? placeholder, but this is in control of the code -> no security risk
 		query = f"UPDATE `modules` SET `{moduleId}` = ? WHERE `channel` = ?;"
 		rowcount = self.pDbConnector.execute(query, [minimumUserLevel, channelName])
-		self.pModuleCallbackRunner.onModuleEnable(moduleId)
+
+		if minimumUserLevel > 0:
+			self.pModuleCallbackRunner.onModuleEnable(moduleId)
+		else:
+			self.pModuleCallbackRunner.onModuleDisable(moduleId)
+		
 		return rowcount == 1
 	# def _setModule(self, channelName: str, moduleId: str, minimumUserLevel: int) -> bool
 
 	def activateModule(self, channelName: str, moduleId: str, minimumUserLevel: int) -> bool:
 		return self._setModule(channelName, moduleId, minimumUserLevel)
+	# def activateModule(self, channelName: str, moduleId: str, minimumUserLevel: int) -> bool
 
 	def addChannel(self, channelName: str):
 		query = "INSERT IGNORE INTO `modules` (`channel`) VALUES (?);"
@@ -52,6 +58,7 @@ class ModuleManager(minidi.Injectable):
 
 	def deactivateModule(self, channelName: str, moduleId: str) -> bool:
 		return self._setModule(channelName, moduleId, 0)
+	# def deactivateModule(self, channelName: str, moduleId: str) -> bool
 
 	def getChannels(self) -> list:
 		query = "SELECT `channel` FROM `modules`;"
@@ -67,10 +74,10 @@ class ModuleManager(minidi.Injectable):
 	# def getMinimumAccessLevel(self, channelName: str, moduleId: str) -> int
 	
 	def listModules(self) -> list:
-		columns = self.pDbConnector.getColumns('modules')
-		columns.remove('channel')
-		columns.remove('ts')
-		return columns
+		modules = self.pDbConnector.getColumns('modules')
+		modules.remove('channel')
+		modules.remove('ts')
+		return modules
 	# def listModules(self) -> list
 
 	def listModulesForChannel(self, channelName: str) -> dict:
@@ -89,4 +96,5 @@ class ModuleManager(minidi.Injectable):
 	def removeChannel(self, channelName: str):
 		query = "DELETE FROM `modules` WHERE `channel` = ?;"
 		self.pDbConnector.execute(query, [channelName])
+	# def removeChannel(self, channelName: str)
 # class ModuleManager(minidi.Injectable)

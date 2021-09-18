@@ -1,72 +1,63 @@
-# pylib
-import unittest
-from unittest import mock
+# vendor
+import minidi
 
 # local
 from TTBot.logic.DbConnection import DbConnection
 from TTBot.logic.DbConnector import DbConnector
+from TTBot.test.DbIntegrationTest import DbIntegrationTest
 
-class QueryResult:
-	description = ''
-	rowcount = 0
+class TestDbConnector(DbIntegrationTest):
+	pDbConnector: DbConnector
 
-	def fetchall(self):
-		pass
-# class QueryResult
+	def setUp(self):
+		super().setUpBeforeEach('db_connector.sqlite')
 
-class TestDbConnector(unittest.TestCase):
+		pDbConnection: DbConnection = minidi.get(DbConnection)
+		pDbConnection.query("CREATE TABLE `test_db_connector` ( \
+			`integer` INT(11), \
+			`string` VARCHAR(32) \
+		);")
+		pDbConnection.query("INSERT INTO `test_db_connector` (`integer`, `string`) \
+			VALUES (42, 'answer'), (69, 'nice');")
+		
+		self.pDbConnector = DbConnector()
+		self.pDbConnector.pDbConnection = pDbConnection
+	# def setUp(self)
+
+	def tearDown(self):
+		super().tearDownAfterEach('db_connector.sqlite')
+	# def tearDown(self)
+
 	def test_execute(self):
-		pQueryResult = QueryResult()
-		pQueryResult.rowcount = 1
+		rowcount = self.pDbConnector.execute(
+			"UPDATE `test_db_connector` SET `string` = ? WHERE `integer` = ?;",
+			['universe', 42]
+		)
 
-		pDbConnection = DbConnection()
-		pDbConnection.query = mock.Mock(return_value=pQueryResult)
-
-		pDbConnector = DbConnector()
-		pDbConnector.pDbConnection = pDbConnection
-
-		rowcount = pDbConnector.execute("UPDATE `modules` SET `ping` = 1 WHERE `channel` = 'unittest'")
 		self.assertEqual(rowcount, 1)
-
-		pDbConnection.query.assert_called_once_with("UPDATE `modules` SET `ping` = 1 WHERE `channel` = 'unittest'", [])
 	# def test_execute(self)
 
 	def test_fetch(self):
-		pQueryResult = QueryResult()
-		pQueryResult.description = [['rank', 'INT(11)'], ['player', 'VARCHAR(32)']]
-		pQueryResult.fetchall = mock.Mock(return_value=[[1, 'Forever'], [2, 'Wirtual'], [3, 'Scrapie']])
-
-		pDbConnection = DbConnection()
-		pDbConnection.query = mock.Mock(return_value=pQueryResult)
-
-		pDbConnector = DbConnector()
-		pDbConnector.pDbConnection = pDbConnection
-
-		rows = pDbConnector.fetch("SELECT `rank`, `player` FROM `ranking` WHERE `rank` <= 3;")
-		self.assertEqual(len(rows), 3)
-		self.assertDictEqual({'rank': 1, 'player': 'Forever'}, rows[0])
-		self.assertDictEqual({'rank': 2, 'player': 'Wirtual'}, rows[1])
-		self.assertDictEqual({'rank': 3, 'player': 'Scrapie'}, rows[2])
-
-		pQueryResult.fetchall.assert_called_once()
-		pDbConnection.query.assert_called_once_with("SELECT `rank`, `player` FROM `ranking` WHERE `rank` <= 3;", [])
+		rows = self.pDbConnector.fetch("SELECT * FROM `test_db_connector`;")
+		self.assertEqual(len(rows), 2)
+		
+		rowAnswer: dict = rows[0]
+		self.assertEqual(len(rowAnswer), 2)
+		self.assertIn('integer', rowAnswer.keys())
+		self.assertIn('string', rowAnswer.keys())
+		self.assertEqual(rowAnswer['integer'], 42)
+		self.assertEqual(rowAnswer['string'], 'answer')
+		
+		rowNice: dict = rows[1]
+		self.assertEqual(len(rowNice), 2)
+		self.assertIn('integer', rowNice.keys())
+		self.assertIn('string', rowNice.keys())
+		self.assertEqual(rowNice['integer'], 69)
+		self.assertEqual(rowNice['string'], 'nice')
 	# def test_fetch(self)
 
 	def test_getColumns(self):
-		pQueryResult = QueryResult()
-		pQueryResult.description = [['rank', 'INT(11)'], ['player', 'VARCHAR(32)']]
-		pQueryResult.fetchall = mock.Mock()
-
-		pDbConnection = DbConnection()
-		pDbConnection.query = mock.Mock(return_value=pQueryResult)
-
-		pDbConnector = DbConnector()
-		pDbConnector.pDbConnection = pDbConnection
-
-		columns = pDbConnector.getColumns('ranking')
-		self.assertListEqual(columns, ['rank', 'player'])
-
-		pQueryResult.fetchall.assert_not_called()
-		pDbConnection.query.assert_called_once_with("SELECT * FROM `ranking` WHERE 0=1;")
+		columns = self.pDbConnector.getColumns('test_db_connector')
+		self.assertListEqual(columns, ['integer', 'string'])
 	# def test_getColumns(self)
-# class TestDbConnector(unittest.TestCase)
+# class TestDbConnector(DbIntegrationTest)

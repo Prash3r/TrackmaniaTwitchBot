@@ -16,7 +16,7 @@ class TestModuleManager(DbIntegrationTest):
 	pModuleManager: ModuleManager
 
 	def setUp(self):
-		super().setUp()
+		super().setUpBeforeEach('module_manager.sqlite')
 
 		pDbConnector: DbConnector = minidi.get(DbConnector)
 
@@ -49,7 +49,7 @@ class TestModuleManager(DbIntegrationTest):
 		self.pModuleManager.pModuleCallbackRunner.onModuleEnable.assert_any_call('score')
 		self.pModuleManager.pModuleList.getModuleIds.assert_called_once()
 
-		super().tearDown()
+		super().tearDownAfterEach('module_manager.sqlite')
 	# def tearDown(self)
 
 	def test_afterInit(self):

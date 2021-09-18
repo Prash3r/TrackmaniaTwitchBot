@@ -38,12 +38,17 @@ Modules can consist of commands and/or evaluators. What commands and evaluators 
 ## I want to implement additional functionality
 Feel free to create pull requests. This is an early stage of development so if you want to implement general functionality you maybe should talk to us first - chances are that someone is already doing it. If you want to implement a command or an evaluator you should look at an existing one first.
 
+Add your new module classes to the [ModuleList](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/module/ModuleList.py), otherwise they cannot get executed by the bot.
+
 ### Some Tips and examples
 Our best implemented module is the [karma module](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/module/karma), which includes one Command !karma (where you can also set the streamers karma) and one evaluator.
 
 ### Guidelines
- 1. dont commit sensitive data
- 2. preferrably rebase before pull request
+ 1. write new code in a personal fork (preferably even in an additional branch)
+ 2. test your new code in the avaiable offline mode (execute ./test.py)
+ 3. write a unittest to your new code (or at least notify us to write one, we are willing to help you out)
+ 4. dont commit sensitive data
+ 5. preferrably rebase before creating your pull request
 
 ### Deployment example
 #### run.sh unchanged

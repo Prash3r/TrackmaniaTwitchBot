@@ -17,7 +17,7 @@ import mariadb
 import minidi
 
 # local
-from TTBot import TrackmaniaTwitchBot
+from TTBot.TrackmaniaTwitchBot import TrackmaniaTwitchBot
 from TTBot.logic.DbConnection import DbConnection
 from TTBot.logic.interface.DbQueryDialectConverter import DbQueryDialectConverter
 from TTBot.logic.Environment import Environment

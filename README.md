@@ -1,4 +1,5 @@
-![unittest](https://github.com/prash3r/TrackmaniaTwitchBot/actions/workflows/unittest/badge.svg)
+![unittest](https://github.com/prash3r/TrackmaniaTwitchBot/actions/workflows/unittest.yml/badge.svg)
+![license](https://img.shields.io/github/license/prash3r/TrackmaniaTwitchBot)
 
 # TTBot - Trackmania Twitch Bot
 This is the repository of the [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot). Its main capability right now is that it can look up matchmaking rankings via [trackmania.io](https://trackmania.io/#/players). Additionaly there are some commands and evaluators implemented that are channel specific.

@@ -1,0 +1,3 @@
+minidi
+sqlite3
+unittest

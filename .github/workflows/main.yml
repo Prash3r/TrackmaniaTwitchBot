@@ -19,8 +19,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: x64
       
+      - name: Set up MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          character set server: 'utf8'
+          collation server: 'utf8_general_ci'
+      
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements_test.txt
       
       - name: Run Unittests
         run: python -m unittest

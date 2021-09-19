@@ -23,4 +23,4 @@ jobs:
         run: pip install -r requirements_test.txt
       
       - name: Run Unittests
-        run: python -m unittest discover -s TTBot/test
+        run: pytest

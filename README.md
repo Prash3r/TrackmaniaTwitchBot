@@ -2,7 +2,7 @@
 ![license](https://img.shields.io/github/license/prash3r/TrackmaniaTwitchBot)
 
 # TTBot - Trackmania Twitch Bot
-This is the repository of the [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot). Its main capability right now is that it can look up matchmaking rankings via [trackmania.io](https://trackmania.io/#/players). Additionaly there are some commands and evaluators implemented that are channel specific.
+This is the repository of the [twitch.tv bot trackmania_bot](https://www.twitch.tv/trackmania_bot). Its main capability right now is that it can look up matchmaking rankings via [trackmania.io](https://trackmania.io/#/players). Additionally, there are some commands and evaluators implemented that are channel specific.
 
 You came here for one of 3 reasons:
  - i want this bot in my channel
@@ -45,6 +45,7 @@ Add your new module classes to the [ModuleList](https://github.com/Prash3r/Track
 
 ### Some Tips and examples
 Our best implemented module is the [karma module](https://github.com/Prash3r/TrackmaniaTwitchBot/tree/master/TTBot/module/karma), which includes one Command !karma (where you can also set the streamers karma) and one evaluator.
+If you need help, you can either create an issue in this repository, or hit us up on Discord (prash3r#8267, axelalex2#5793).
 
 ### Guidelines
  1. write new code in a personal fork (preferably even in an additional branch)

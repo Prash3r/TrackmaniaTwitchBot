@@ -3,6 +3,7 @@ import minidi
 
 # local
 from TTBot.module.joke.CommandJoke import CommandJoke
+from TTBot.module.shitbot.CommandShitbot import CommandShitbot
 from TTBot.module.karma.CommandKarma import CommandKarma
 from TTBot.module.kem.CommandKem import CommandKem
 from TTBot.module.matchmaking.CommandMm import CommandMm
@@ -16,6 +17,7 @@ from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 
 COMMAND_LIST = [
 	CommandJoke,
+	CommandShitbot,
 	CommandKarma,
 	CommandKem,
 	CommandMm,

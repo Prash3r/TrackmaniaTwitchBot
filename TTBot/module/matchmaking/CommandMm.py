@@ -2,12 +2,12 @@
 from TTBot.data.Message import Message
 from TTBot.module.matchmaking.MatchmakingCache import MatchmakingCache
 from TTBot.module.matchmaking.MatchmakingData import MatchmakingData
-from TTBot.module.matchmaking.TrackmaniaIO import TrackmaniaIO
+from TTBot.module.matchmaking.TrackmaniaIoMatchmaking import TrackmaniaIoMatchmaking
 from TTBot.module.Command import Command
 
 class CommandMm(Command):
     pMatchmakingCache: MatchmakingCache
-    pTrackmaniaIO: TrackmaniaIO
+    pTrackmaniaIoMatchmaking: TrackmaniaIoMatchmaking
     
     def getCommandTrigger(self):
         return ['matchmaking', 'mm']
@@ -35,7 +35,7 @@ class CommandMm(Command):
         if cachedData:
             return f"@{messageAuthorName} {self._buildFullMessage(cachedData)}"
         else:
-            matchmakingData = self.pTrackmaniaIO.getMatchmakingData(playerNamePart)
+            matchmakingData = self.pTrackmaniaIoMatchmaking.getMatchmakingData(playerNamePart)
             for pMatchmakingData in matchmakingData:
                 self.pMatchmakingCache.write(pMatchmakingData)
 

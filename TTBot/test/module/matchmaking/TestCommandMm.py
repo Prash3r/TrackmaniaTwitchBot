@@ -8,7 +8,7 @@ from TTBot.data.MessageAuthor import MessageAuthor
 from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.module.matchmaking.MatchmakingCache import MatchmakingCache
 from TTBot.module.matchmaking.MatchmakingData import MatchmakingData
-from TTBot.module.matchmaking.TrackmaniaIO import TrackmaniaIO
+from TTBot.module.matchmaking.TrackmaniaIoMatchmaking import TrackmaniaIoMatchmaking
 
 class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 	async def test_getCommandTrigger(self):
@@ -69,12 +69,12 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 		pMatchmakingCache.get = mock.Mock(return_value=matchmakingDataList)
 		pMatchmakingCache.write = mock.Mock()
 
-		pTrackmaniaIO = TrackmaniaIO()
-		pTrackmaniaIO.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
+		pTrackmaniaIoMatchmaking = TrackmaniaIoMatchmaking()
+		pTrackmaniaIoMatchmaking.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
 
 		pCommandMm = CommandMm()
 		pCommandMm.pMatchmakingCache = pMatchmakingCache
-		pCommandMm.pTrackmaniaIO = pTrackmaniaIO
+		pCommandMm.pTrackmaniaIoMatchmaking = pTrackmaniaIoMatchmaking
 
 		pMessage = Message(author=MessageAuthor(name='unittest'))
 
@@ -84,7 +84,7 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 
 		pMatchmakingCache.get.assert_called_once_with('test')
 		pMatchmakingCache.write.assert_not_called()
-		pTrackmaniaIO.getMatchmakingData.assert_not_called()
+		pTrackmaniaIoMatchmaking.getMatchmakingData.assert_not_called()
 	# async def test_execute_cache(self)
 
 	async def test_execute_default(self):
@@ -104,12 +104,12 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 		pMatchmakingCache.get = mock.Mock(return_value=matchmakingDataList)
 		pMatchmakingCache.write = mock.Mock()
 
-		pTrackmaniaIO = TrackmaniaIO()
-		pTrackmaniaIO.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
+		pTrackmaniaIoMatchmaking = TrackmaniaIoMatchmaking()
+		pTrackmaniaIoMatchmaking.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
 
 		pCommandMm = CommandMm()
 		pCommandMm.pMatchmakingCache = pMatchmakingCache
-		pCommandMm.pTrackmaniaIO = pTrackmaniaIO
+		pCommandMm.pTrackmaniaIoMatchmaking = pTrackmaniaIoMatchmaking
 
 		pMessage = Message(author=MessageAuthor(name='unittest'))
 
@@ -119,7 +119,7 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 
 		pMatchmakingCache.get.assert_not_called()
 		pMatchmakingCache.write.assert_not_called()
-		pTrackmaniaIO.getMatchmakingData.assert_not_called()
+		pTrackmaniaIoMatchmaking.getMatchmakingData.assert_not_called()
 	# async def test_execute_default(self)
 
 	async def test_execute_tmio_failure(self):
@@ -127,12 +127,12 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 		pMatchmakingCache.get = mock.Mock(return_value=[])
 		pMatchmakingCache.write = mock.Mock()
 
-		pTrackmaniaIO = TrackmaniaIO()
-		pTrackmaniaIO.getMatchmakingData = mock.Mock(return_value=[])
+		pTrackmaniaIoMatchmaking = TrackmaniaIoMatchmaking()
+		pTrackmaniaIoMatchmaking.getMatchmakingData = mock.Mock(return_value=[])
 
 		pCommandMm = CommandMm()
 		pCommandMm.pMatchmakingCache = pMatchmakingCache
-		pCommandMm.pTrackmaniaIO = pTrackmaniaIO
+		pCommandMm.pTrackmaniaIoMatchmaking = pTrackmaniaIoMatchmaking
 
 		pMessage = Message(author=MessageAuthor(name='unittest'))
 
@@ -142,7 +142,7 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 
 		pMatchmakingCache.get.assert_called_once_with('test')
 		pMatchmakingCache.write.assert_not_called()
-		pTrackmaniaIO.getMatchmakingData.assert_called_once_with('test')
+		pTrackmaniaIoMatchmaking.getMatchmakingData.assert_called_once_with('test')
 	# async def test_execute_tmio_failure(self)
 
 	async def test_execute_tmio_success(self):
@@ -162,12 +162,12 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 		pMatchmakingCache.get = mock.Mock(return_value=[])
 		pMatchmakingCache.write = mock.Mock()
 
-		pTrackmaniaIO = TrackmaniaIO()
-		pTrackmaniaIO.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
+		pTrackmaniaIoMatchmaking = TrackmaniaIoMatchmaking()
+		pTrackmaniaIoMatchmaking.getMatchmakingData = mock.Mock(return_value=matchmakingDataList)
 
 		pCommandMm = CommandMm()
 		pCommandMm.pMatchmakingCache = pMatchmakingCache
-		pCommandMm.pTrackmaniaIO = pTrackmaniaIO
+		pCommandMm.pTrackmaniaIoMatchmaking = pTrackmaniaIoMatchmaking
 
 		pMessage = Message(author=MessageAuthor(name='unittest'))
 
@@ -178,6 +178,6 @@ class TestCommandMm(unittest.IsolatedAsyncioTestCase):
 		pMatchmakingCache.get.assert_called_once_with('test')
 		pMatchmakingCache.write.assert_any_call(pMatchmakingData1)
 		pMatchmakingCache.write.assert_any_call(pMatchmakingData2)
-		pTrackmaniaIO.getMatchmakingData.assert_called_once_with('test')
+		pTrackmaniaIoMatchmaking.getMatchmakingData.assert_called_once_with('test')
 	# async def test_execute_tmio_success(self)
 # class TestCommandMm(unittest.IsolatedAsyncioTestCase)

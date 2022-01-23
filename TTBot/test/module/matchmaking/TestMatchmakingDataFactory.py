@@ -23,7 +23,7 @@ class TestMatchmakingDataFactory(unittest.TestCase):
 		self.assertEqual(pMatchmakingData.getTimestamp(), pTimestamp)
 	# def test_createFromCacheQuery(self)
 
-	def test_createFromTrackmaniaIO(self):
+	def test_createFromTrackmaniaIoMatchmaking(self):
 		pMatchmakingDataFactory = MatchmakingDataFactory()
 		tmIoData = {
 			'player': {'name': 'playername'},
@@ -36,10 +36,10 @@ class TestMatchmakingDataFactory(unittest.TestCase):
 			]
 		}
 
-		pMatchmakingData = pMatchmakingDataFactory.createFromTrackmaniaIO(tmIoData)
+		pMatchmakingData = pMatchmakingDataFactory.createFromTrackmaniaIoMatchmaking(tmIoData)
 		self.assertEqual(pMatchmakingData.getPlayer(), 'playername')
 		self.assertEqual(pMatchmakingData.getPlayerAccountId(), 'FACADE01')
 		self.assertEqual(pMatchmakingData.getRank(), 42)
 		self.assertEqual(pMatchmakingData.getScore(), 1234)
-	# def test_createFromTrackmaniaIO(self)
+	# def test_createFromTrackmaniaIoMatchmaking(self)
 # class TestMatchmakingDataFactory(unittest.TestCase)

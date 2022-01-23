@@ -8,7 +8,7 @@ import minidi
 from TTBot.logic.Environment import Environment
 from TTBot.module.matchmaking.MatchmakingDataFactory import MatchmakingDataFactory
 
-class TrackmaniaIO(minidi.Injectable):
+class TrackmaniaIoMatchmaking(minidi.Injectable):
 	pEnvironment: Environment
 	pMatchmakingDataFactory: MatchmakingDataFactory
 
@@ -21,6 +21,6 @@ class TrackmaniaIO(minidi.Injectable):
 
 	def getMatchmakingData(self, playerNamePart: str) -> list:
 		players = self._findPlayer(playerNamePart)
-		return [self.pMatchmakingDataFactory.createFromTrackmaniaIO(player) for player in players if player['matchmaking']]
+		return [self.pMatchmakingDataFactory.createFromTrackmaniaIoMatchmaking(player) for player in players if player['matchmaking']]
 	# def getMatchmakingData(self, playerNamePart: str) -> list
-# class TrackmaniaIO(minidi.Injectable)
+# class TrackmaniaIoMatchmaking(minidi.Injectable)

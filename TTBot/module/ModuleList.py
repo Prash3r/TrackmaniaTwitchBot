@@ -2,13 +2,14 @@
 import minidi
 
 # local
+from TTBot.module.cotd.CommandCotd import CommandCotd
 from TTBot.module.joke.CommandJoke import CommandJoke
-from TTBot.module.shitbot.CommandShitbot import CommandShitbot
 from TTBot.module.karma.CommandKarma import CommandKarma
 from TTBot.module.kem.CommandKem import CommandKem
 from TTBot.module.matchmaking.CommandMm import CommandMm
 from TTBot.module.roll.CommandRoll import CommandRoll
 from TTBot.module.score.CommandScore import CommandScore
+from TTBot.module.shitbot.CommandShitbot import CommandShitbot
 
 from TTBot.module.karma.EvaluatorKarma import EvaluatorKarma
 from TTBot.module.luckers.EvaluatorLuckers import EvaluatorLuckers
@@ -16,13 +17,14 @@ from TTBot.module.ooga.EvaluatorOoga import EvaluatorOoga
 from TTBot.module.ping.EvaluatorPing import EvaluatorPing
 
 COMMAND_LIST = [
+	CommandCotd,
 	CommandJoke,
-	CommandShitbot,
 	CommandKarma,
 	CommandKem,
 	CommandMm,
 	CommandRoll,
-	CommandScore
+	CommandScore,
+	CommandShitbot
 ]
 
 EVALUATOR_LIST = [

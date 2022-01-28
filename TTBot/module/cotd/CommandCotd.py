@@ -5,6 +5,7 @@ import datetime
 from TTBot.data.Message import Message
 from TTBot.logic.DateTimeFormatter import DateTimeFormatter
 from TTBot.module.Command import Command
+from TTBot.module.cotd.CotdInfo import CotdInfo
 from TTBot.module.cotd.CotdInfoCache import CotdInfoCache
 from TTBot.module.cotd.CotdInfoFactory import CotdInfoFactory
 from TTBot.module.cotd.TrackmaniaIoCotd import TrackmaniaIoCotd
@@ -27,8 +28,11 @@ class CommandCotd(Command):
         pCotdInfoPrev = self.pCotdInfoCache.getPrev()
         pCotdInfoNext = self.pCotdInfoCache.getNext()
 
-        needsData = not (pCotdInfoPrev and pCotdInfoPrev.getWinner()) and not pCotdInfoNext
-        dataIsOld = not pCotdInfoNext and (pNow - pCotdInfoPrev.getDateEnd()) > datetime.timedelta(hours=8)
+        hasPrevData = isinstance(pCotdInfoPrev, CotdInfo)
+        hasNextData = isinstance(pCotdInfoNext, CotdInfo)
+        needsData = not (hasPrevData and pCotdInfoPrev.getWinner()) and not hasNextData
+        dataIsOld = hasPrevData and (pNow - pCotdInfoPrev.getDateEnd()) > datetime.timedelta(hours=8)
+        
         if needsData or dataIsOld:
             self.pTrackmaniaIoCotd.loadInfo()
             pCotdInfoPrev = self.pCotdInfoCache.getPrev()

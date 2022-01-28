@@ -1,6 +1,7 @@
 # pylib
 import os
 import time
+import traceback
 
 # vendor
 import minidi
@@ -11,6 +12,7 @@ from TTBot.data.Message import Message
 from TTBot.logic.interface.MessageConverter import MessageConverter
 from TTBot.logic.Environment import Environment
 from TTBot.logic.Logger import Logger
+from TTBot.logic.MessageEvaluator import MessageEvaluator
 from TTBot.logic.ModuleCallbackRunner import ModuleCallbackRunner
 from TTBot.logic.ModuleManager import ModuleManager
 from TTBot.module.CommandCoreList import CommandCoreList
@@ -115,6 +117,16 @@ class TrackmaniaTwitchBot(commands.Bot):
         pLogger.debug(f"{messageAuthorName}\t:{message}")
 
         pModuleRunner: ModuleRunner = minidi.get(ModuleRunner)
-        await pModuleRunner.execute(pMessage)
+        try:
+            await pModuleRunner.execute(pMessage)
+        except:
+            pEnvironment: Environment = minidi.get(Environment)
+            pMessageEvaluator: MessageEvaluator = minidi.get(MessageEvaluator)
+
+            isBotChannel = pMessage.getChannel().getName() == pEnvironment.getTwitchBotUsername()
+            if isBotChannel and pMessageEvaluator.isMainDeveloperMessage(pMessage):
+                pMessage.getChannel().sendMessage(traceback.format_exc())
+            
+            raise
     # async def handle(self, pMessage: Message)
 # class TrackmaniaTwitchBot(commands.Bot)

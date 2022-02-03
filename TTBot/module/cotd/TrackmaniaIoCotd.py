@@ -25,7 +25,12 @@ class TrackmaniaIoCotd(minidi.Injectable):
 		user_agent = {'User-agent': self.pEnvironment.getVariable('TMIO_USER_AGENT')}
 		url = f'https://trackmania.io/api/comp/{cotdId}'
 		resp = requests.get(url=url, headers=user_agent)
-		matchDiv1Id = resp.json()['rounds'][0]['matches'][0]['id']
+		matches = resp.json()['rounds'][0]['matches']
+		
+		if not matches:
+			return None
+
+		matchDiv1Id = matches[0]['id']
 		
 		url = f'https://trackmania.io/api/comp/{cotdId}/match/{matchDiv1Id}/0'
 		resp = requests.get(url=url, headers=user_agent)

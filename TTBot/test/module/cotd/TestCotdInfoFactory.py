@@ -7,18 +7,18 @@ from TTBot.module.cotd.CotdInfo import CotdInfo
 from TTBot.module.cotd.CotdInfoFactory import CotdInfoFactory
 
 class TestCotdInfoFactory(unittest.TestCase):
-	def test_createFromCacheQuery(self):
+	def test_createFromCacheQuery_Mysql(self):
+		pDateStart = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=4)
+		pDateEnd = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=26)
+
 		dataInfo = {
 			'id': 1234,
 			'name': 'unittest #1234',
 			'num_players': 69,
-			'date_start': '2022-01-25 23:01:04',
-			'date_end': '2022-01-25 23:01:26',
+			'date_start': pDateStart,
+			'date_end': pDateEnd,
 			'winner': 'unittest'
 		}
-
-		pDateStart = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=4)
-		pDateEnd = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=26)
 
 		pCotdInfoFactory = CotdInfoFactory()
 		pCotdInfo = pCotdInfoFactory.createFromCacheQuery(dataInfo)
@@ -28,15 +28,38 @@ class TestCotdInfoFactory(unittest.TestCase):
 		self.assertEqual(pCotdInfo.getDateStart(), pDateStart)
 		self.assertEqual(pCotdInfo.getDateEnd(), pDateEnd)
 		self.assertEqual(pCotdInfo.getWinner(), 'unittest')
-	# def test_createFromCacheQuery(self)
+	# def test_createFromCacheQuery_Mysql(self)
+
+	def test_createFromCacheQuery_Sqlite(self):
+		pDateStart = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=4)
+		pDateEnd = datetime.datetime(year=2022, month=1, day=25, hour=23, minute=1, second=26)
+
+		dataInfo = {
+			'id': 1234,
+			'name': 'unittest #1234',
+			'num_players': 69,
+			'date_start': '2022-01-25 23:01:04',
+			'date_end': '2022-01-25 23:01:26',
+			'winner': 'unittest'
+		}
+
+		pCotdInfoFactory = CotdInfoFactory()
+		pCotdInfo = pCotdInfoFactory.createFromCacheQuery(dataInfo)
+		self.assertEqual(pCotdInfo.getId(), 1234)
+		self.assertEqual(pCotdInfo.getName(), 'unittest #1234')
+		self.assertEqual(pCotdInfo.getNumPlayers(), 69)
+		self.assertEqual(pCotdInfo.getDateStart(), pDateStart)
+		self.assertEqual(pCotdInfo.getDateEnd(), pDateEnd)
+		self.assertEqual(pCotdInfo.getWinner(), 'unittest')
+	# def test_createFromCacheQuery_Sqlite(self)
 
 	def test_createFromTrackmaniaIo(self):
 		dataInfo = {
 			'id': 1234,
 			'name': 'unittest #1234',
 			'players': 69,
-			'startdate': 1234567890,
-			'enddate': 9876543210
+			'starttime': 1234567890,
+			'endtime': 9876543210
 		}
 
 		pDateStart = datetime.datetime(year=2009, month=2, day=13, hour=23, minute=31, second=30)

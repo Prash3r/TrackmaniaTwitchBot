@@ -9,22 +9,24 @@ from TTBot.module.cotd.CotdInfo import CotdInfo
 
 class CotdInfoFactory(minidi.Injectable):
 	def createFromCacheQuery(self, dataInfo: dict) -> CotdInfo:
-		pDateStart = datetime.datetime.fromisoformat(dataInfo['date_start'])
-		pDateEnd = datetime.datetime.fromisoformat(dataInfo['date_end'])
+		if isinstance(dataInfo['date_start'], str):
+			dataInfo['date_start'] = datetime.datetime.fromisoformat(dataInfo['date_start'])
+		if isinstance(dataInfo['date_end'], str):
+			dataInfo['date_end'] = datetime.datetime.fromisoformat(dataInfo['date_end'])
 
 		pCotdInfo = CotdInfo()
 		pCotdInfo.setId(dataInfo['id'])
 		pCotdInfo.setName(dataInfo['name'])
 		pCotdInfo.setNumPlayers(dataInfo['num_players'])
-		pCotdInfo.setDateStart(pDateStart)
-		pCotdInfo.setDateEnd(pDateEnd)
+		pCotdInfo.setDateStart(dataInfo['date_start'])
+		pCotdInfo.setDateEnd(dataInfo['date_end'])
 		pCotdInfo.setWinner(dataInfo['winner'])
 		return pCotdInfo
 	# def createFromCacheQuery(self, dataInfo: dict) -> CotdInfo
 
 	def createFromTrackmaniaIo(self, dataInfo: dict, winner: str) -> CotdInfo:
-		pDateStart = datetime.datetime.utcfromtimestamp(dataInfo['startdate'])
-		pDateEnd = datetime.datetime.utcfromtimestamp(dataInfo['enddate'])
+		pDateStart = datetime.datetime.utcfromtimestamp(dataInfo['starttime'])
+		pDateEnd = datetime.datetime.utcfromtimestamp(dataInfo['endtime'])
 
 		pCotdInfo = CotdInfo()
 		pCotdInfo.setId(dataInfo['id'])

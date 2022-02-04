@@ -36,7 +36,7 @@ class CotdInfoFactory(minidi.Injectable):
 		pCotdInfo.setDateEnd(pDateEnd)
 		pCotdInfo.setWinner(winner)
 		return pCotdInfo
-	# def createFromTrackmaniaIo(self, dataInfo: dict) -> CotdInfo
+	# def createFromTrackmaniaIo(self, dataInfo: dict, winner: str) -> CotdInfo
 
 	def createNext(self, pCotdInfoPrev: CotdInfo) -> CotdInfo:
 		# add 8 hours to estimate next event start & end

@@ -23,29 +23,16 @@ class CommandCotd(Command):
         return 'cotd'
 
     def _buildCotdInfoMessage(self) -> str:
-        pNow = datetime.datetime.now()
+        self.pTrackmaniaIoCotd.loadInfo()
 
         pCotdInfoPrev = self.pCotdInfoCache.getPrev()
         pCotdInfoNext = self.pCotdInfoCache.getNext()
-
-        hasPrevData = isinstance(pCotdInfoPrev, CotdInfo)
-        hasNextData = isinstance(pCotdInfoNext, CotdInfo)
-        needsData = not (hasPrevData and pCotdInfoPrev.getWinner()) and not hasNextData
-        dataIsOld = hasPrevData and (pNow - pCotdInfoPrev.getDateEnd()) > datetime.timedelta(hours=8)
-        
-        if needsData or dataIsOld:
-            self.pTrackmaniaIoCotd.loadInfo()
-            pCotdInfoPrev = self.pCotdInfoCache.getPrev()
-            pCotdInfoNext = self.pCotdInfoCache.getNext()
-            if not pCotdInfoPrev and not pCotdInfoNext:
-                return 'error fetching data about CotDs!'
-        # if not pCotdInfoPrev and not pCotdInfoNext
-
-        pDelta = pNow - pCotdInfoPrev.getDateEnd()
-        infoPrev = f'Last CotD finished {self.pDateTimeFormatter.formatIntervalShort(pDelta)} ago, winner: {pCotdInfoPrev.getWinner()}'
-
         if not pCotdInfoNext:
             pCotdInfoNext = self.pCotdInfoFactory.createNext(pCotdInfoPrev)
+
+        pNow = datetime.datetime.now()
+        pDelta = pNow - pCotdInfoPrev.getDateEnd()
+        infoPrev = f'Last CotD finished {self.pDateTimeFormatter.formatIntervalShort(pDelta)} ago, winner: {pCotdInfoPrev.getWinner()}'
         
         pDelta = pCotdInfoNext.getDateStart() - pNow
         infoNext = f'next CotD starts in ~{self.pDateTimeFormatter.formatIntervalShort(pDelta)}'

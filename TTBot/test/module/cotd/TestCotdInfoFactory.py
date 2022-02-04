@@ -76,7 +76,7 @@ class TestCotdInfoFactory(unittest.TestCase):
 	# def test_createFromTrackmaniaIo(self)
 
 	def test_createNext(self):
-		pNow = datetime.datetime.now()
+		pNow = datetime.datetime(year=2022, month=2, day=4, hour=22, minute=15, second=30)
 		pDistance = datetime.timedelta(hours=4)
 		pDuration = datetime.timedelta(hours=1)
 		pMarginOfError = datetime.timedelta(hours=1)
@@ -94,5 +94,7 @@ class TestCotdInfoFactory(unittest.TestCase):
 		self.assertGreaterEqual(pCotdInfoNext.getDateStart(), pNow + pDistance - pMarginOfError)
 		self.assertGreaterEqual(pCotdInfoNext.getDateEnd(), pNow + pDistance + pDuration - pMarginOfError)
 		self.assertIsNone(pCotdInfoNext.getWinner())
+
+		self.assertEqual('2022-02-05', pCotdInfoNext.getDateStart().strftime('%Y-%m-%d'))
 	# def test_createNext(self)
 # class TestCotdInfoFactory(unittest.TestCase)

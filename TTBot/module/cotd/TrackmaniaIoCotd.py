@@ -1,4 +1,5 @@
 # pylib
+import datetime
 import requests
 
 # vendor
@@ -6,13 +7,17 @@ import minidi
 
 # local
 from TTBot.logic.Environment import Environment
+from TTBot.logic.GlobalVariables import GlobalVariables
 from TTBot.module.cotd.CotdInfoCache import CotdInfoCache
 from TTBot.module.cotd.CotdInfoFactory import CotdInfoFactory
 
 class TrackmaniaIoCotd(minidi.Injectable):
+	TIMESTAMP_INTERVAL = 300
+
 	pCotdInfoCache: CotdInfoCache
 	pCotdInfoFactory: CotdInfoFactory
 	pEnvironment: Environment
+	pGlobalVariables: GlobalVariables
 
 	def _getCotdInfos(self) -> list:
 		user_agent = {'User-agent': self.pEnvironment.getVariable('TMIO_USER_AGENT')}
@@ -38,6 +43,13 @@ class TrackmaniaIoCotd(minidi.Injectable):
 	# def _getWinner(self, cotdId: int) -> str
 
 	def loadInfo(self):
+		timestampNow = datetime.datetime.now().timestamp()
+		timestampLastRequest = self.pGlobalVariables.get('cotd.requestTS', timestampNow)
+		isDataOld = timestampNow - timestampLastRequest > TrackmaniaIoCotd.TIMESTAMP_INTERVAL
+
+		if not isDataOld:
+			return
+
 		cotdInfos = self._getCotdInfos()
 		cotdIdsWithWinner = self.pCotdInfoCache.getIdsWithWinner(len(cotdInfos))
 
@@ -50,5 +62,7 @@ class TrackmaniaIoCotd(minidi.Injectable):
 			pCotdInfo = self.pCotdInfoFactory.createFromTrackmaniaIo(cotdInfo, winner)
 			self.pCotdInfoCache.write(pCotdInfo)
 		# for cotdInfo in cotdInfos
+
+		self.pGlobalVariables.write('cotd.requestTS', timestampNow)
 	# def loadInfo(self)
 # class TrackmaniaIoCotd(minidi.Injectable)

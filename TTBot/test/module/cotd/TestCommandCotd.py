@@ -22,51 +22,6 @@ class TestCommandCotd(unittest.TestCase):
 		self.assertEqual(pCommandCotd.getModuleId(), 'cotd')
 	# def test_getModuleId(self)
 
-	def test__buildCotdInfoMessage_dataIsOld(self):
-		pNow = datetime.datetime.now()
-		pDistance = datetime.timedelta(hours=4)
-		pDuration = datetime.timedelta(hours=1)
-
-		pCotdInfoPrevPrev = CotdInfo()
-		pCotdInfoPrevPrev.setDateEnd(pNow - 3*pDistance + pDuration)
-		pCotdInfoPrevPrev.setWinner('unittest')
-
-		pCotdInfoPrev = CotdInfo()
-		pCotdInfoPrev.setDateEnd(pNow - pDistance + pDuration)
-		pCotdInfoPrev.setWinner('unittest')
-
-		pCotdInfoNext = CotdInfo()
-		pCotdInfoNext.setDateStart(pNow + pDistance)
-
-		pCotdInfoCache = CotdInfoCache()
-		pCotdInfoCache.getPrev = Mock(side_effect=[pCotdInfoPrevPrev, pCotdInfoPrev])
-		pCotdInfoCache.getNext = Mock(side_effect=[None, pCotdInfoNext])
-
-		pCotdInfoFactory = CotdInfoFactory()
-		pCotdInfoFactory.createNext = Mock(return_value=pCotdInfoNext)
-		
-		pDateTimeFormatter = DateTimeFormatter()
-		pDateTimeFormatter.formatIntervalShort = Mock(side_effect=['3h', '4h'])
-
-		pTrackmaniaIoCotd = TrackmaniaIoCotd()
-		pTrackmaniaIoCotd.loadInfo = Mock()
-
-		pCommandCotd = CommandCotd()
-		pCommandCotd.pCotdInfoCache = pCotdInfoCache
-		pCommandCotd.pCotdInfoFactory = pCotdInfoFactory
-		pCommandCotd.pDateTimeFormatter = pDateTimeFormatter
-		pCommandCotd.pTrackmaniaIoCotd = pTrackmaniaIoCotd
-
-		message = pCommandCotd._buildCotdInfoMessage()
-		self.assertEqual(message, 'Last CotD finished 3h ago, winner: unittest // next CotD starts in ~4h')
-
-		pCotdInfoCache.getPrev.assert_called_with()
-		pCotdInfoCache.getNext.assert_called_with()
-		pCotdInfoFactory.createNext.assert_not_called()
-		pDateTimeFormatter.formatIntervalShort.assert_called()
-		pTrackmaniaIoCotd.loadInfo.assert_called_once_with()
-	# def test__buildCotdInfoMessage_dataIsOld(self)
-
 	def test__buildCotdInfoMessage_default(self):
 		pNow = datetime.datetime.now()
 		pDistance = datetime.timedelta(hours=4)
@@ -105,7 +60,7 @@ class TestCommandCotd(unittest.TestCase):
 		pCotdInfoCache.getNext.assert_called_once_with()
 		pCotdInfoFactory.createNext.assert_not_called()
 		pDateTimeFormatter.formatIntervalShort.assert_called()
-		pTrackmaniaIoCotd.loadInfo.assert_not_called()
+		pTrackmaniaIoCotd.loadInfo.assert_called_once_with()
 	# def test__buildCotdInfoMessage_default(self)
 
 	def test__buildCotdInfoMessage_estimateNext(self):
@@ -149,50 +104,6 @@ class TestCommandCotd(unittest.TestCase):
 		pCotdInfoCache.getNext.assert_called_once_with()
 		pCotdInfoFactory.createNext.assert_called_once_with(pCotdInfoPrev)
 		pDateTimeFormatter.formatIntervalShort.assert_called()
-		pTrackmaniaIoCotd.loadInfo.assert_not_called()
-	# def test__buildCotdInfoMessage_estimateNext(self)
-
-	def test__buildCotdInfoMessage_needsData(self):
-		pNow = datetime.datetime.now()
-		pDistance = datetime.timedelta(hours=4)
-		pDuration = datetime.timedelta(hours=1)
-
-		pCotdInfoPrev = CotdInfo()
-		pCotdInfoPrev.setDateEnd(pNow - pDistance + pDuration)
-
-		pCotdInfoPrevWinner = CotdInfo()
-		pCotdInfoPrevWinner.setDateEnd(pNow - pDistance + pDuration)
-		pCotdInfoPrevWinner.setWinner('unittest')
-
-		pCotdInfoNext = CotdInfo()
-		pCotdInfoNext.setDateStart(pNow + pDistance)
-
-		pCotdInfoCache = CotdInfoCache()
-		pCotdInfoCache.getPrev = Mock(side_effect=[pCotdInfoPrev, pCotdInfoPrevWinner])
-		pCotdInfoCache.getNext = Mock(side_effect=[None, pCotdInfoNext])
-
-		pCotdInfoFactory = CotdInfoFactory()
-		pCotdInfoFactory.createNext = Mock(return_value=pCotdInfoNext)
-		
-		pDateTimeFormatter = DateTimeFormatter()
-		pDateTimeFormatter.formatIntervalShort = Mock(side_effect=['3h', '4h'])
-
-		pTrackmaniaIoCotd = TrackmaniaIoCotd()
-		pTrackmaniaIoCotd.loadInfo = Mock()
-
-		pCommandCotd = CommandCotd()
-		pCommandCotd.pCotdInfoCache = pCotdInfoCache
-		pCommandCotd.pCotdInfoFactory = pCotdInfoFactory
-		pCommandCotd.pDateTimeFormatter = pDateTimeFormatter
-		pCommandCotd.pTrackmaniaIoCotd = pTrackmaniaIoCotd
-
-		message = pCommandCotd._buildCotdInfoMessage()
-		self.assertEqual(message, 'Last CotD finished 3h ago, winner: unittest // next CotD starts in ~4h')
-
-		pCotdInfoCache.getPrev.assert_called_with()
-		pCotdInfoCache.getNext.assert_called_with()
-		pCotdInfoFactory.createNext.assert_not_called()
-		pDateTimeFormatter.formatIntervalShort.assert_called()
 		pTrackmaniaIoCotd.loadInfo.assert_called_once_with()
-	# def test__buildCotdInfoMessage_needsData(self)
+	# def test__buildCotdInfoMessage_estimateNext(self)
 # class TestCommandCotd(unittest.TestCase)

@@ -18,7 +18,7 @@ class CommandMm(Command):
     def _buildFullMessage(self, matchmakingDataList: list) -> str:
         messages = []
         results = 0
-        for pMatchmakingData in matchmakingDataList
+        for pMatchmakingData in matchmakingDataList:
             messages.append(self._buildSingleMessage(pMatchmakingData))
             results += 1
             if results > 4:

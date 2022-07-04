@@ -16,8 +16,18 @@ class CommandMm(Command):
         return 'mm'
     
     def _buildFullMessage(self, matchmakingDataList: list) -> str:
-        messages = [self._buildSingleMessage(pMatchmakingData) for pMatchmakingData in matchmakingDataList]
+        messages = []
+        results = 0
+        for pMatchmakingData in matchmakingDataList
+            messages.append(self._buildSingleMessage(pMatchmakingData))
+            results += 1
+            if results > 4:
+                messages.append("and more")
+                break
         return ' | '.join(messages)
+        # the following was spamming a little bit since we split messages into multiple chat msg when the char limit is reached.
+        # messages = [self._buildSingleMessage(pMatchmakingData) for pMatchmakingData in matchmakingDataList]
+        # return ' | '.join(messages)
     # def _buildFullMessage(self, matchmakingDataList: list) -> str
     
     def _buildSingleMessage(self, pMatchmakingData: MatchmakingData) -> str:
